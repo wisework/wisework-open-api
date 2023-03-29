@@ -1,0 +1,8 @@
+﻿using WW.Application.Common.Interfaces;
+
+namespace WW.Infrastructure.Services;
+
+public class DateTimeService : IDateTime
+{
+    public DateTime Now => DateTime.Now;
+}
