@@ -1,6 +1,6 @@
 {
-  "Wiskwork.OpenAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\WW\\src\\WebUI",
-  "WW.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\WW\\src\\Application",
-  "WW.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\WW\\src\\Domain",
-  "WW.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\WW\\src\\Infrastructure"
+  "Wiskwork.OpenAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\pdpa-q4\\wisework-open-api\\src\\WebUI",
+  "WW.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\pdpa-q4\\wisework-open-api\\src\\Application",
+  "WW.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\pdpa-q4\\wisework-open-api\\src\\Domain",
+  "WW.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\pdpa-q4\\wisework-open-api\\src\\Infrastructure"
 }

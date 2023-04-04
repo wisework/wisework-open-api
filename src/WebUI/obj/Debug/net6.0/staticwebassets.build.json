@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "fNO0+N1VbIgrt6o7DxBqTzABLm3xPQCDGlCn7M5Vk00=",
+  "Hash": "6Jc+HoE0llxtigqpGD3+aJlQx8Pqux/whnXDCTsIcIs=",
   "Source": "Wiskwork.OpenAPI",
   "BasePath": "_content/Wiskwork.OpenAPI",
   "Mode": "Default",
@@ -10,7 +10,7 @@
     {
       "Name": "Wiskwork.OpenAPI\\wwwroot",
       "Source": "Wiskwork.OpenAPI",
-      "ContentRoot": "D:\\WW\\src\\WebUI\\wwwroot\\",
+      "ContentRoot": "D:\\pdpa-q4\\wisework-open-api\\src\\WebUI\\wwwroot\\",
       "BasePath": "_content/Wiskwork.OpenAPI",
       "Pattern": "**"
     }
@@ -1037,10 +1037,10 @@
       "OriginalItemSpec": "C:\\Users\\panis\\.nuget\\packages\\microsoft.aspnetcore.identity.ui\\6.0.5\\staticwebassets\\V5\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
     },
     {
-      "Identity": "D:\\WW\\src\\WebUI\\wwwroot\\api\\specification.json",
+      "Identity": "D:\\pdpa-q4\\wisework-open-api\\src\\WebUI\\wwwroot\\api\\specification.json",
       "SourceId": "Wiskwork.OpenAPI",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\WW\\src\\WebUI\\wwwroot\\",
+      "ContentRoot": "D:\\pdpa-q4\\wisework-open-api\\src\\WebUI\\wwwroot\\",
       "BasePath": "_content/Wiskwork.OpenAPI",
       "RelativePath": "api/specification.json",
       "AssetKind": "All",
@@ -1054,10 +1054,10 @@
       "OriginalItemSpec": "wwwroot\\api\\specification.json"
     },
     {
-      "Identity": "D:\\WW\\src\\WebUI\\wwwroot\\favicon.ico",
+      "Identity": "D:\\pdpa-q4\\wisework-open-api\\src\\WebUI\\wwwroot\\favicon.ico",
       "SourceId": "Wiskwork.OpenAPI",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\WW\\src\\WebUI\\wwwroot\\",
+      "ContentRoot": "D:\\pdpa-q4\\wisework-open-api\\src\\WebUI\\wwwroot\\",
       "BasePath": "_content/Wiskwork.OpenAPI",
       "RelativePath": "favicon.ico",
       "AssetKind": "All",

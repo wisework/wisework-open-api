@@ -2,7 +2,7 @@
 "SpaProxyServer": {
 "ServerUrl": "https://localhost:44447",
 "LaunchCommand": "npm start",
-"WorkingDirectory": "D:\\WW\\src\\WebUI\\ClientApp\\",
+"WorkingDirectory": "D:\\pdpa-q4\\wisework-open-api\\src\\WebUI\\ClientApp\\",
 "MaxTimeoutInSeconds": "120"
 }
 }
