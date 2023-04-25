@@ -67,19 +67,19 @@ public class GetCollectionPointsQueryHandler : IRequestHandler<GetCollectionPoin
                                 new GeneralConsentPurpose
                                 {
                                     PurposeId = p.PurposeId,
-                                    PurposeType = p.PurposeType == 1 ? PurposeType.Consent.ToString() : PurposeType.Cookie.ToString(),
+                                    //PurposeType = p.PurposeType == 1 ? PurposeType.Consent.ToString() : PurposeType.Cookie.ToString(),
                                     Code = p.Code,
                                     Description = p.Description,
                                     WarningDescription = p.WarningDescription,
                                     PurposeCategoryId = p.PurposeCategoryId,
                                     ExpiredDateTime = Calulate.ExpiredDateTime(p.KeepAliveData,p.CreateDate),
-                                    Guid = p.Guid,
+                                    //Guid = p.Guid,
                                     Version = p.Version,
                                     Priority = cp.Priority,
                                     Status = p.Status,
-                                    CreateBy = p.CreateBy,
+                                    /*CreateBy = p.CreateBy,
                                     CreateDate = p.CreateDate.ToLocalTime(),
-                                    UpdateBy = p.UpdateBy
+                                    UpdateBy = p.UpdateBy*/
                                 })).ToList();
 
         var purposeLookup = purposeList.ToLookup(item => item.Key, item => item.Value);
@@ -89,7 +89,7 @@ public class GetCollectionPointsQueryHandler : IRequestHandler<GetCollectionPoin
 
         var customFieldsList = (from cf in _context.DbSetConsent_CollectionPointCustomFieldConfig
                                
-                            where collectionPointGuids.Contains(cf.CollectionPointGuid)
+                            //where collectionPointGuids.Contains(cf.CollectionPointGuid)
                             select new KeyValuePair<string, CollectionPointCustomFields>(cf.CollectionPointGuid,
                                 new CollectionPointCustomFields
                                 {
@@ -109,37 +109,37 @@ public class GetCollectionPointsQueryHandler : IRequestHandler<GetCollectionPoin
                            select new KeyValuePair<int, CollectionPointPageDetail>(cp.CollectionPointId,
                            new CollectionPointPageDetail
                            {
-                               AcceptCheckBoxLabel = cp.LabelCheckBoxAccept,
+                               /*AcceptCheckBoxLabel = cp.LabelCheckBoxAccept,
                                AcceptCheckBoxLabelFontColor = cp.LabelCheckBoxAcceptFontColor,
-                               BodyBackgroundColor = cp.BodyBgcolor,
+                               BodyBackgroundColor = cp.BodyBgcolor,*/
                                // BodyBackgroundId 
-                               BodyBackground = cp.BodyBgcolor,
+                               /*BodyBackground = cp.BodyBgcolor,
                                BodyBottomDescription = cp.BodyBottomDescription,
                                BodyBottomDescriptionFontColor = cp.BodyBottomDescriptionFontColor,
                                BodyTopDescription = cp.BodyTopDescription,
                                BodyTopDerscriptionFontColor = cp.BodyTopDerscriptionFontColor,
                                CancelButtonBackgroundColor = cp.CancelButtonBgcolor,
                                CancelButtonFontColor = cp.CancelButtonFontColor,
-                               CancelButtonLabel = cp.LabelActionCancel,
+                               CancelButtonLabel = cp.LabelActionCancel,*/
                                //ConfirmButtonLabel 
-                               HeaderBackgroundColor = cp.HeaderBgcolor,
+                               //HeaderBackgroundColor = cp.HeaderBgcolor,
                                //HeaderBackgroundId 
                                // HeaderBackground
-                               HeaderFontColor = cp.HeaderFontColor,
-                               HeaderLabel = cp.HeaderLabel,
+                               /*HeaderFontColor = cp.HeaderFontColor,
+                               HeaderLabel = cp.HeaderLabel,*/
                                //Logo,
                                //LogoId,
-                               OkButtonBackgroundColor = cp.OkbuttonBgcolor,
-                               OkButtonFontColor = cp.OkbuttonFontColor,
+                               /*OkButtonBackgroundColor = cp.OkbuttonBgcolor,
+                               OkButtonFontColor = cp.OkbuttonFontColor,*/
                                PolicyUrl = cp.LabelLinkToPolicyUrl,
-                               PolicyUrlLabel = cp.LabelLinkToPolicyUrl,
+                               /*PolicyUrlLabel = cp.LabelLinkToPolicyUrl,
                                PurposeAcceptLabel = cp.LabelPurposeActionAgree,
                                PolicyUrlLabelFontColor = cp.LabelLinkToPolicyFontColor,
-                               PurposeRejectLabel = cp.LabelPurposeActionNotAgree,
+                               PurposeRejectLabel = cp.LabelPurposeActionNotAgree,*/
                                RedirectUrl = cp.RedirectUrl,
-                               SuccessHeaderLabel = cp.HeaderLabelThankPage,
+                               /*SuccessHeaderLabel = cp.HeaderLabelThankPage,
                                SuccessDescription = cp.ShortDescriptionThankPage,
-                               SuccessButtonLabel = cp.ButtonThankpage
+                               SuccessButtonLabel = cp.ButtonThankpage*/
                            })).ToList();
 
         #endregion
@@ -155,7 +155,7 @@ public class GetCollectionPointsQueryHandler : IRequestHandler<GetCollectionPoin
                                    new CollectionPointInfo
                                    {
                                        CollectionPointId = cp.CollectionPointId,
-                                       CollectionPoint = cp.CollectionPoint,
+                                       /*CollectionPoint = cp.CollectionPoint,
                                        WebsiteId = cp.WebsiteId,
                                        AccessToken = c.AccessToken,
                                        Guid = cp.Guid,
@@ -163,18 +163,18 @@ public class GetCollectionPointsQueryHandler : IRequestHandler<GetCollectionPoin
                                        WebsiteUrl = w.Url,
                                        WebsitePolicy = w.Urlpolicy,
                                        Description = cp.Description,
-                                       Script = cp.Script,
+                                       Script = cp.Script,*/
                                        CompanyId = (int)(long)c.CompanyId,
                                        Version = c.Version,
                                        Status = c.Status,
-                                       StatusDisplay = c.Status == "Active" ? Status.Active.ToString() : Status.Inactive.ToString(),
+                                       /*StatusDisplay = c.Status == "Active" ? Status.Active.ToString() : Status.Inactive.ToString(),
                                        CreateBy = c.CreateBy,
                                        CreateByDisplay = String.Format("{0} {1}", uCreate.FirstName, uCreate.LastName),
                                        CreateDate = c.CreateDate.ToLocalTime(),
                                        CreateDateDisplay = c.CreateDate.LocalDateTime.ToShortDateString(),
                                        UpdateBy = c.UpdateBy,
                                        UpdateByDisplay = String.Format("{0} {1}", uUpdate.FirstName, uUpdate.LastName),
-                                       IsStatus = c.Status == "Active" ? true : false
+                                       IsStatus = c.Status == "Active" ? true : false*/
                                    })).ToList();
       
 
@@ -183,26 +183,26 @@ public class GetCollectionPointsQueryHandler : IRequestHandler<GetCollectionPoin
         foreach (var item in model.Items)
         {
             item.PurposeList = purposeLookup[item.CollectionPointId.Value].ToList();
-            item.CustomFieldsList = customFieldsLookup[item.Guid].ToList();
+            //item.CustomFieldsList = customFieldsLookup[item.Guid].ToList();
             item.PageDetail = pageDetails.Where(pd => pd.Key == item.CollectionPointId.Value).Select(x=>x.Value).FirstOrDefault();
-            item.AccessToken = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.AccessToken).FirstOrDefault();
+            /*item.AccessToken = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.AccessToken).FirstOrDefault();
             item.WebsiteId = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.WebsiteId).FirstOrDefault();
             item.WebsiteUrl = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.WebsiteUrl).FirstOrDefault();
             item.WebsiteDescription = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.WebsiteDescription).FirstOrDefault();
             item.WebsitePolicy = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.WebsitePolicy).FirstOrDefault();
             item.Description = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Description).FirstOrDefault();
-            item.Script = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Script).FirstOrDefault();
+            item.Script = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Script).FirstOrDefault();*/
             item.CompanyId = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CompanyId).FirstOrDefault();
             item.Version = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Version).FirstOrDefault();
             item.Status = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Status).FirstOrDefault();
-            item.StatusDisplay = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.StatusDisplay).FirstOrDefault();
+            /*item.StatusDisplay = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.StatusDisplay).FirstOrDefault();
             item.CreateBy = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateBy).FirstOrDefault();
             item.CreateByDisplay = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateByDisplay).FirstOrDefault();
             item.CreateDate = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateDate).FirstOrDefault();
             item.CreateDateDisplay = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateDateDisplay).FirstOrDefault();
             item.UpdateBy = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.UpdateBy).FirstOrDefault();
             item.UpdateByDisplay = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.UpdateByDisplay).FirstOrDefault();
-            item.IsStatus = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.IsStatus).FirstOrDefault();
+            item.IsStatus = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.IsStatus).FirstOrDefault();*/
         }
 
         return model;

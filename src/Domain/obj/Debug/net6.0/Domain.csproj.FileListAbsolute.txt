@@ -22,3 +22,17 @@ D:\pdpa-q4\wisework-open-api\src\Domain\obj\Debug\net6.0\WW.Domain.dll
 D:\pdpa-q4\wisework-open-api\src\Domain\obj\Debug\net6.0\refint\WW.Domain.dll
 D:\pdpa-q4\wisework-open-api\src\Domain\obj\Debug\net6.0\WW.Domain.pdb
 D:\pdpa-q4\wisework-open-api\src\Domain\obj\Debug\net6.0\ref\WW.Domain.dll
+D:\GitHub\wisework-open-api\src\Domain\bin\Debug\net6.0\WW.Domain.deps.json
+D:\GitHub\wisework-open-api\src\Domain\bin\Debug\net6.0\WW.Domain.dll
+D:\GitHub\wisework-open-api\src\Domain\bin\Debug\net6.0\WW.Domain.pdb
+D:\GitHub\wisework-open-api\src\Domain\bin\Debug\net6.0\Wisework.ConsentManagementSystem.Api.dll
+D:\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\Domain.csproj.AssemblyReference.cache
+D:\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\Domain.AssemblyInfoInputs.cache
+D:\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\Domain.AssemblyInfo.cs
+D:\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\Domain.csproj.CoreCompileInputs.cache
+D:\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\Domain.csproj.CopyComplete
+D:\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\WW.Domain.dll
+D:\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\refint\WW.Domain.dll
+D:\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\WW.Domain.pdb
+D:\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\ref\WW.Domain.dll

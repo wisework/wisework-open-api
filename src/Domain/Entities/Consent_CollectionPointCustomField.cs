@@ -15,4 +15,8 @@ public  class Consent_CollectionPointCustomField: Base
     public string? Guid { get; set; }
     public int? CompanyId { get; set; }
     public string? Status { get; set; }
+    public string? Placeholder { get; set; }
+    public int? LengthLimit { get; set; }
+    public int? MaxLines { get; set; }
+    public int? MinLines { get; set; }
 }
