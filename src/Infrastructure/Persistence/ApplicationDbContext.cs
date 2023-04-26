@@ -119,10 +119,6 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
             entity.Property(e => e.Description).HasMaxLength(100);
 
-            entity.Property(e => e.Guid)
-                .HasMaxLength(36)
-                .HasColumnName("GUID");
-
             entity.Property(e => e.Owner).HasMaxLength(20);
 
             entity.Property(e => e.Status).HasMaxLength(10);

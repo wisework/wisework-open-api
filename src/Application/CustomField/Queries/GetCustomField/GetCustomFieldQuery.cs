@@ -17,8 +17,8 @@ namespace WW.Application.CustomField.Queries.GetCustomField;
 
 public record GetCustomFieldQuery : IRequest<PaginatedList<CollectionPointCustomFieldActiveList>>
 {
-    public int Offset { get; init; } = 1;
-    public int Limit { get; init; } = 10;
+    public int offset { get; init; } = 1;
+    public int limit { get; init; } = 10;
 }
 public class GetCustomFieldQueryHandler : IRequestHandler<GetCustomFieldQuery, PaginatedList<CollectionPointCustomFieldActiveList>>
 {
@@ -44,7 +44,7 @@ public class GetCustomFieldQueryHandler : IRequestHandler<GetCustomFieldQuery, P
         //todo:edit conpanyid หลังมีการทำ identity server
         PaginatedList<CollectionPointCustomFieldActiveList> model =
             await _context.DbSetConsentCollectionPointCustomFields.Where(p => p.CompanyId == 1 && p.Status == Status.Active.ToString())
-            .ProjectTo<CollectionPointCustomFieldActiveList>(mapper.ConfigurationProvider).PaginatedListAsync(request.Offset, request.Limit);
+            .ProjectTo<CollectionPointCustomFieldActiveList>(mapper.ConfigurationProvider).PaginatedListAsync(request.offset, request.limit);
 
         return model;
     }

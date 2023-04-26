@@ -14,7 +14,7 @@
         "operationId": "CustomField_GetCollectionPointsQuery",
         "parameters": [
           {
-            "name": "Offset",
+            "name": "offset",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -23,7 +23,7 @@
             "x-position": 1
           },
           {
-            "name": "Limit",
+            "name": "limit",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -39,6 +39,110 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PaginatedListOfCollectionPointCustomFieldActiveList"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "CustomField"
+        ],
+        "operationId": "CustomField_Create",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomFieldCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionPointCustomFieldActiveList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/CustomField/{id}": {
+      "put": {
+        "tags": [
+          "CustomField"
+        ],
+        "operationId": "CustomField_Update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCustomFieldCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionPointCustomFieldActiveList"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "CustomField"
+        ],
+        "operationId": "CustomField_Get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionPointCustomFieldActiveList"
                 }
               }
             }
@@ -629,6 +733,76 @@
             "type": "object",
             "nullable": true,
             "additionalProperties": {}
+          }
+        }
+      },
+      "CreateCustomFieldCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "inputType": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "placeholder": {
+            "type": "string"
+          },
+          "lengthLimit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxLines": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minLines": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UpdateCustomFieldCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "code": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "inputType": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "placeholder": {
+            "type": "string"
+          },
+          "lengthLimit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxLines": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minLines": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
