@@ -12,36 +12,61 @@ public class UpdateCustomFieldCommandValidator : AbstractValidator<UpdateCustomF
     public UpdateCustomFieldCommandValidator()
     {
         RuleFor(v => v.Code)
-            .MaximumLength(1000)
+            .NotNull()
+            .WithMessage("Code is required")
             .NotEmpty()
-            .NotNull();
+            .WithMessage("Code cannot be empty")
+            .MaximumLength(20)
+            .WithMessage("Code must be no more than 20 characters long");
 
         RuleFor(v => v.Owner)
+            .NotNull()
+            .WithMessage("Owner is required")
             .NotEmpty()
-            .NotNull();
+            .WithMessage("Owner cannot be empty")
+            .MaximumLength(20)
+            .WithMessage("Owner must be no more than 20 characters long");
 
         RuleFor(v => v.InputType)
+            .NotNull()
+            .WithMessage("Input type is required")
             .NotEmpty()
-            .NotNull();
+            .WithMessage("Input type cannot be empty")
+            .MaximumLength(20)
+            .WithMessage("Input type must be no more than 20 characters long");
 
         RuleFor(v => v.Title)
+            .NotNull()
+            .WithMessage("Title is required")
             .NotEmpty()
-            .NotNull();
+            .WithMessage("Title cannot be empty")
+            .MaximumLength(100)
+            .WithMessage("Title must be no more than 100 characters long");
 
         RuleFor(v => v.Placeholder)
+            .NotNull()
+            .WithMessage("Placeholder is required")
             .NotEmpty()
-            .NotNull();
+            .WithMessage("Placeholder cannot be empty")
+            .MaximumLength(100)
+            .WithMessage("Placeholder must be no more than 100 characters long");
 
         RuleFor(v => v.LengthLimit)
             .NotEmpty()
-            .GreaterThan(0);
+            .WithMessage("Length limit cannot be empty")
+            .GreaterThan(0)
+            .WithMessage("Length limit must be greater than 0");
 
         RuleFor(v => v.MaxLines)
             .NotEmpty()
-            .GreaterThan(0);
+            .WithMessage("Max lines cannot be empty")
+            .GreaterThan(0)
+            .WithMessage("Max lines must be greater than 0");
 
         RuleFor(v => v.MinLines)
             .NotEmpty()
-            .GreaterThan(0);
+            .WithMessage("Min lines cannot be empty")
+            .GreaterThan(0)
+            .WithMessage("Min lines must be greater than 0");
     }
 }
