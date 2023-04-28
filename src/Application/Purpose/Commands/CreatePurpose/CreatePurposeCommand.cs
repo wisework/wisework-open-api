@@ -38,16 +38,18 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
     {
         var entity = new Consent_Purpose();
         var guid = Guid.NewGuid();
-
+        (string letters, string numbers,DateTime expiredDateTime) = SeparateNumbersAndLetters(request.KeepAliveData);
         entity.Guid = guid.ToString();
 
         entity.PurposeType = request.PurposeType;
         entity.CategoryID = request.CategoryID;
         entity.Code = request.Code;
         entity.Description = request.Description;
+        
         entity.KeepAliveData = request.KeepAliveData;
         entity.LinkMoreDetail = request.LinkMoreDetail; 
-        entity.Status = request.Status;         
+        
+             
         entity.TextMoreDetail = request.TextMoreDetail; 
         entity.WarningDescription = request.WarningDescription;
 
@@ -60,6 +62,12 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
         entity.Version = 1;
         entity.CompanyId = 1;
         entity.Language = "en";
+        entity.ExpiredDateTime = $"{expiredDateTime}";
+
+
+        
+
+
 
         _context.DbSetConsentPurpose.Add(entity);
 
@@ -79,8 +87,50 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
             TextMoreDetail = entity.TextMoreDetail,
             WarningDescription = entity.WarningDescription,
             Language = entity.Language,
+            ExpiredDateTime = entity.ExpiredDateTime,
         };
 
         return PurposeInfo;
+    }
+
+    public static (string letters, string numbers,DateTime expiredDateTime) SeparateNumbersAndLetters(string input)
+    {
+        string letters = "";
+        string numbers = "";
+        DateTime expiredDateTime = DateTime.Now;
+        
+
+        foreach (char c in input)
+        {
+            if (Char.IsLetter(c))
+            {
+                letters += c;
+            }
+            else if (Char.IsNumber(c))
+            {
+                numbers += c;
+            }
+        }
+
+        
+
+        switch (letters.ToLower()) // Change this value to specify the unit of time to add (days, months, or years)
+        {
+            case "d":
+                expiredDateTime = expiredDateTime.AddDays(Int32.Parse(numbers));
+                break;
+            case "m":
+                expiredDateTime = expiredDateTime.AddMonths(Int32.Parse(numbers));
+                break;
+            case "y":
+                expiredDateTime = expiredDateTime.AddYears(Int32.Parse(numbers));
+                break;
+            default:
+                Console.WriteLine("Invalid time unit specified.");
+                break;
+        }
+
+
+        return (letters, numbers, expiredDateTime);
     }
 }
