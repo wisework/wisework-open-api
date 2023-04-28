@@ -218,6 +218,12 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
             entity.Property(e => e.UpdateDate).HasPrecision(0);
 
             entity.Property(e => e.WarningDescription).HasColumnType("ntext");
+
+            entity.Property(e => e.CategoryID).HasColumnName("CategoryID");
+
+            entity.Property(e => e.ExpiredDateTime).HasColumnName("ExpiredDateTime");
+
+            entity.Property(e => e.Language).HasColumnName("Language");
         });
 
         builder.Entity<Consent_Page>(entity =>

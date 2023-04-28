@@ -401,7 +401,7 @@
         "operationId": "Purpose_GetCollectionPointsQuery",
         "parameters": [
           {
-            "name": "PageNumber",
+            "name": "Offset",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -410,7 +410,7 @@
             "x-position": 1
           },
           {
-            "name": "PageSize",
+            "name": "Limit",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -426,6 +426,110 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PaginatedListOfPurposeActiveList"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Purpose"
+        ],
+        "operationId": "Purpose_Create",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePurposeCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurposeActiveList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Purpose/{id}": {
+      "put": {
+        "tags": [
+          "Purpose"
+        ],
+        "operationId": "Purpose_Update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePurposeCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurposeActiveList"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Purpose"
+        ],
+        "operationId": "Purpose_Get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurposeActiveList"
                 }
               }
             }
@@ -1234,6 +1338,77 @@
             "type": "object",
             "nullable": true,
             "additionalProperties": {}
+          }
+        }
+      },
+      "CreatePurposeCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "purposeType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "categoryID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "keepAliveData": {
+            "type": "string"
+          },
+          "linkMoreDetail": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "textMoreDetail": {
+            "type": "string"
+          },
+          "warningDescription": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdatePurposeCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "purposeID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "purposeType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "categoryID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string"
+          },
+          "keepAliveData": {
+            "type": "string"
+          },
+          "linkMoreDetail": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "textMoreDetail": {
+            "type": "string"
+          },
+          "warningDescription": {
+            "type": "string"
           }
         }
       },
