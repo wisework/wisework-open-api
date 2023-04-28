@@ -5,10 +5,14 @@
       "MediatR/9.0.0": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.1/MediatR.dll": {}
+          "lib/netstandard2.1/MediatR.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.1/MediatR.dll": {}
+          "lib/netstandard2.1/MediatR.dll": {
+            "related": ".xml"
+          }
         }
       }
     }
@@ -39,19 +43,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\panis\\.nuget\\packages\\": {}
+    "C:\\Users\\sriyu\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\pdpa-q4\\wisework-open-api\\src\\Domain\\Domain.csproj",
+      "projectUniqueName": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj",
       "projectName": "WW.Domain",
-      "projectPath": "D:\\pdpa-q4\\wisework-open-api\\src\\Domain\\Domain.csproj",
-      "packagesPath": "C:\\Users\\panis\\.nuget\\packages\\",
-      "outputPath": "D:\\pdpa-q4\\wisework-open-api\\src\\Domain\\obj\\",
+      "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj",
+      "packagesPath": "C:\\Users\\sriyu\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Domain\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\panis\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\sriyu\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -99,7 +103,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
       }
     }
   }

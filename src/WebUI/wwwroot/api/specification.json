@@ -289,6 +289,150 @@
         }
       }
     },
+    "/api/PurposeCategory": {
+      "get": {
+        "tags": [
+          "PurposeCategory"
+        ],
+        "operationId": "PurposeCategory_GetPurposeCategoryQuery",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedListOfPurposeCategoryActiveList"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "PurposeCategory"
+        ],
+        "operationId": "PurposeCategory_Create",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePurposeCategoryCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurposeCategoryActiveList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PurposeCategory/{id}": {
+      "put": {
+        "tags": [
+          "PurposeCategory"
+        ],
+        "operationId": "PurposeCategory_Update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePurposeCategoryCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurposeCategoryActiveList"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "PurposeCategory"
+        ],
+        "operationId": "PurposeCategory_Get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurposeCategoryActiveList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Purpose": {
       "get": {
         "tags": [
@@ -601,14 +745,29 @@
           "code": {
             "type": "string"
           },
-          "description": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
           "owner": {
             "type": "string"
+          },
+          "inputType": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "placeholder": {
+            "type": "string"
+          },
+          "lengthLimit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxLines": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minLines": {
+            "type": "integer",
+            "format": "int32"
           },
           "additionalProperties": {
             "type": "object",
@@ -676,22 +835,14 @@
             "type": "string"
           },
           "consentDateTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "consentDateTimeDisplay": {
             "type": "string"
           },
-          "websiteId": {
-            "type": "integer",
-            "format": "int32"
+          "website": {
+            "$ref": "#/components/schemas/Website4"
           },
           "collectionPointVersion": {
             "type": "integer",
             "format": "int32"
-          },
-          "websiteDescription": {
-            "type": "string"
           },
           "purposeList": {
             "type": "array",
@@ -699,13 +850,7 @@
               "$ref": "#/components/schemas/GeneralConsentPurpose"
             }
           },
-          "purpose": {
-            "type": "string"
-          },
           "fromBrowser": {
-            "type": "string"
-          },
-          "fromWebsite": {
             "type": "string"
           },
           "phoneNumber": {
@@ -718,9 +863,6 @@
             "type": "string"
           },
           "remark": {
-            "type": "string"
-          },
-          "eventCode": {
             "type": "string"
           },
           "totalCount": {
@@ -737,43 +879,34 @@
           "status": {
             "type": "string"
           },
-          "createBy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "createByDisplay": {
-            "type": "string"
-          },
-          "createDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "createDateDisplay": {
-            "type": "string"
-          },
-          "updateBy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "updateByDisplay": {
-            "type": "string"
-          },
-          "updateDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updateDateDisplay": {
-            "type": "string"
-          },
           "verifyType": {
             "type": "string"
           },
-          "row": {
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
+      "Website4": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "id": {
             "type": "integer",
             "format": "int32"
           },
-          "isStatus": {
-            "type": "boolean"
+          "description": {
+            "type": "string"
+          },
+          "urlPolicyPage": {
+            "type": "string"
+          },
+          "urlHomePage": {
+            "type": "string"
           },
           "additionalProperties": {
             "type": "object",
@@ -796,9 +929,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "purposeType": {
-            "type": "string"
-          },
           "code": {
             "type": "string"
           },
@@ -816,7 +946,8 @@
             "type": "string"
           },
           "guid": {
-            "type": "string"
+            "type": "string",
+            "format": "guid"
           },
           "version": {
             "type": "integer",
@@ -828,25 +959,6 @@
           },
           "status": {
             "type": "string"
-          },
-          "createBy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "createDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updateBy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "updateDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "active": {
-            "type": "boolean"
           },
           "additionalProperties": {
             "type": "object",
@@ -938,10 +1050,6 @@
           "active": {
             "type": "boolean"
           },
-          "expiredDateTime": {
-            "type": "string",
-            "format": "date-time"
-          },
           "additionalProperties": {
             "type": "object",
             "nullable": true,
@@ -960,7 +1068,9 @@
             "format": "int32"
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 0
           },
           "additionalProperties": {
             "type": "object",
@@ -1011,6 +1121,89 @@
           }
         }
       },
+      "PaginatedListOfPurposeCategoryActiveList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurposeCategoryActiveList"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PurposeCategoryActiveList": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
+      "CreatePurposeCategoryCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdatePurposeCategoryCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
       "PaginatedListOfPurposeActiveList": {
         "type": "object",
         "additionalProperties": false,
@@ -1047,7 +1240,19 @@
           "nullable": true
         },
         "properties": {
-          "purposeId": {
+          "purposeID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "guid": {
+            "type": "string",
+            "format": "guid"
+          },
+          "purposeType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "categoryID": {
             "type": "integer",
             "format": "int32"
           },
@@ -1057,7 +1262,25 @@
           "description": {
             "type": "string"
           },
+          "keepAliveData": {
+            "type": "string"
+          },
+          "linkMoreDetail": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "textMoreDetail": {
+            "type": "string"
+          },
+          "warningDescription": {
+            "type": "string"
+          },
           "expiredDateTime": {
+            "type": "string"
+          },
+          "language": {
             "type": "string"
           },
           "additionalProperties": {
@@ -1113,6 +1336,9 @@
           "description": {
             "type": "string"
           },
+          "status": {
+            "type": "string"
+          },
           "additionalProperties": {
             "type": "object",
             "nullable": true,
@@ -1160,10 +1386,13 @@
             "type": "integer",
             "format": "int32"
           },
-          "code": {
+          "name": {
             "type": "string"
           },
-          "description": {
+          "urlHomePage": {
+            "type": "string"
+          },
+          "urlPolicyPage": {
             "type": "string"
           },
           "additionalProperties": {
@@ -1213,33 +1442,15 @@
             "type": "integer",
             "format": "int32"
           },
-          "collectionPoint": {
-            "type": "string"
-          },
-          "websiteId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "accessToken": {
+          "collectionPointName": {
             "type": "string"
           },
           "guid": {
-            "type": "string"
+            "type": "string",
+            "format": "guid"
           },
-          "websiteDescription": {
-            "type": "string"
-          },
-          "websiteUrl": {
-            "type": "string"
-          },
-          "websitePolicy": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "script": {
-            "type": "string"
+          "website": {
+            "$ref": "#/components/schemas/Website"
           },
           "purposeList": {
             "type": "array",
@@ -1250,7 +1461,7 @@
           "customFieldsList": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/CollectionPointCustomFields"
+              "$ref": "#/components/schemas/CustomFields"
             }
           },
           "expiredDateTime": {
@@ -1267,44 +1478,6 @@
           "status": {
             "type": "string"
           },
-          "statusDisplay": {
-            "type": "string"
-          },
-          "createBy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "createByDisplay": {
-            "type": "string"
-          },
-          "createDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "createDateDisplay": {
-            "type": "string"
-          },
-          "updateBy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "updateByDisplay": {
-            "type": "string"
-          },
-          "updateDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updateDateDisplay": {
-            "type": "string"
-          },
-          "row": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "isStatus": {
-            "type": "boolean"
-          },
           "pageDetail": {
             "$ref": "#/components/schemas/CollectionPointPageDetail"
           },
@@ -1315,16 +1488,37 @@
           }
         }
       },
-      "CollectionPointCustomFields": {
+      "Website": {
         "type": "object",
         "additionalProperties": {
           "nullable": true
         },
-        "required": [
-          "id",
-          "isRequired",
-          "sequence"
-        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string"
+          },
+          "urlPolicyPage": {
+            "type": "string"
+          },
+          "urlHomePage": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
+      "CustomFields": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
         "properties": {
           "id": {
             "type": "integer",
@@ -1334,6 +1528,27 @@
             "type": "boolean"
           },
           "sequence": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inputType": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "placeholder": {
+            "type": "string"
+          },
+          "lengthLimit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxLines": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minLines": {
             "type": "integer",
             "format": "int32"
           },
@@ -1349,101 +1564,69 @@
         "additionalProperties": {
           "nullable": true
         },
+        "required": [
+          "themeId",
+          "acceptCheckBoxText",
+          "bodyBottomDescriptionText",
+          "bodyTopDescriptionText",
+          "cancelButtonText",
+          "confirmButtonText",
+          "headerText",
+          "policyUrlText",
+          "successHeaderText",
+          "successButtonText"
+        ],
         "properties": {
-          "acceptCheckBoxLabel": {
-            "type": "string"
-          },
-          "acceptCheckBoxLabelFontColor": {
-            "type": "string"
-          },
-          "bodyBackgroundColor": {
-            "type": "string"
-          },
-          "bodyBackgroundId": {
+          "themeId": {
             "type": "integer",
             "format": "int32"
           },
-          "bodyBackground": {
+          "acceptCheckBoxText": {
             "type": "string"
           },
-          "bodyBottomDescription": {
-            "type": "string"
-          },
-          "bodyBottomDescriptionFontColor": {
-            "type": "string"
-          },
-          "bodyTopDescription": {
-            "type": "string"
-          },
-          "bodyTopDerscriptionFontColor": {
-            "type": "string"
-          },
-          "cancelButtonBackgroundColor": {
-            "type": "string"
-          },
-          "cancelButtonFontColor": {
-            "type": "string"
-          },
-          "cancelButtonLabel": {
-            "type": "string"
-          },
-          "confirmButtonLabel": {
-            "type": "string"
-          },
-          "headerBackgroundColor": {
-            "type": "string"
-          },
-          "headerBackgroundId": {
+          "backgroundImageId": {
             "type": "integer",
             "format": "int32"
           },
-          "headerBackground": {
+          "bodyBottomDescriptionText": {
             "type": "string"
           },
-          "headerFontColor": {
+          "bodyTopDescriptionText": {
             "type": "string"
           },
-          "headerLabel": {
+          "cancelButtonText": {
             "type": "string"
           },
-          "logo": {
+          "confirmButtonText": {
             "type": "string"
           },
-          "logoId": {
+          "headerBackgroundImageId": {
             "type": "integer",
             "format": "int32"
           },
-          "okButtonBackgroundColor": {
+          "headerText": {
             "type": "string"
           },
-          "okButtonFontColor": {
+          "logoImageId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "policyUrlText": {
             "type": "string"
           },
           "policyUrl": {
             "type": "string"
           },
-          "policyUrlLabel": {
-            "type": "string"
-          },
-          "purposeAcceptLabel": {
-            "type": "string"
-          },
-          "policyUrlLabelFontColor": {
-            "type": "string"
-          },
-          "purposeRejectLabel": {
-            "type": "string"
-          },
           "redirectUrl": {
             "type": "string"
           },
-          "successHeaderLabel": {
+          "successHeaderText": {
             "type": "string"
           },
-          "successDescription": {
+          "successDescriptionText": {
             "type": "string"
           },
-          "successButtonLabel": {
+          "successButtonText": {
             "type": "string"
           },
           "additionalProperties": {
@@ -1523,6 +1706,35 @@
           }
         }
       },
+      "CollectionPointCustomFields": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "required": [
+          "id",
+          "isRequired",
+          "sequence"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isRequired": {
+            "type": "boolean"
+          },
+          "sequence": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
       "CollectionPointPurpose": {
         "type": "object",
         "additionalProperties": {
@@ -1534,7 +1746,8 @@
         ],
         "properties": {
           "guid": {
-            "type": "string"
+            "type": "string",
+            "format": "guid"
           },
           "priority": {
             "type": "integer",

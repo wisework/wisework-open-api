@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\pdpa-q4\\wisework-open-api\\tests\\Application.UnitTests\\Application.UnitTests.csproj": {}
+    "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\tests\\Application.UnitTests\\Application.UnitTests.csproj": {}
   },
   "projects": {
-    "D:\\pdpa-q4\\wisework-open-api\\src\\Application\\Application.csproj": {
+    "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\pdpa-q4\\wisework-open-api\\src\\Application\\Application.csproj",
+        "projectUniqueName": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj",
         "projectName": "WW.Application",
-        "projectPath": "D:\\pdpa-q4\\wisework-open-api\\src\\Application\\Application.csproj",
-        "packagesPath": "C:\\Users\\panis\\.nuget\\packages\\",
-        "outputPath": "D:\\pdpa-q4\\wisework-open-api\\src\\Application\\obj\\",
+        "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj",
+        "packagesPath": "C:\\Users\\sriyu\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Application\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\panis\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\sriyu\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -29,8 +29,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\pdpa-q4\\wisework-open-api\\src\\Domain\\Domain.csproj": {
-                "projectPath": "D:\\pdpa-q4\\wisework-open-api\\src\\Domain\\Domain.csproj"
+              "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj"
               }
             }
           }
@@ -82,21 +82,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\pdpa-q4\\wisework-open-api\\src\\Domain\\Domain.csproj": {
+    "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\pdpa-q4\\wisework-open-api\\src\\Domain\\Domain.csproj",
+        "projectUniqueName": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj",
         "projectName": "WW.Domain",
-        "projectPath": "D:\\pdpa-q4\\wisework-open-api\\src\\Domain\\Domain.csproj",
-        "packagesPath": "C:\\Users\\panis\\.nuget\\packages\\",
-        "outputPath": "D:\\pdpa-q4\\wisework-open-api\\src\\Domain\\obj\\",
+        "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj",
+        "packagesPath": "C:\\Users\\sriyu\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\panis\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\sriyu\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -144,21 +144,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\pdpa-q4\\wisework-open-api\\src\\Infrastructure\\Infrastructure.csproj": {
+    "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Infrastructure\\Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\pdpa-q4\\wisework-open-api\\src\\Infrastructure\\Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Infrastructure\\Infrastructure.csproj",
         "projectName": "WW.Infrastructure",
-        "projectPath": "D:\\pdpa-q4\\wisework-open-api\\src\\Infrastructure\\Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\panis\\.nuget\\packages\\",
-        "outputPath": "D:\\pdpa-q4\\wisework-open-api\\src\\Infrastructure\\obj\\",
+        "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Infrastructure\\Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\sriyu\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\panis\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\sriyu\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -173,8 +173,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\pdpa-q4\\wisework-open-api\\src\\Application\\Application.csproj": {
-                "projectPath": "D:\\pdpa-q4\\wisework-open-api\\src\\Application\\Application.csproj"
+              "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj": {
+                "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj"
               }
             }
           }
@@ -230,21 +230,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\pdpa-q4\\wisework-open-api\\tests\\Application.UnitTests\\Application.UnitTests.csproj": {
+    "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\tests\\Application.UnitTests\\Application.UnitTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\pdpa-q4\\wisework-open-api\\tests\\Application.UnitTests\\Application.UnitTests.csproj",
+        "projectUniqueName": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\tests\\Application.UnitTests\\Application.UnitTests.csproj",
         "projectName": "WW.Application.UnitTests",
-        "projectPath": "D:\\pdpa-q4\\wisework-open-api\\tests\\Application.UnitTests\\Application.UnitTests.csproj",
-        "packagesPath": "C:\\Users\\panis\\.nuget\\packages\\",
-        "outputPath": "D:\\pdpa-q4\\wisework-open-api\\tests\\Application.UnitTests\\obj\\",
+        "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\tests\\Application.UnitTests\\Application.UnitTests.csproj",
+        "packagesPath": "C:\\Users\\sriyu\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\tests\\Application.UnitTests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\panis\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\sriyu\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -259,11 +259,11 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\pdpa-q4\\wisework-open-api\\src\\Application\\Application.csproj": {
-                "projectPath": "D:\\pdpa-q4\\wisework-open-api\\src\\Application\\Application.csproj"
+              "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj": {
+                "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj"
               },
-              "D:\\pdpa-q4\\wisework-open-api\\src\\Infrastructure\\Infrastructure.csproj": {
-                "projectPath": "D:\\pdpa-q4\\wisework-open-api\\src\\Infrastructure\\Infrastructure.csproj"
+              "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Infrastructure\\Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Infrastructure\\Infrastructure.csproj"
               }
             }
           }
@@ -296,6 +296,10 @@
               "target": "Package",
               "version": "[4.2.1, )"
             },
+            "Wisework.ConsentManagementSystem.Api": {
+              "target": "Package",
+              "version": "[1.0.13, )"
+            },
             "nunit": {
               "target": "Package",
               "version": "[3.13.3, )"
@@ -317,7 +321,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     }

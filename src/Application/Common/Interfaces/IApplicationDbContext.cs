@@ -11,6 +11,7 @@ public interface IApplicationDbContext
     DbSet<Consent_CollectionPoint> DbSetConsentCollectionPoints { get; }
     DbSet<Consent_SectionInfo> DbSetConsentSectionInfo { get; }
     DbSet<Consent_Purpose> DbSetConsentPurpose { get; }
+    DbSet<Consent_PurposeCategory> DbSetConsentPurposeCategory { get; }
     DbSet<Consent_Page> DbSetConsentPage { get; }
     DbSet<Consent_CollectionPointItem> DbSetConsentCollectionPointItem { get; }
     DbSet<Consent_CollectionPointCustomField> DbSetConsentCollectionPointCustomFields { get; }

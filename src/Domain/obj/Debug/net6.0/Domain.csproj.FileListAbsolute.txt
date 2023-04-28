@@ -22,3 +22,17 @@ D:\pdpa-q4\wisework-open-api\src\Domain\obj\Debug\net6.0\WW.Domain.dll
 D:\pdpa-q4\wisework-open-api\src\Domain\obj\Debug\net6.0\refint\WW.Domain.dll
 D:\pdpa-q4\wisework-open-api\src\Domain\obj\Debug\net6.0\WW.Domain.pdb
 D:\pdpa-q4\wisework-open-api\src\Domain\obj\Debug\net6.0\ref\WW.Domain.dll
+C:\Users\sriyu\OneDrive\เอกสาร\GitHub\wisework-open-api\src\Domain\bin\Debug\net6.0\WW.Domain.deps.json
+C:\Users\sriyu\OneDrive\เอกสาร\GitHub\wisework-open-api\src\Domain\bin\Debug\net6.0\WW.Domain.dll
+C:\Users\sriyu\OneDrive\เอกสาร\GitHub\wisework-open-api\src\Domain\bin\Debug\net6.0\WW.Domain.pdb
+C:\Users\sriyu\OneDrive\เอกสาร\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\Domain.csproj.AssemblyReference.cache
+C:\Users\sriyu\OneDrive\เอกสาร\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\sriyu\OneDrive\เอกสาร\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\Domain.AssemblyInfoInputs.cache
+C:\Users\sriyu\OneDrive\เอกสาร\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\Domain.AssemblyInfo.cs
+C:\Users\sriyu\OneDrive\เอกสาร\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\Domain.csproj.CoreCompileInputs.cache
+C:\Users\sriyu\OneDrive\เอกสาร\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\WW.Domain.dll
+C:\Users\sriyu\OneDrive\เอกสาร\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\refint\WW.Domain.dll
+C:\Users\sriyu\OneDrive\เอกสาร\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\WW.Domain.pdb
+C:\Users\sriyu\OneDrive\เอกสาร\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\ref\WW.Domain.dll
+C:\Users\sriyu\OneDrive\เอกสาร\GitHub\wisework-open-api\src\Domain\bin\Debug\net6.0\Wisework.ConsentManagementSystem.Api.dll
+C:\Users\sriyu\OneDrive\เอกสาร\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\Domain.csproj.CopyComplete

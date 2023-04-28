@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "baB+i9QMkP2DglTVO7Frgyb2QN+sTScbE79F0bWrjCjctX0RI3HU1zhxnHJ3DuJDCR79nEawvyHfn+w//r5UEw==",
+  "dgSpecHash": "FxwWlyS3J/AjlCjBykSGZ06nAx45TVWJJbUExZbLaPyWv68mpBM9pj0B4f77uPfrGEjsAtWon4ZZkDd7rMtkRw==",
   "success": true,
-  "projectFilePath": "D:\\pdpa-q4\\wisework-open-api\\src\\Domain\\Domain.csproj",
+  "projectFilePath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\panis\\.nuget\\packages\\mediatr\\9.0.0\\mediatr.9.0.0.nupkg.sha512"
+    "C:\\Users\\sriyu\\.nuget\\packages\\mediatr\\9.0.0\\mediatr.9.0.0.nupkg.sha512"
   ],
   "logs": []
 }

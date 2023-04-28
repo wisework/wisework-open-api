@@ -8,7 +8,8 @@
     ".NETCoreApp,Version=v6.0": {
       "WW.Domain/1.0.0": {
         "dependencies": {
-          "MediatR": "9.0.0"
+          "MediatR": "9.0.0",
+          "Wisework.ConsentManagementSystem.Api": "1.0.12.0"
         },
         "runtime": {
           "WW.Domain.dll": {}
@@ -19,6 +20,14 @@
           "lib/netstandard2.1/MediatR.dll": {
             "assemblyVersion": "9.0.0.0",
             "fileVersion": "9.0.0.0"
+          }
+        }
+      },
+      "Wisework.ConsentManagementSystem.Api/1.0.12.0": {
+        "runtime": {
+          "Wisework.ConsentManagementSystem.Api.dll": {
+            "assemblyVersion": "1.0.12.0",
+            "fileVersion": "1.0.12.0"
           }
         }
       }
@@ -36,6 +45,11 @@
       "sha512": "sha512-8b3UYNxegHVYcJMG2zH8wn+YqxLvXG+eMfj0cMCq/jTW72p6O3PCKMkrIv0mqyxdW7bA4gblsocw7n+/9Akg5g==",
       "path": "mediatr/9.0.0",
       "hashPath": "mediatr.9.0.0.nupkg.sha512"
+    },
+    "Wisework.ConsentManagementSystem.Api/1.0.12.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

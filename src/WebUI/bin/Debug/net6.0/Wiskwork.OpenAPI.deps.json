@@ -16,7 +16,10 @@
           "NSwag.MSBuild": "13.16.0",
           "WW.Application": "1.0.0",
           "WW.Infrastructure": "1.0.0",
-          "Wisework.ConsentManagementSystem.Api": "1.0.13.0"
+          "Wisework.ConsentManagementSystem.Api": "1.0.12.0",
+          "WW.Application.Reference": "1.0.0.0",
+          "WW.Domain.Reference": "1.0.0.0",
+          "WW.Infrastructure.Reference": "1.0.0.0"
         },
         "runtime": {
           "Wiskwork.OpenAPI.dll": {}
@@ -1021,11 +1024,35 @@
           "WW.Infrastructure.dll": {}
         }
       },
-      "Wisework.ConsentManagementSystem.Api/1.0.13.0": {
+      "Wisework.ConsentManagementSystem.Api/1.0.12.0": {
         "runtime": {
           "Wisework.ConsentManagementSystem.Api.dll": {
-            "assemblyVersion": "1.0.13.0",
-            "fileVersion": "1.0.13.0"
+            "assemblyVersion": "1.0.12.0",
+            "fileVersion": "1.0.12.0"
+          }
+        }
+      },
+      "WW.Application.Reference/1.0.0.0": {
+        "runtime": {
+          "WW.Application.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "WW.Domain.Reference/1.0.0.0": {
+        "runtime": {
+          "WW.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "WW.Infrastructure.Reference/1.0.0.0": {
+        "runtime": {
+          "WW.Infrastructure.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       }
@@ -1717,7 +1744,22 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Wisework.ConsentManagementSystem.Api/1.0.13.0": {
+    "Wisework.ConsentManagementSystem.Api/1.0.12.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "WW.Application.Reference/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "WW.Domain.Reference/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "WW.Infrastructure.Reference/1.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

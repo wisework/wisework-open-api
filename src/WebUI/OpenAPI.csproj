@@ -43,8 +43,7 @@
 
     <ItemGroup>
       <Reference Include="Wisework.ConsentManagementSystem.Api">
-        <HintPath>..\..\..\..\PDPA\wisework-package\Wisework.ConsentManagementSystem.Api\bin\Release\netstandard2.0\Wisework.ConsentManagementSystem.Api.dll</HintPath>
-        <CopyLocal>True</CopyLocal>
+        <HintPath>..\..\..\..\..\..\Downloads\Wisework.ConsentManagementSystem.Api.dll</HintPath>
       </Reference>
     </ItemGroup>
 

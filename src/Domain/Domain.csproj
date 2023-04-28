@@ -12,4 +12,10 @@
       <PackageReference Include="MediatR" Version="9.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Wisework.ConsentManagementSystem.Api">
+        <HintPath>..\..\..\..\..\..\Downloads\Wisework.ConsentManagementSystem.Api.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
