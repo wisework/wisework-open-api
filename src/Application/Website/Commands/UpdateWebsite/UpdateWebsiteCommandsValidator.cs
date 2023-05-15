@@ -18,7 +18,7 @@ public class UpdateWebsiteCommandsValidator : AbstractValidator<UpdateWebsiteCom
             .NotEmpty()
             .WithMessage("Code cannot be empty")
             .MaximumLength(1000)
-            .WithMessage("Code must be no more than 1000 characters long");
+            .WithMessage("Code must be no more than 1000 characters ");
 
         RuleFor(v => v.UrlHomePage)
             .NotNull()
