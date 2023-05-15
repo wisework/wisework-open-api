@@ -8,4 +8,8 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = WW.Domain
+<<<<<<< HEAD
 build_property.ProjectDir = c:\Users\sriyu\OneDrive\เอกสาร\GitHub\wisework-open-api\src\Domain\
+=======
+build_property.ProjectDir = D:\GitHub\wisework-open-api\src\Domain\
+>>>>>>> develop

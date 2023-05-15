@@ -120,10 +120,6 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
             entity.Property(e => e.Description).HasMaxLength(100);
 
-            entity.Property(e => e.Guid)
-                .HasMaxLength(36)
-                .HasColumnName("GUID");
-
             entity.Property(e => e.Owner).HasMaxLength(20);
 
             entity.Property(e => e.Status).HasMaxLength(10);
@@ -131,6 +127,14 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
             entity.Property(e => e.Type).HasMaxLength(100);
 
             entity.Property(e => e.UpdateDate).HasPrecision(0);
+
+            entity.Property(e => e.Placeholder).HasMaxLength(100);
+
+            entity.Property(e => e.LengthLimit).HasColumnName("LengthLimit");
+
+            entity.Property(e => e.MaxLines).HasColumnName("MaxLines");
+
+            entity.Property(e => e.MinLines).HasColumnName("MinLines");
         });
 
         builder.Entity<Consent_CollectionPointItem>(entity =>

@@ -184,12 +184,21 @@ public class GeneralConsentListRequestQueryHandler : IRequestHandler<GeneralCons
                                    Version = p.Version,
                                    Priority = cp.Priority,
                                    Status = p.Status,
+<<<<<<< HEAD
                                    //CreateBy = p.CreateBy,
                                    //CreateDate = p.CreateDate.ToLocalTime(),
                                    //UpdateBy = p.UpdateBy,
                                    CompanyId = p.CompanyId,
                                    //UpdateDate = p.UpdateDate.ToLocalTime(),
                                    //Active = p.Status == "Active" ? true : false,
+=======
+                                   /*CreateBy = p.CreateBy,
+                                   CreateDate = p.CreateDate.ToLocalTime(),
+                                   UpdateBy = p.UpdateBy,*/
+                                   CompanyId = p.CompanyId,
+                                   /*UpdateDate = p.UpdateDate.ToLocalTime(),
+                                   Active = p.Status == "Active" ? true : false,*/
+>>>>>>> develop
                                })).ToList();
 
         var purposeLookup = purposeList.ToLookup(item => item.Key, item => item.Value);
@@ -207,6 +216,7 @@ public class GeneralConsentListRequestQueryHandler : IRequestHandler<GeneralCons
                                    new CollectionPointInfo
                                    {
                                        CollectionPointId = cp.CollectionPointId,
+<<<<<<< HEAD
                                        //CollectionPoint = cp.CollectionPoint,
                                        //WebsiteId = cp.WebsiteId,
                                        //AccessToken = c.AccessToken,
@@ -224,6 +234,25 @@ public class GeneralConsentListRequestQueryHandler : IRequestHandler<GeneralCons
                                        //CreateDate = cp.CreateDate.ToLocalTime(),
                                        //CreateDateDisplay = c.CreateDate.LocalDateTime.ToShortDateString(),
                                        //UpdateBy = cp.UpdateBy,
+=======
+                                       /*CollectionPoint = cp.CollectionPoint,
+                                       WebsiteId = cp.WebsiteId,
+                                       AccessToken = c.AccessToken,
+                                       Guid = cp.Guid,
+                                       WebsiteDescription = w.Description,
+                                       WebsiteUrl = w.Url,
+                                       WebsitePolicy = w.Urlpolicy,
+                                       Description = cp.Description,*/
+                                       CompanyId = (int)(long)cp.CompanyId,
+                                       Version = cp.Version,
+                                       Status = cp.Status,
+                                       /*StatusDisplay = cp.Status == "Active" ? Status.Active.ToString() : Status.Inactive.ToString(),
+                                       CreateBy = cp.CreateBy,*/
+                                       //CreateByDisplay = String.Format("{0} {1}", uCreate.FirstName, uCreate.LastName),
+                                       /*CreateDate = cp.CreateDate.ToLocalTime(),
+                                       CreateDateDisplay = c.CreateDate.LocalDateTime.ToShortDateString(),
+                                       UpdateBy = cp.UpdateBy,*/
+>>>>>>> develop
                                        //UpdateByDisplay = String.Format("{0} {1}", uUpdate.FirstName, uUpdate.LastName),
                                        //IsStatus = cp.Status == "Active" ? true : false,
                                        //CollectionPointGuid = cp.CollectionPointId,
@@ -245,6 +274,7 @@ public class GeneralConsentListRequestQueryHandler : IRequestHandler<GeneralCons
             //item.WebsiteDescription = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.WebsiteDescription).FirstOrDefault();
             item.CompanyId = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CompanyId).FirstOrDefault();
             item.Status = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Status).FirstOrDefault();
+<<<<<<< HEAD
             //item.CreateBy = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateBy).FirstOrDefault();
             //item.CreateByDisplay = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateByDisplay).FirstOrDefault();
             //item.CreateDate = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateDate).FirstOrDefault();
@@ -253,6 +283,16 @@ public class GeneralConsentListRequestQueryHandler : IRequestHandler<GeneralCons
             //item.UpdateByDisplay = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.UpdateByDisplay).FirstOrDefault();
             //item.IsStatus = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.IsStatus).FirstOrDefault();
             //item.CollectionPointGuid = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Guid).FirstOrDefault();
+=======
+            /*item.CreateBy = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateBy).FirstOrDefault();
+            item.CreateByDisplay = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateByDisplay).FirstOrDefault();
+            item.CreateDate = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateDate).FirstOrDefault();
+            item.CreateDateDisplay = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateDateDisplay).FirstOrDefault();
+            item.UpdateBy = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.UpdateBy).FirstOrDefault();
+            item.UpdateByDisplay = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.UpdateByDisplay).FirstOrDefault();
+            item.IsStatus = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.IsStatus).FirstOrDefault();
+            item.CollectionPointGuid = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Guid).FirstOrDefault();*/
+>>>>>>> develop
             item.CollectionPointVersion = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Version).FirstOrDefault();
         }
 

@@ -1,6 +1,7 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
     "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\tests\\Application.IntegrationTests\\Application.IntegrationTests.csproj": {}
   },
   "projects": {
@@ -12,9 +13,30 @@
         "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj",
         "packagesPath": "C:\\Users\\sriyu\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Application\\obj\\",
+=======
+    "D:\\GitHub\\wisework-open-api\\tests\\Application.IntegrationTests\\Application.IntegrationTests.csproj": {}
+  },
+  "projects": {
+    "D:\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj",
+        "projectName": "WW.Application",
+        "projectPath": "D:\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj",
+        "packagesPath": "C:\\Users\\tunal\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\wisework-open-api\\src\\Application\\obj\\",
+>>>>>>> develop
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
+<<<<<<< HEAD
           "C:\\Users\\sriyu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+=======
+          "C:\\Users\\tunal\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+>>>>>>> develop
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -29,8 +51,13 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
+<<<<<<< HEAD
               "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj": {
                 "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj"
+=======
+              "D:\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj": {
+                "projectPath": "D:\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj"
+>>>>>>> develop
               }
             }
           }
@@ -82,6 +109,7 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
@@ -94,9 +122,31 @@
         "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj",
         "packagesPath": "C:\\Users\\sriyu\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Domain\\obj\\",
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj",
+        "projectName": "WW.Domain",
+        "projectPath": "D:\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj",
+        "packagesPath": "C:\\Users\\tunal\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\wisework-open-api\\src\\Domain\\obj\\",
+>>>>>>> develop
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
+<<<<<<< HEAD
           "C:\\Users\\sriyu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+=======
+          "C:\\Users\\tunal\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+>>>>>>> develop
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -144,6 +194,7 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
@@ -156,9 +207,31 @@
         "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Infrastructure\\Infrastructure.csproj",
         "packagesPath": "C:\\Users\\sriyu\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Infrastructure\\obj\\",
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GitHub\\wisework-open-api\\src\\Infrastructure\\Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\wisework-open-api\\src\\Infrastructure\\Infrastructure.csproj",
+        "projectName": "WW.Infrastructure",
+        "projectPath": "D:\\GitHub\\wisework-open-api\\src\\Infrastructure\\Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\tunal\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\wisework-open-api\\src\\Infrastructure\\obj\\",
+>>>>>>> develop
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
+<<<<<<< HEAD
           "C:\\Users\\sriyu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+=======
+          "C:\\Users\\tunal\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+>>>>>>> develop
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -173,8 +246,13 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
+<<<<<<< HEAD
               "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj": {
                 "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj"
+=======
+              "D:\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj": {
+                "projectPath": "D:\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj"
+>>>>>>> develop
               }
             }
           }
@@ -230,6 +308,7 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
@@ -242,9 +321,31 @@
         "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\WebUI\\OpenAPI.csproj",
         "packagesPath": "C:\\Users\\sriyu\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\WebUI\\obj\\",
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GitHub\\wisework-open-api\\src\\WebUI\\OpenAPI.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\wisework-open-api\\src\\WebUI\\OpenAPI.csproj",
+        "projectName": "Wiskwork.OpenAPI",
+        "projectPath": "D:\\GitHub\\wisework-open-api\\src\\WebUI\\OpenAPI.csproj",
+        "packagesPath": "C:\\Users\\tunal\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\wisework-open-api\\src\\WebUI\\obj\\",
+>>>>>>> develop
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
+<<<<<<< HEAD
           "C:\\Users\\sriyu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+=======
+          "C:\\Users\\tunal\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+>>>>>>> develop
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -259,11 +360,19 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
+<<<<<<< HEAD
               "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj": {
                 "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj"
               },
               "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Infrastructure\\Infrastructure.csproj": {
                 "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Infrastructure\\Infrastructure.csproj"
+=======
+              "D:\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj": {
+                "projectPath": "D:\\GitHub\\wisework-open-api\\src\\Application\\Application.csproj"
+              },
+              "D:\\GitHub\\wisework-open-api\\src\\Infrastructure\\Infrastructure.csproj": {
+                "projectPath": "D:\\GitHub\\wisework-open-api\\src\\Infrastructure\\Infrastructure.csproj"
+>>>>>>> develop
               }
             }
           }
@@ -324,6 +433,7 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
@@ -336,9 +446,31 @@
         "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\tests\\Application.IntegrationTests\\Application.IntegrationTests.csproj",
         "packagesPath": "C:\\Users\\sriyu\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\tests\\Application.IntegrationTests\\obj\\",
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GitHub\\wisework-open-api\\tests\\Application.IntegrationTests\\Application.IntegrationTests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\wisework-open-api\\tests\\Application.IntegrationTests\\Application.IntegrationTests.csproj",
+        "projectName": "WW.Application.IntegrationTests",
+        "projectPath": "D:\\GitHub\\wisework-open-api\\tests\\Application.IntegrationTests\\Application.IntegrationTests.csproj",
+        "packagesPath": "C:\\Users\\tunal\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\wisework-open-api\\tests\\Application.IntegrationTests\\obj\\",
+>>>>>>> develop
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
+<<<<<<< HEAD
           "C:\\Users\\sriyu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+=======
+          "C:\\Users\\tunal\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+>>>>>>> develop
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -353,8 +485,13 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
+<<<<<<< HEAD
               "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\WebUI\\OpenAPI.csproj": {
                 "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\WebUI\\OpenAPI.csproj"
+=======
+              "D:\\GitHub\\wisework-open-api\\src\\WebUI\\OpenAPI.csproj": {
+                "projectPath": "D:\\GitHub\\wisework-open-api\\src\\WebUI\\OpenAPI.csproj"
+>>>>>>> develop
               }
             }
           }
@@ -420,7 +557,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+>>>>>>> develop
         }
       }
     }

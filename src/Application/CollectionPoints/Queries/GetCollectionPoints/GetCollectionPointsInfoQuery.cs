@@ -47,6 +47,7 @@ public class GetCollectionPointsInfoQueryHandler : IRequestHandler<GetCollection
                                    select new CollectionPointInfo
                                    {
                                        CollectionPointId = cp.CollectionPointId,
+<<<<<<< HEAD
                                        //CollectionPoint = cp.CollectionPoint,
                                        //WebsiteId = cp.WebsiteId,
                                        //AccessToken = c.AccessToken,
@@ -67,6 +68,28 @@ public class GetCollectionPointsInfoQueryHandler : IRequestHandler<GetCollection
                                        //UpdateBy = c.UpdateBy,
                                        //UpdateByDisplay = String.Format("{0} {1}", uUpdate.FirstName, uUpdate.LastName),
                                        //IsStatus = c.Status == "Active" ? true : false
+=======
+                                       /*CollectionPoint = cp.CollectionPoint,
+                                       WebsiteId = cp.WebsiteId,
+                                       AccessToken = c.AccessToken,
+                                       Guid = cp.Guid,
+                                       WebsiteDescription = w.Description,
+                                       WebsiteUrl = w.Url,
+                                       WebsitePolicy = w.Urlpolicy,
+                                       Description = cp.Description,
+                                       Script = cp.Script,*/
+                                       CompanyId = (int)(long)c.CompanyId,
+                                       Version = c.Version,
+                                       Status = c.Status,
+                                       /*StatusDisplay = c.Status == "Active" ? Status.Active.ToString() :Status.Inactive.ToString(),
+                                       CreateBy = c.CreateBy,
+                                       CreateByDisplay = String.Format("{0} {1}", uCreate.FirstName, uCreate.LastName),
+                                       CreateDate = c.CreateDate.ToLocalTime(),
+                                       CreateDateDisplay = c.CreateDate.LocalDateTime.ToShortDateString(),
+                                       UpdateBy = c.UpdateBy,
+                                       UpdateByDisplay = String.Format("{0} {1}", uUpdate.FirstName, uUpdate.LastName),
+                                       IsStatus = c.Status == "Active" ? true : false*/
+>>>>>>> develop
                                    }).FirstOrDefault();
 
         
@@ -91,11 +114,19 @@ public class GetCollectionPointsInfoQueryHandler : IRequestHandler<GetCollection
                                    Priority = cp.Priority,
                                    Status = p.Status,
                                    CompanyId = p.CompanyId,
+<<<<<<< HEAD
                                    //CreateBy = p.CreateBy,
                                    //CreateDate = p.CreateDate.ToLocalTime(),
                                    //UpdateBy = p.UpdateBy,
                                    //UpdateDate = p.UpdateDate.ToLocalTime(),
                                    //Active = p.Status == Status.Active.ToString()?true:false
+=======
+                                   /*CreateBy = p.CreateBy,
+                                   CreateDate = p.CreateDate.ToLocalTime(),
+                                   UpdateBy = p.UpdateBy,
+                                   UpdateDate = p.UpdateDate.ToLocalTime(),
+                                   Active = p.Status == Status.Active.ToString()?true:false*/
+>>>>>>> develop
 
                                }).ToList();
 
@@ -126,6 +157,7 @@ public class GetCollectionPointsInfoQueryHandler : IRequestHandler<GetCollection
                            select
                            new CollectionPointPageDetail
                            {
+<<<<<<< HEAD
                                //AcceptCheckBoxLabel = cp.LabelCheckBoxAccept,
                                //AcceptCheckBoxLabelFontColor = cp.LabelCheckBoxAcceptFontColor,
                                //BodyBackgroundColor = cp.BodyBgcolor,
@@ -138,10 +170,25 @@ public class GetCollectionPointsInfoQueryHandler : IRequestHandler<GetCollection
                                //CancelButtonBackgroundColor = cp.CancelButtonBgcolor,
                                //CancelButtonFontColor = cp.CancelButtonFontColor,
                                //CancelButtonLabel = cp.LabelActionCancel,
+=======
+                               /*AcceptCheckBoxLabel = cp.LabelCheckBoxAccept,
+                               AcceptCheckBoxLabelFontColor = cp.LabelCheckBoxAcceptFontColor,
+                               BodyBackgroundColor = cp.BodyBgcolor,*/
+                               // BodyBackgroundId 
+                               /*BodyBackground = cp.BodyBgcolor,
+                               BodyBottomDescription = cp.BodyBottomDescription,
+                               BodyBottomDescriptionFontColor = cp.BodyBottomDescriptionFontColor,
+                               BodyTopDescription = cp.BodyTopDescription,
+                               BodyTopDerscriptionFontColor = cp.BodyTopDerscriptionFontColor,
+                               CancelButtonBackgroundColor = cp.CancelButtonBgcolor,
+                               CancelButtonFontColor = cp.CancelButtonFontColor,
+                               CancelButtonLabel = cp.LabelActionCancel,*/
+>>>>>>> develop
                                //ConfirmButtonLabel 
                                //HeaderBackgroundColor = cp.HeaderBgcolor,
                                //HeaderBackgroundId 
                                // HeaderBackground
+<<<<<<< HEAD
                                //HeaderFontColor = cp.HeaderFontColor,
                                //HeaderLabel = cp.HeaderLabel,
                                //Logo,
@@ -157,6 +204,23 @@ public class GetCollectionPointsInfoQueryHandler : IRequestHandler<GetCollection
                                //SuccessHeaderLabel = cp.HeaderLabelThankPage,
                                //SuccessDescription = cp.ShortDescriptionThankPage,
                                //SuccessButtonLabel = cp.ButtonThankpage
+=======
+                               /*HeaderFontColor = cp.HeaderFontColor,
+                               HeaderLabel = cp.HeaderLabel,*/
+                               //Logo,
+                               //LogoId,
+                               /*OkButtonBackgroundColor = cp.OkbuttonBgcolor,
+                               OkButtonFontColor = cp.OkbuttonFontColor,*/
+                               PolicyUrl = cp.LabelLinkToPolicyUrl,
+                               /*PolicyUrlLabel = cp.LabelLinkToPolicyUrl,
+                               PurposeAcceptLabel = cp.LabelPurposeActionAgree,
+                               PolicyUrlLabelFontColor = cp.LabelLinkToPolicyFontColor,
+                               PurposeRejectLabel = cp.LabelPurposeActionNotAgree,*/
+                               RedirectUrl = cp.RedirectUrl,
+                               /*SuccessHeaderLabel = cp.HeaderLabelThankPage,
+                               SuccessDescription = cp.ShortDescriptionThankPage,
+                               SuccessButtonLabel = cp.ButtonThankpage*/
+>>>>>>> develop
                            }).FirstOrDefault();
 
         #endregion

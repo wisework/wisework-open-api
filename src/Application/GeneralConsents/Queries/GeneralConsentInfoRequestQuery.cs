@@ -72,6 +72,7 @@ public class GeneralConsentInfoRequestQueryHandler : IRequestHandler<GeneralCons
                          TotalTransactions = c.TotalTransactions,
                          FullName = c.NameSurname,
                          CollectionPointGuid = cp.Guid,
+<<<<<<< HEAD
                          //ConsentDateTime = c.ConsentDatetime.Value,
                          //ConsentDateTimeDisplay = c.CreateDate.Value.LocalDateTime.ToShortDateString(),
                          //WebsiteId = c.WebsiteId,
@@ -80,6 +81,16 @@ public class GeneralConsentInfoRequestQueryHandler : IRequestHandler<GeneralCons
                          //Purpose = "",
                          FromBrowser = c.FromBrowser,
                          //FromWebsite = c.FromWebsite,
+=======
+                         /*ConsentDateTime = c.ConsentDatetime.Value,
+                         ConsentDateTimeDisplay = c.CreateDate.Value.LocalDateTime.ToShortDateString(),
+                         WebsiteId = c.WebsiteId,*/
+                         CollectionPointVersion = cp.Version,
+                         /*WebsiteDescription = w.Description,
+                         Purpose = "",
+                         FromBrowser = c.FromBrowser,
+                         FromWebsite = c.FromWebsite,*/
+>>>>>>> develop
                          PhoneNumber = c.Tel,
                          IdCardNumber = c.CardNumber,
                          Email = c.Email,
@@ -87,6 +98,7 @@ public class GeneralConsentInfoRequestQueryHandler : IRequestHandler<GeneralCons
                          CompanyId = c.CompanyId,
                          CompanyName = company.Name,
                          Status = c.Status,
+<<<<<<< HEAD
                          //EventCode = c.EventCode,
                          //CreateBy = cp.CreateBy,
                          //CreateByDisplay = String.Format("{0} {1}", uCreate.FirstName, uCreate.LastName),
@@ -94,6 +106,15 @@ public class GeneralConsentInfoRequestQueryHandler : IRequestHandler<GeneralCons
                          //CreateDateDisplay = c.CreateDate.Value.LocalDateTime.ToShortDateString(),
                          //UpdateBy = c.UpdateBy,
                          //UpdateByDisplay = String.Format("{0} {1}", uUpdate.FirstName, uUpdate.LastName),
+=======
+                         /*EventCode = c.EventCode,
+                         CreateBy = cp.CreateBy,
+                         CreateByDisplay = String.Format("{0} {1}", uCreate.FirstName, uCreate.LastName),
+                         CreateDate = c.CreateDate.Value.ToLocalTime(),
+                         CreateDateDisplay = c.CreateDate.Value.LocalDateTime.ToShortDateString(),
+                         UpdateBy = c.UpdateBy,
+                         UpdateByDisplay = String.Format("{0} {1}", uUpdate.FirstName, uUpdate.LastName),*/
+>>>>>>> develop
                          VerifyType = c.VerifyType,
                          //IsStatus = c.Status == "Active" ? true : false
                      });
@@ -145,12 +166,21 @@ public class GeneralConsentInfoRequestQueryHandler : IRequestHandler<GeneralCons
                     Version = p.Version,
                     Priority = cp.Priority,
                     Status = p.Status,
+<<<<<<< HEAD
                     //CreateBy = p.CreateBy,
                     //CreateDate = p.CreateDate.ToLocalTime(),
                     //UpdateBy = p.UpdateBy,
                     CompanyId = p.CompanyId,
                     //UpdateDate = p.UpdateDate.ToLocalTime(),
                     //Active = p.Status == "Active" ? true : false,
+=======
+                    /*CreateBy = p.CreateBy,
+                    CreateDate = p.CreateDate.ToLocalTime(),
+                    UpdateBy = p.UpdateBy,*/
+                    CompanyId = p.CompanyId,
+                    /*UpdateDate = p.UpdateDate.ToLocalTime(),
+                    Active = p.Status == "Active" ? true : false,*/
+>>>>>>> develop
                 }).ToList();
             model.PurposeList = purposeList;
         }

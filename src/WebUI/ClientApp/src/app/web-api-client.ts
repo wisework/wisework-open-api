@@ -16,7 +16,10 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface ICustomFieldClient {
-    getCollectionPointsQuery(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfCollectionPointCustomFieldActiveList>;
+    getCollectionPointsQuery(offset: number | undefined, limit: number | undefined): Observable<PaginatedListOfCollectionPointCustomFieldActiveList>;
+    create(command: CreateCustomFieldCommand): Observable<CollectionPointCustomFieldActiveList>;
+    update(id: number, command: UpdateCustomFieldCommand): Observable<CollectionPointCustomFieldActiveList>;
+    get(id: number): Observable<CollectionPointCustomFieldActiveList>;
 }
 
 @Injectable({
@@ -32,16 +35,16 @@ export class CustomFieldClient implements ICustomFieldClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getCollectionPointsQuery(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfCollectionPointCustomFieldActiveList> {
+    getCollectionPointsQuery(offset: number | undefined, limit: number | undefined): Observable<PaginatedListOfCollectionPointCustomFieldActiveList> {
         let url_ = this.baseUrl + "/api/CustomField?";
-        if (pageNumber === null)
-            throw new Error("The parameter 'pageNumber' cannot be null.");
-        else if (pageNumber !== undefined)
-            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
-        if (pageSize === null)
-            throw new Error("The parameter 'pageSize' cannot be null.");
-        else if (pageSize !== undefined)
-            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (offset === null)
+            throw new Error("The parameter 'offset' cannot be null.");
+        else if (offset !== undefined)
+            url_ += "offset=" + encodeURIComponent("" + offset) + "&";
+        if (limit === null)
+            throw new Error("The parameter 'limit' cannot be null.");
+        else if (limit !== undefined)
+            url_ += "limit=" + encodeURIComponent("" + limit) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -78,6 +81,164 @@ export class CustomFieldClient implements ICustomFieldClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PaginatedListOfCollectionPointCustomFieldActiveList.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    create(command: CreateCustomFieldCommand): Observable<CollectionPointCustomFieldActiveList> {
+        let url_ = this.baseUrl + "/api/CustomField";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CollectionPointCustomFieldActiveList>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CollectionPointCustomFieldActiveList>;
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<CollectionPointCustomFieldActiveList> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CollectionPointCustomFieldActiveList.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    update(id: number, command: UpdateCustomFieldCommand): Observable<CollectionPointCustomFieldActiveList> {
+        let url_ = this.baseUrl + "/api/CustomField/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CollectionPointCustomFieldActiveList>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CollectionPointCustomFieldActiveList>;
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<CollectionPointCustomFieldActiveList> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CollectionPointCustomFieldActiveList.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    get(id: number): Observable<CollectionPointCustomFieldActiveList> {
+        let url_ = this.baseUrl + "/api/CustomField/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CollectionPointCustomFieldActiveList>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CollectionPointCustomFieldActiveList>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<CollectionPointCustomFieldActiveList> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CollectionPointCustomFieldActiveList.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1179,6 +1340,138 @@ export interface ICollectionPointCustomFieldActiveList {
     maxLines?: number;
     minLines?: number;
     additionalProperties?: { [key: string]: any; } | undefined;
+}
+
+export class CreateCustomFieldCommand implements ICreateCustomFieldCommand {
+    code?: string;
+    owner?: string;
+    inputType?: string;
+    title?: string;
+    placeholder?: string;
+    lengthLimit?: number;
+    maxLines?: number;
+    minLines?: number;
+
+    constructor(data?: ICreateCustomFieldCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.code = _data["code"];
+            this.owner = _data["owner"];
+            this.inputType = _data["inputType"];
+            this.title = _data["title"];
+            this.placeholder = _data["placeholder"];
+            this.lengthLimit = _data["lengthLimit"];
+            this.maxLines = _data["maxLines"];
+            this.minLines = _data["minLines"];
+        }
+    }
+
+    static fromJS(data: any): CreateCustomFieldCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCustomFieldCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
+        data["owner"] = this.owner;
+        data["inputType"] = this.inputType;
+        data["title"] = this.title;
+        data["placeholder"] = this.placeholder;
+        data["lengthLimit"] = this.lengthLimit;
+        data["maxLines"] = this.maxLines;
+        data["minLines"] = this.minLines;
+        return data;
+    }
+}
+
+export interface ICreateCustomFieldCommand {
+    code?: string;
+    owner?: string;
+    inputType?: string;
+    title?: string;
+    placeholder?: string;
+    lengthLimit?: number;
+    maxLines?: number;
+    minLines?: number;
+}
+
+export class UpdateCustomFieldCommand implements IUpdateCustomFieldCommand {
+    id?: number;
+    code?: string;
+    owner?: string;
+    inputType?: string;
+    title?: string;
+    placeholder?: string;
+    lengthLimit?: number;
+    maxLines?: number;
+    minLines?: number;
+
+    constructor(data?: IUpdateCustomFieldCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.code = _data["code"];
+            this.owner = _data["owner"];
+            this.inputType = _data["inputType"];
+            this.title = _data["title"];
+            this.placeholder = _data["placeholder"];
+            this.lengthLimit = _data["lengthLimit"];
+            this.maxLines = _data["maxLines"];
+            this.minLines = _data["minLines"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCustomFieldCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCustomFieldCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["code"] = this.code;
+        data["owner"] = this.owner;
+        data["inputType"] = this.inputType;
+        data["title"] = this.title;
+        data["placeholder"] = this.placeholder;
+        data["lengthLimit"] = this.lengthLimit;
+        data["maxLines"] = this.maxLines;
+        data["minLines"] = this.minLines;
+        return data;
+    }
+}
+
+export interface IUpdateCustomFieldCommand {
+    id?: number;
+    code?: string;
+    owner?: string;
+    inputType?: string;
+    title?: string;
+    placeholder?: string;
+    lengthLimit?: number;
+    maxLines?: number;
+    minLines?: number;
 }
 
 export class PaginatedListOfGeneralConsent implements IPaginatedListOfGeneralConsent {

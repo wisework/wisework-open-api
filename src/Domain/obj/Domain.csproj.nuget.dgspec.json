@@ -1,6 +1,7 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
     "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj": {}
   },
   "projects": {
@@ -12,9 +13,30 @@
         "projectPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj",
         "packagesPath": "C:\\Users\\sriyu\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\sriyu\\OneDrive\\เอกสาร\\GitHub\\wisework-open-api\\src\\Domain\\obj\\",
+=======
+    "D:\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj": {}
+  },
+  "projects": {
+    "D:\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj",
+        "projectName": "WW.Domain",
+        "projectPath": "D:\\GitHub\\wisework-open-api\\src\\Domain\\Domain.csproj",
+        "packagesPath": "C:\\Users\\tunal\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\wisework-open-api\\src\\Domain\\obj\\",
+>>>>>>> develop
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
+<<<<<<< HEAD
           "C:\\Users\\sriyu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+=======
+          "C:\\Users\\tunal\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+>>>>>>> develop
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -62,7 +84,11 @@
               "privateAssets": "all"
             }
           },
+<<<<<<< HEAD
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+=======
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+>>>>>>> develop
         }
       }
     }

@@ -107,6 +107,7 @@ public class UpdateCollectionPointCommandHandler : IRequestHandler<UpdateCollect
         var pageDetail = new Consent_Page();
         // id collecion point
         pageDetail.CollectionPointId = entity.CollectionPointId;
+<<<<<<< HEAD
         //pageDetail.LabelCheckBoxAccept = request.PageDetail.AcceptCheckBoxLabel;
         //pageDetail.LabelCheckBoxAcceptFontColor = request.PageDetail.AcceptCheckBoxLabelFontColor;
         //pageDetail.BodyBgcolor = request.PageDetail.BodyBackgroundColor;
@@ -138,6 +139,36 @@ public class UpdateCollectionPointCommandHandler : IRequestHandler<UpdateCollect
         //pageDetail.HeaderLabelThankPage = request.PageDetail.SuccessHeaderLabel;
         //pageDetail.ShortDescriptionThankPage = request.PageDetail.SuccessDescription;
         //pageDetail.ButtonThankpage = request.PageDetail.SuccessButtonLabel;
+=======
+        pageDetail.LabelCheckBoxAccept = request.PageDetail.AcceptCheckBoxText;
+        //pageDetail.LabelCheckBoxAcceptFontColor = request.PageDetail.AcceptCheckBoxLabelFontColor;
+        //pageDetail.BodyBgcolor = request.PageDetail.BodyBackgroundColor;
+        pageDetail.BodyBgimage = request.PageDetail.BackgroundImageId;
+        pageDetail.BodyBottomDescription = request.PageDetail.BodyBottomDescriptionText;
+        //pageDetail.BodyBottomDescriptionFontColor = request.PageDetail.BodyBottomDescriptionFontColor;
+        pageDetail.BodyTopDescription = request.PageDetail.BodyTopDescriptionText;
+        //pageDetail.BodyTopDerscriptionFontColor = request.PageDetail.BodyTopDerscriptionFontColor;
+        //pageDetail.CancelButtonBgcolor = request.PageDetail.CancelButtonBackgroundColor;
+        //pageDetail.CancelButtonFontColor = request.PageDetail.CancelButtonFontColor;
+        pageDetail.LabelActionCancel = request.PageDetail.CancelButtonText;
+        pageDetail.LabelActionOk = request.PageDetail.ConfirmButtonText;
+        //pageDetail.HeaderBgcolor = request.PageDetail.HeaderBackgroundColor;
+        pageDetail.HeaderBgimage = request.PageDetail.HeaderBackgroundImageId;
+        //pageDetail.HeaderFontColor = request.PageDetail.HeaderFontColor;
+        pageDetail.HeaderLabel = request.PageDetail.HeaderText;
+        pageDetail.HeaderLogo = request.PageDetail.LogoImageId;
+        //pageDetail.OkbuttonBgcolor = request.PageDetail.OkButtonBackgroundColor;
+        //pageDetail.OkbuttonFontColor = request.PageDetail.OkButtonFontColor;
+        pageDetail.LabelLinkToPolicyUrl = request.PageDetail.PolicyUrl;
+        pageDetail.LabelLinkToPolicy = request.PageDetail.PolicyUrlText;
+        //pageDetail.LabelPurposeActionAgree = request.PageDetail.PurposeAcceptLabel;
+        //pageDetail.LabelLinkToPolicyFontColor = request.PageDetail.PolicyUrlLabelFontColor;
+        //pageDetail.LabelPurposeActionNotAgree = request.PageDetail.PurposeRejectLabel;
+        pageDetail.RedirectUrl = request.PageDetail.RedirectUrl;
+        pageDetail.HeaderLabelThankPage = request.PageDetail.SuccessHeaderText;
+        pageDetail.ShortDescriptionThankPage = request.PageDetail.SuccessDescriptionText;
+        pageDetail.ButtonThankpage = request.PageDetail.SuccessButtonText;
+>>>>>>> develop
 
         //todo:change affter identity server
 
