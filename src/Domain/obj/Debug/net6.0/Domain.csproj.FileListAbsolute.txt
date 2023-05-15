@@ -36,17 +36,3 @@ D:\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\WW.Domain.dll
 D:\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\refint\WW.Domain.dll
 D:\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\WW.Domain.pdb
 D:\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\ref\WW.Domain.dll
-C:\Users\ทำงาน\Documents\GitHub\wisework-open-api\src\Domain\bin\Debug\net6.0\WW.Domain.deps.json
-C:\Users\ทำงาน\Documents\GitHub\wisework-open-api\src\Domain\bin\Debug\net6.0\WW.Domain.dll
-C:\Users\ทำงาน\Documents\GitHub\wisework-open-api\src\Domain\bin\Debug\net6.0\WW.Domain.pdb
-C:\Users\ทำงาน\Documents\GitHub\wisework-open-api\src\Domain\bin\Debug\net6.0\Wisework.ConsentManagementSystem.Api.dll
-C:\Users\ทำงาน\Documents\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\Domain.csproj.AssemblyReference.cache
-C:\Users\ทำงาน\Documents\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\ทำงาน\Documents\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\Domain.AssemblyInfoInputs.cache
-C:\Users\ทำงาน\Documents\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\Domain.AssemblyInfo.cs
-C:\Users\ทำงาน\Documents\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\Domain.csproj.CoreCompileInputs.cache
-C:\Users\ทำงาน\Documents\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\Domain.csproj.CopyComplete
-C:\Users\ทำงาน\Documents\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\WW.Domain.dll
-C:\Users\ทำงาน\Documents\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\refint\WW.Domain.dll
-C:\Users\ทำงาน\Documents\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\WW.Domain.pdb
-C:\Users\ทำงาน\Documents\GitHub\wisework-open-api\src\Domain\obj\Debug\net6.0\ref\WW.Domain.dll

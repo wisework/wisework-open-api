@@ -19,7 +19,4 @@ public class ConsentWebsite
     public string Description { get; set; } = null!;
     public string Url { get; set; } = null!;
     public string Urlpolicy { get; set; } = null!;
-    public string? Name { get; set; }
-    public string? UrlHomePage { get; set; }
-    public string? UrlPolicyPage { get; set; }
 }

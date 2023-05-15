@@ -28,7 +28,7 @@
 
     <ItemGroup>
       <Reference Include="Wisework.ConsentManagementSystem.Api">
-        <HintPath>..\..\..\..\..\Downloads\Wisework.ConsentManagementSystem.Api.dll</HintPath>
+        <HintPath>C:\Users\tunal\Downloads\DLL\v1.0.12.0\Wisework.ConsentManagementSystem.Api.dll</HintPath>
       </Reference>
     </ItemGroup>
 
