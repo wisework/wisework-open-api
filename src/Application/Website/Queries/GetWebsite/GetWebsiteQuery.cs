@@ -16,8 +16,8 @@ using WW.Domain.Enums;
 namespace WW.Application.Website.Queries.GetWebsite;
 public record GetWebsiteQuery: IRequest<PaginatedList<WebsiteActiveList>>
 {
-    public int PageNumber { get; init; } = 1;
-    public int PageSize { get; init; } = 10;
+    public int Offset { get; init; } = 1;
+    public int Limit { get; init; } = 10;
 }
 public class GetWebsiteQueryHandler : IRequestHandler<GetWebsiteQuery, PaginatedList<WebsiteActiveList>>
 {
@@ -33,6 +33,9 @@ public class GetWebsiteQueryHandler : IRequestHandler<GetWebsiteQuery, Paginated
         MapperConfiguration config = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<ConsentWebsite, WebsiteActiveList>().ForMember(d=>d.WebsiteId, a=>a.MapFrom(s=>s.WebsiteId))
+            .ForMember(d => d.Name, a => a.MapFrom(s => s.Description))
+            .ForMember(d => d.UrlHomePage, a => a.MapFrom(s => s.Url))
+            .ForMember(d => d.UrlPolicyPage, a => a.MapFrom(s => s.Urlpolicy))
             ;
         });
 
@@ -40,7 +43,7 @@ public class GetWebsiteQueryHandler : IRequestHandler<GetWebsiteQuery, Paginated
 
         //todo:edit conpanyid หลังมีการทำ identity server
         PaginatedList<WebsiteActiveList> model =
-            await _context.DbSetConsentWebsite.Where(w => w.CompanyId == 1 && w.Status == Status.Active.ToString()).ProjectTo<WebsiteActiveList>(mapper.ConfigurationProvider).PaginatedListAsync(request.PageNumber, request.PageSize);
+            await _context.DbSetConsentWebsite.Where(w => w.CompanyId == 1 && w.Status == Status.Active.ToString()).ProjectTo<WebsiteActiveList>(mapper.ConfigurationProvider).PaginatedListAsync(request.Offset, request.Limit);
 
         return model;
     }
