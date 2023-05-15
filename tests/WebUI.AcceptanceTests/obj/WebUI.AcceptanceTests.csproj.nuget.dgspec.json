@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "D:\\pdpa-q4\\wisework-open-api\\tests\\WebUI.AcceptanceTests\\WebUI.AcceptanceTests.csproj": {}
+    "D:\\GitHub\\wisework-open-api\\tests\\WebUI.AcceptanceTests\\WebUI.AcceptanceTests.csproj": {}
   },
   "projects": {
-    "D:\\pdpa-q4\\wisework-open-api\\tests\\WebUI.AcceptanceTests\\WebUI.AcceptanceTests.csproj": {
+    "D:\\GitHub\\wisework-open-api\\tests\\WebUI.AcceptanceTests\\WebUI.AcceptanceTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\pdpa-q4\\wisework-open-api\\tests\\WebUI.AcceptanceTests\\WebUI.AcceptanceTests.csproj",
+        "projectUniqueName": "D:\\GitHub\\wisework-open-api\\tests\\WebUI.AcceptanceTests\\WebUI.AcceptanceTests.csproj",
         "projectName": "WW.WebUI.AcceptanceTests",
-        "projectPath": "D:\\pdpa-q4\\wisework-open-api\\tests\\WebUI.AcceptanceTests\\WebUI.AcceptanceTests.csproj",
-        "packagesPath": "C:\\Users\\panis\\.nuget\\packages\\",
-        "outputPath": "D:\\pdpa-q4\\wisework-open-api\\tests\\WebUI.AcceptanceTests\\obj\\",
+        "projectPath": "D:\\GitHub\\wisework-open-api\\tests\\WebUI.AcceptanceTests\\WebUI.AcceptanceTests.csproj",
+        "packagesPath": "C:\\Users\\tunal\\.nuget\\packages\\",
+        "outputPath": "D:\\GitHub\\wisework-open-api\\tests\\WebUI.AcceptanceTests\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\panis\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\tunal\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -73,6 +77,10 @@
               "target": "Package",
               "version": "[3.9.57, )"
             },
+            "Wisework.ConsentManagementSystem.Api": {
+              "target": "Package",
+              "version": "[1.0.13, )"
+            },
             "nunit": {
               "target": "Package",
               "version": "[3.13.2, )"
@@ -94,7 +102,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }

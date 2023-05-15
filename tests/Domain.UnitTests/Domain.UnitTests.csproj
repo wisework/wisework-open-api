@@ -18,6 +18,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="FluentAssertions" Version="6.7.0" />
+        <PackageReference Include="Wisework.ConsentManagementSystem.Api" Version="1.0.13" />
     </ItemGroup>
 
     <ItemGroup>

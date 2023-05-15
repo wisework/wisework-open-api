@@ -17,8 +17,8 @@ namespace WW.Application.CustomField.Queries.GetCustomField;
 
 public record GetCustomFieldQuery : IRequest<PaginatedList<CollectionPointCustomFieldActiveList>>
 {
-    public int PageNumber { get; init; } = 1;
-    public int PageSize { get; init; } = 10;
+    public int offset { get; init; } = 1;
+    public int limit { get; init; } = 10;
 }
 public class GetCustomFieldQueryHandler : IRequestHandler<GetCustomFieldQuery, PaginatedList<CollectionPointCustomFieldActiveList>>
 {
@@ -33,7 +33,10 @@ public class GetCustomFieldQueryHandler : IRequestHandler<GetCustomFieldQuery, P
     {
         MapperConfiguration config = new MapperConfiguration(cfg =>
         {
-            cfg.CreateMap<Consent_CollectionPointCustomField, CollectionPointCustomFieldActiveList>().ForMember(d => d.Id, a => a.MapFrom(s => s.CollectionPointCustomFieldId));
+            cfg.CreateMap<Consent_CollectionPointCustomField, CollectionPointCustomFieldActiveList>()
+            .ForMember(d => d.Id, a => a.MapFrom(s => s.CollectionPointCustomFieldId))
+            .ForMember(d => d.Title, a => a.MapFrom(s => s.Description))
+            .ForMember(d => d.InputType, a => a.MapFrom(s => s.Type));
         });
 
         Mapper mapper = new Mapper(config);
@@ -41,7 +44,7 @@ public class GetCustomFieldQueryHandler : IRequestHandler<GetCustomFieldQuery, P
         //todo:edit conpanyid หลังมีการทำ identity server
         PaginatedList<CollectionPointCustomFieldActiveList> model =
             await _context.DbSetConsentCollectionPointCustomFields.Where(p => p.CompanyId == 1 && p.Status == Status.Active.ToString())
-            .ProjectTo<CollectionPointCustomFieldActiveList>(mapper.ConfigurationProvider).PaginatedListAsync(request.PageNumber, request.PageSize);
+            .ProjectTo<CollectionPointCustomFieldActiveList>(mapper.ConfigurationProvider).PaginatedListAsync(request.offset, request.limit);
 
         return model;
     }
