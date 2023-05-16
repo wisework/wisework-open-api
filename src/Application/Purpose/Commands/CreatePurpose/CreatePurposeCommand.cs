@@ -88,6 +88,7 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
             WarningDescription = entity.WarningDescription,
             Language = entity.Language,
             ExpiredDateTime = entity.ExpiredDateTime,
+
         };
 
         return PurposeInfo;
