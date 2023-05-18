@@ -195,6 +195,10 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
             entity.Property(e => e.Status).HasMaxLength(10);
 
+            entity.Property(e => e.CreateDate).HasPrecision(0);
+
+            entity.Property(e => e.UpdateDate).HasPrecision(0);
+
             entity.Property(e => e.CompanyId).HasColumnName("CompanyID");
 
         });
