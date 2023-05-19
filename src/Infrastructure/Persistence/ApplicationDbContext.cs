@@ -45,6 +45,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
     public DbSet<Consent_Consent> DbSetConsent => Set<Consent_Consent>();
     public DbSet<Consent_ConsentItem> DbSetConsentItem => Set<Consent_ConsentItem>();
+    public DbSet<Consent_ConsentTheme> DbSetConsentTheme => Set<Consent_ConsentTheme>();
     public virtual DbSet<V_Consent_Latest_Consent> DbSetVConsentLatestConsents => Set<V_Consent_Latest_Consent>();
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -158,6 +159,48 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
             entity.Property(e => e.Status).HasMaxLength(10);
 
             entity.Property(e => e.UpdateDate).HasPrecision(0);
+        });
+
+        builder.Entity<Consent_ConsentTheme>(entity =>
+        {
+            entity.HasKey(e => e.ThemeId);
+
+            entity.ToTable("Consent_ConsentTheme");
+
+            entity.Property(e => e.ThemeId).HasColumnName("ThemeId");
+
+            entity.Property(e => e.ThemeTitle).HasMaxLength(100);
+
+            entity.Property(e => e.HeaderTextColor).HasMaxLength(20);
+
+            entity.Property(e => e.HeaderBackgroundColor).HasMaxLength(20);
+
+            entity.Property(e => e.BodyBackgroudColor).HasMaxLength(20);
+
+            entity.Property(e => e.TopDescriptionTextColor).HasMaxLength(20);
+
+            entity.Property(e => e.BottomDescriptionTextColor).HasMaxLength(20);
+
+            entity.Property(e => e.AcceptionButtonColor).HasMaxLength(20);
+
+            entity.Property(e => e.AcceptionConsentTextColor).HasMaxLength(20);
+
+            entity.Property(e => e.CancelButtonColor).HasMaxLength(20);
+
+            entity.Property(e => e.CancelTextButtonColor).HasMaxLength(20);
+
+            entity.Property(e => e.LinkToPolicyTextColor).HasMaxLength(20);
+
+            entity.Property(e => e.PolicyUrlTextColor).HasMaxLength(20);
+
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.CreateDate).HasPrecision(0);
+
+            entity.Property(e => e.UpdateDate).HasPrecision(0);
+
+            entity.Property(e => e.CompanyId).HasColumnName("CompanyID");
+
         });
 
         builder.Entity<Consent_SectionInfo>(entity =>

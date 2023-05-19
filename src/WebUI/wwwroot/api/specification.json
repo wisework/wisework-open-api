@@ -6,6 +6,76 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/api/ConsentPageSetting": {
+      "get": {
+        "tags": [
+          "ConsentPageSetting"
+        ],
+        "operationId": "ConsentPageSetting_GetConsentThemeQuery",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedListOfConsentTheme"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ConsentPageSetting"
+        ],
+        "operationId": "ConsentPageSetting_Create",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateConsentThemeCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsentTheme"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/CustomField": {
       "get": {
         "tags": [
@@ -766,6 +836,135 @@
   },
   "components": {
     "schemas": {
+      "PaginatedListOfConsentTheme": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConsentTheme"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ConsentTheme": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "themeId": {},
+          "themeTitle": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "herderTextColor": {
+            "type": "string"
+          },
+          "headerBackgroundColor": {
+            "type": "string"
+          },
+          "bodyBackgroudColor": {
+            "type": "string"
+          },
+          "topDescriptionTextColor": {
+            "type": "string"
+          },
+          "bottomDescriptionTextColor": {
+            "type": "string"
+          },
+          "acceptionConsentTextColor": {
+            "type": "string"
+          },
+          "linkToPolicyTextColor": {
+            "type": "string"
+          },
+          "acceptionButtonColor": {
+            "type": "string"
+          },
+          "cancelButtonColor": {
+            "type": "string"
+          },
+          "cancelTextButtonColor": {
+            "type": "string"
+          },
+          "policyUrlTextColor": {
+            "type": "string"
+          },
+          "companyId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
+      "CreateConsentThemeCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "themeTitle": {
+            "type": "string"
+          },
+          "headerTextColor": {
+            "type": "string"
+          },
+          "headerBackgroundColor": {
+            "type": "string"
+          },
+          "bodyBackgroudColor": {
+            "type": "string"
+          },
+          "topDescriptionTextColor": {
+            "type": "string"
+          },
+          "bottomDescriptionTextColor": {
+            "type": "string"
+          },
+          "acceptionButtonColor": {
+            "type": "string"
+          },
+          "acceptionConsentTextColor": {
+            "type": "string"
+          },
+          "cancelButtonColor": {
+            "type": "string"
+          },
+          "cancelTextButtonColor": {
+            "type": "string"
+          },
+          "linkToPolicyTextColor": {
+            "type": "string"
+          },
+          "policyUrlTextColor": {
+            "type": "string"
+          }
+        }
+      },
       "PaginatedListOfCollectionPointCustomFieldActiveList": {
         "type": "object",
         "additionalProperties": false,

@@ -22,6 +22,7 @@ public interface IApplicationDbContext
     DbSet<Consent_Consent> DbSetConsent { get; }
     DbSet<V_Consent_Latest_Consent> DbSetVConsentLatestConsents {get; }
     DbSet<Consent_ConsentItem> DbSetConsentItem { get; }
+    DbSet<Consent_ConsentTheme> DbSetConsentTheme { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     Task<int> SubmitConsent(string query
                         /*,int CompanyId
