@@ -17,8 +17,8 @@ namespace WW.Application.Section.Queries.GetSection;
 
 public record GetSectionQuery : IRequest<PaginatedList<SectionActiveList>>
 {
-    public int PageNumber { get; init; } = 1;
-    public int PageSize { get; init; } = 10;
+    public int offset { get; init; } = 1;
+    public int limit { get; init; } = 10;
 }
 public class GetSectionQueryHandler : IRequestHandler<GetSectionQuery, PaginatedList<SectionActiveList>>
 {
@@ -41,7 +41,7 @@ public class GetSectionQueryHandler : IRequestHandler<GetSectionQuery, Paginated
         //todo:edit conpanyid หลังมีการทำ identity server
         PaginatedList<SectionActiveList> model =
             await _context.DbSetConsentSectionInfo.Where(p => p.CompanyId == 1 && p.Status == Status.Active.ToString())
-            .ProjectTo<SectionActiveList>(mapper.ConfigurationProvider).PaginatedListAsync(request.PageNumber, request.PageSize);
+            .ProjectTo<SectionActiveList>(mapper.ConfigurationProvider).PaginatedListAsync(request.offset, request.limit);
 
         return model;
     }
