@@ -15,6 +15,133 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
+export interface IConsentPageSettingClient {
+    getConsentThemeQuery(offset: number | undefined, limit: number | undefined): Observable<PaginatedListOfConsentTheme>;
+    create(command: CreateConsentThemeCommand): Observable<ConsentTheme>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ConsentPageSettingClient implements IConsentPageSettingClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getConsentThemeQuery(offset: number | undefined, limit: number | undefined): Observable<PaginatedListOfConsentTheme> {
+        let url_ = this.baseUrl + "/api/ConsentPageSetting?";
+        if (offset === null)
+            throw new Error("The parameter 'offset' cannot be null.");
+        else if (offset !== undefined)
+            url_ += "offset=" + encodeURIComponent("" + offset) + "&";
+        if (limit === null)
+            throw new Error("The parameter 'limit' cannot be null.");
+        else if (limit !== undefined)
+            url_ += "limit=" + encodeURIComponent("" + limit) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetConsentThemeQuery(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetConsentThemeQuery(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PaginatedListOfConsentTheme>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PaginatedListOfConsentTheme>;
+        }));
+    }
+
+    protected processGetConsentThemeQuery(response: HttpResponseBase): Observable<PaginatedListOfConsentTheme> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginatedListOfConsentTheme.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    create(command: CreateConsentThemeCommand): Observable<ConsentTheme> {
+        let url_ = this.baseUrl + "/api/ConsentPageSetting";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ConsentTheme>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ConsentTheme>;
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<ConsentTheme> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ConsentTheme.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
 export interface ICustomFieldClient {
     getCollectionPointsQuery(offset: number | undefined, limit: number | undefined): Observable<PaginatedListOfCollectionPointCustomFieldActiveList>;
     create(command: CreateCustomFieldCommand): Observable<CollectionPointCustomFieldActiveList>;
@@ -957,6 +1084,258 @@ export class CollectionPointsClient implements ICollectionPointsClient {
         }
         return _observableOf(null as any);
     }
+}
+
+export class PaginatedListOfConsentTheme implements IPaginatedListOfConsentTheme {
+    items?: ConsentTheme[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+
+    constructor(data?: IPaginatedListOfConsentTheme) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(ConsentTheme.fromJS(item));
+            }
+            this.pageNumber = _data["pageNumber"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.hasPreviousPage = _data["hasPreviousPage"];
+            this.hasNextPage = _data["hasNextPage"];
+        }
+    }
+
+    static fromJS(data: any): PaginatedListOfConsentTheme {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedListOfConsentTheme();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pageNumber"] = this.pageNumber;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
+        return data;
+    }
+}
+
+export interface IPaginatedListOfConsentTheme {
+    items?: ConsentTheme[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+}
+
+export class ConsentTheme implements IConsentTheme {
+    themeId?: any;
+    themeTitle?: string;
+    status?: string;
+    herderTextColor?: string;
+    headerBackgroundColor?: string;
+    bodyBackgroudColor?: string;
+    topDescriptionTextColor?: string;
+    bottomDescriptionTextColor?: string;
+    acceptionConsentTextColor?: string;
+    linkToPolicyTextColor?: string;
+    acceptionButtonColor?: string;
+    cancelButtonColor?: string;
+    cancelTextButtonColor?: string;
+    policyUrlTextColor?: string;
+    companyId?: number;
+    additionalProperties?: { [key: string]: any; } | undefined;
+
+    constructor(data?: IConsentTheme) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.themeId = _data["themeId"];
+            this.themeTitle = _data["themeTitle"];
+            this.status = _data["status"];
+            this.herderTextColor = _data["herderTextColor"];
+            this.headerBackgroundColor = _data["headerBackgroundColor"];
+            this.bodyBackgroudColor = _data["bodyBackgroudColor"];
+            this.topDescriptionTextColor = _data["topDescriptionTextColor"];
+            this.bottomDescriptionTextColor = _data["bottomDescriptionTextColor"];
+            this.acceptionConsentTextColor = _data["acceptionConsentTextColor"];
+            this.linkToPolicyTextColor = _data["linkToPolicyTextColor"];
+            this.acceptionButtonColor = _data["acceptionButtonColor"];
+            this.cancelButtonColor = _data["cancelButtonColor"];
+            this.cancelTextButtonColor = _data["cancelTextButtonColor"];
+            this.policyUrlTextColor = _data["policyUrlTextColor"];
+            this.companyId = _data["companyId"];
+            if (_data["additionalProperties"]) {
+                this.additionalProperties = {} as any;
+                for (let key in _data["additionalProperties"]) {
+                    if (_data["additionalProperties"].hasOwnProperty(key))
+                        (<any>this.additionalProperties)![key] = _data["additionalProperties"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): ConsentTheme {
+        data = typeof data === 'object' ? data : {};
+        let result = new ConsentTheme();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["themeId"] = this.themeId;
+        data["themeTitle"] = this.themeTitle;
+        data["status"] = this.status;
+        data["herderTextColor"] = this.herderTextColor;
+        data["headerBackgroundColor"] = this.headerBackgroundColor;
+        data["bodyBackgroudColor"] = this.bodyBackgroudColor;
+        data["topDescriptionTextColor"] = this.topDescriptionTextColor;
+        data["bottomDescriptionTextColor"] = this.bottomDescriptionTextColor;
+        data["acceptionConsentTextColor"] = this.acceptionConsentTextColor;
+        data["linkToPolicyTextColor"] = this.linkToPolicyTextColor;
+        data["acceptionButtonColor"] = this.acceptionButtonColor;
+        data["cancelButtonColor"] = this.cancelButtonColor;
+        data["cancelTextButtonColor"] = this.cancelTextButtonColor;
+        data["policyUrlTextColor"] = this.policyUrlTextColor;
+        data["companyId"] = this.companyId;
+        if (this.additionalProperties) {
+            data["additionalProperties"] = {};
+            for (let key in this.additionalProperties) {
+                if (this.additionalProperties.hasOwnProperty(key))
+                    (<any>data["additionalProperties"])[key] = this.additionalProperties[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface IConsentTheme {
+    themeId?: any;
+    themeTitle?: string;
+    status?: string;
+    herderTextColor?: string;
+    headerBackgroundColor?: string;
+    bodyBackgroudColor?: string;
+    topDescriptionTextColor?: string;
+    bottomDescriptionTextColor?: string;
+    acceptionConsentTextColor?: string;
+    linkToPolicyTextColor?: string;
+    acceptionButtonColor?: string;
+    cancelButtonColor?: string;
+    cancelTextButtonColor?: string;
+    policyUrlTextColor?: string;
+    companyId?: number;
+    additionalProperties?: { [key: string]: any; } | undefined;
+}
+
+export class CreateConsentThemeCommand implements ICreateConsentThemeCommand {
+    themeTitle?: string;
+    headerTextColor?: string;
+    headerBackgroundColor?: string;
+    bodyBackgroudColor?: string;
+    topDescriptionTextColor?: string;
+    bottomDescriptionTextColor?: string;
+    acceptionButtonColor?: string;
+    acceptionConsentTextColor?: string;
+    cancelButtonColor?: string;
+    cancelTextButtonColor?: string;
+    linkToPolicyTextColor?: string;
+    policyUrlTextColor?: string;
+
+    constructor(data?: ICreateConsentThemeCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.themeTitle = _data["themeTitle"];
+            this.headerTextColor = _data["headerTextColor"];
+            this.headerBackgroundColor = _data["headerBackgroundColor"];
+            this.bodyBackgroudColor = _data["bodyBackgroudColor"];
+            this.topDescriptionTextColor = _data["topDescriptionTextColor"];
+            this.bottomDescriptionTextColor = _data["bottomDescriptionTextColor"];
+            this.acceptionButtonColor = _data["acceptionButtonColor"];
+            this.acceptionConsentTextColor = _data["acceptionConsentTextColor"];
+            this.cancelButtonColor = _data["cancelButtonColor"];
+            this.cancelTextButtonColor = _data["cancelTextButtonColor"];
+            this.linkToPolicyTextColor = _data["linkToPolicyTextColor"];
+            this.policyUrlTextColor = _data["policyUrlTextColor"];
+        }
+    }
+
+    static fromJS(data: any): CreateConsentThemeCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateConsentThemeCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["themeTitle"] = this.themeTitle;
+        data["headerTextColor"] = this.headerTextColor;
+        data["headerBackgroundColor"] = this.headerBackgroundColor;
+        data["bodyBackgroudColor"] = this.bodyBackgroudColor;
+        data["topDescriptionTextColor"] = this.topDescriptionTextColor;
+        data["bottomDescriptionTextColor"] = this.bottomDescriptionTextColor;
+        data["acceptionButtonColor"] = this.acceptionButtonColor;
+        data["acceptionConsentTextColor"] = this.acceptionConsentTextColor;
+        data["cancelButtonColor"] = this.cancelButtonColor;
+        data["cancelTextButtonColor"] = this.cancelTextButtonColor;
+        data["linkToPolicyTextColor"] = this.linkToPolicyTextColor;
+        data["policyUrlTextColor"] = this.policyUrlTextColor;
+        return data;
+    }
+}
+
+export interface ICreateConsentThemeCommand {
+    themeTitle?: string;
+    headerTextColor?: string;
+    headerBackgroundColor?: string;
+    bodyBackgroudColor?: string;
+    topDescriptionTextColor?: string;
+    bottomDescriptionTextColor?: string;
+    acceptionButtonColor?: string;
+    acceptionConsentTextColor?: string;
+    cancelButtonColor?: string;
+    cancelTextButtonColor?: string;
+    linkToPolicyTextColor?: string;
+    policyUrlTextColor?: string;
 }
 
 export class PaginatedListOfCollectionPointCustomFieldActiveList implements IPaginatedListOfCollectionPointCustomFieldActiveList {
