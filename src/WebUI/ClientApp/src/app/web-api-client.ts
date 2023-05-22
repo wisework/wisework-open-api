@@ -778,6 +778,75 @@ export class SectionClient implements ISectionClient {
     }
 }
 
+export interface IUserClient {
+    get(id: number): Observable<UserInfo>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class UserClient implements IUserClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    get(id: number): Observable<UserInfo> {
+        let url_ = this.baseUrl + "/api/User/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<UserInfo>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<UserInfo>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<UserInfo> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserInfo.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
 export interface IWebsiteClient {
     getCollectionPointsQuery(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfWebsiteActiveList>;
 }
@@ -2595,6 +2664,110 @@ export interface ISectionActiveList {
     code?: string;
     description?: string;
     status?: string;
+    additionalProperties?: { [key: string]: any; } | undefined;
+}
+
+export class UserInfo implements IUserInfo {
+    address?: string;
+    birthDate?: string;
+    citizenId?: string;
+    companyId?: number;
+    email?: string;
+    fullName?: string;
+    guid?: string;
+    gender?: string;
+    positionDescription?: string;
+    profileImage?: string;
+    tel?: string;
+    userID?: number;
+    username?: string;
+    version?: number;
+    additionalProperties?: { [key: string]: any; } | undefined;
+
+    constructor(data?: IUserInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.address = _data["address"];
+            this.birthDate = _data["birthDate"];
+            this.citizenId = _data["citizenId"];
+            this.companyId = _data["companyId"];
+            this.email = _data["email"];
+            this.fullName = _data["fullName"];
+            this.guid = _data["guid"];
+            this.gender = _data["gender"];
+            this.positionDescription = _data["positionDescription"];
+            this.profileImage = _data["profileImage"];
+            this.tel = _data["tel"];
+            this.userID = _data["userID"];
+            this.username = _data["username"];
+            this.version = _data["version"];
+            if (_data["additionalProperties"]) {
+                this.additionalProperties = {} as any;
+                for (let key in _data["additionalProperties"]) {
+                    if (_data["additionalProperties"].hasOwnProperty(key))
+                        (<any>this.additionalProperties)![key] = _data["additionalProperties"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): UserInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["address"] = this.address;
+        data["birthDate"] = this.birthDate;
+        data["citizenId"] = this.citizenId;
+        data["companyId"] = this.companyId;
+        data["email"] = this.email;
+        data["fullName"] = this.fullName;
+        data["guid"] = this.guid;
+        data["gender"] = this.gender;
+        data["positionDescription"] = this.positionDescription;
+        data["profileImage"] = this.profileImage;
+        data["tel"] = this.tel;
+        data["userID"] = this.userID;
+        data["username"] = this.username;
+        data["version"] = this.version;
+        if (this.additionalProperties) {
+            data["additionalProperties"] = {};
+            for (let key in this.additionalProperties) {
+                if (this.additionalProperties.hasOwnProperty(key))
+                    (<any>data["additionalProperties"])[key] = this.additionalProperties[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface IUserInfo {
+    address?: string;
+    birthDate?: string;
+    citizenId?: string;
+    companyId?: number;
+    email?: string;
+    fullName?: string;
+    guid?: string;
+    gender?: string;
+    positionDescription?: string;
+    profileImage?: string;
+    tel?: string;
+    userID?: number;
+    username?: string;
+    version?: number;
     additionalProperties?: { [key: string]: any; } | undefined;
 }
 

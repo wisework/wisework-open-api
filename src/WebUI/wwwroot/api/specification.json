@@ -543,6 +543,38 @@
         }
       }
     },
+    "/api/User/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_Get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Website": {
       "get": {
         "tags": [
@@ -1484,6 +1516,65 @@
           },
           "status": {
             "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
+      "UserInfo": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "address": {
+            "type": "string"
+          },
+          "birthDate": {
+            "type": "string"
+          },
+          "citizenId": {
+            "type": "string"
+          },
+          "companyId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "email": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "guid": {
+            "type": "string",
+            "format": "guid"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "positionDescription": {
+            "type": "string"
+          },
+          "profileImage": {
+            "type": "string"
+          },
+          "tel": {
+            "type": "string"
+          },
+          "userID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "username": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
           },
           "additionalProperties": {
             "type": "object",
