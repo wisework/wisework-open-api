@@ -6,6 +6,38 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/api/Company/{id}": {
+      "get": {
+        "tags": [
+          "Company"
+        ],
+        "operationId": "Company_Get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Company"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/ConsentPageSetting": {
       "get": {
         "tags": [
@@ -836,6 +868,40 @@
   },
   "components": {
     "schemas": {
+      "Company": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "companyId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "companyName": {
+            "type": "string"
+          },
+          "logoImage": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "createBy": {
+            "type": "string"
+          },
+          "createDate": {},
+          "updateBy": {
+            "type": "string"
+          },
+          "updateDate": {},
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
       "PaginatedListOfConsentTheme": {
         "type": "object",
         "additionalProperties": false,
