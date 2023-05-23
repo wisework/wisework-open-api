@@ -76,6 +76,38 @@
         }
       }
     },
+    "/api/ConsentPageSetting/image/{count}": {
+      "get": {
+        "tags": [
+          "ConsentPageSetting"
+        ],
+        "operationId": "ConsentPageSetting_Get",
+        "parameters": [
+          {
+            "name": "count",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Image"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/CustomField": {
       "get": {
         "tags": [
@@ -962,6 +994,22 @@
           },
           "policyUrlTextColor": {
             "type": "string"
+          }
+        }
+      },
+      "Image": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "fullPath": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
           }
         }
       },

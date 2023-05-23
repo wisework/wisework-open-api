@@ -26,8 +26,11 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Reference Include="IXBI.Net.Helper">
+        <HintPath>..\..\dll\IXBI.Net.Helper.dll</HintPath>
+      </Reference>
       <Reference Include="Wisework.ConsentManagementSystem.Api">
-        <HintPath>..\..\..\..\..\..\Downloads\Wisework.ConsentManagementSystem.Api.dll</HintPath>
+        <HintPath>..\..\dll\v1.0.17.0\Wisework.ConsentManagementSystem.Api.dll</HintPath>
       </Reference>
     </ItemGroup>
 

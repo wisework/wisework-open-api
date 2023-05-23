@@ -18,6 +18,7 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 export interface IConsentPageSettingClient {
     getConsentThemeQuery(offset: number | undefined, limit: number | undefined): Observable<PaginatedListOfConsentTheme>;
     create(command: CreateConsentThemeCommand): Observable<ConsentTheme>;
+    get(count: number): Observable<Image>;
 }
 
 @Injectable({
@@ -131,6 +132,57 @@ export class ConsentPageSettingClient implements IConsentPageSettingClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = ConsentTheme.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    get(count: number): Observable<Image> {
+        let url_ = this.baseUrl + "/api/ConsentPageSetting/image/{count}";
+        if (count === undefined || count === null)
+            throw new Error("The parameter 'count' must be defined.");
+        url_ = url_.replace("{count}", encodeURIComponent("" + count));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Image>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Image>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<Image> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Image.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1497,6 +1549,58 @@ export interface ICreateConsentThemeCommand {
     cancelTextButtonColor?: string;
     linkToPolicyTextColor?: string;
     policyUrlTextColor?: string;
+}
+
+export class Image implements IImage {
+    fullPath?: string;
+    additionalProperties?: { [key: string]: any; } | undefined;
+
+    constructor(data?: IImage) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.fullPath = _data["fullPath"];
+            if (_data["additionalProperties"]) {
+                this.additionalProperties = {} as any;
+                for (let key in _data["additionalProperties"]) {
+                    if (_data["additionalProperties"].hasOwnProperty(key))
+                        (<any>this.additionalProperties)![key] = _data["additionalProperties"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): Image {
+        data = typeof data === 'object' ? data : {};
+        let result = new Image();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["fullPath"] = this.fullPath;
+        if (this.additionalProperties) {
+            data["additionalProperties"] = {};
+            for (let key in this.additionalProperties) {
+                if (this.additionalProperties.hasOwnProperty(key))
+                    (<any>data["additionalProperties"])[key] = this.additionalProperties[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface IImage {
+    fullPath?: string;
+    additionalProperties?: { [key: string]: any; } | undefined;
 }
 
 export class PaginatedListOfCollectionPointCustomFieldActiveList implements IPaginatedListOfCollectionPointCustomFieldActiveList {
