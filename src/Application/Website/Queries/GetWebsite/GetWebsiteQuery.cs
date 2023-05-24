@@ -27,6 +27,8 @@ public class GetWebsiteQueryHandler : IRequestHandler<GetWebsiteQuery, Paginated
     }
     public async Task<PaginatedList<WebsiteActiveList>> Handle(GetWebsiteQuery request, CancellationToken cancellationToken)
     {
+        // Example of url "https://isosuitestorage.blob.core.windows.net/isosuite/9303DBFB-5FFA-4B3E-A8BD-2C7054096D43.gif"
+        string url = _uploadService.GetStorageBlobUrl("9303DBFB-5FFA-4B3E-A8BD-2C7054096D43.gif", "");
         MapperConfiguration config = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<ConsentWebsite, WebsiteActiveList>().ForMember(d => d.WebsiteId, a => a.MapFrom(s => s.WebsiteId))
