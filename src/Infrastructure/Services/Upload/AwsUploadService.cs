@@ -1,11 +1,9 @@
-﻿using System;
-using Amazon.S3;
+﻿using Amazon.S3;
 using Amazon.S3.Model;
-using WW.Infrastructure.Services.Upload.Infrastructures;
-using WW.Infrastructure.Services.Upload.Constants;
 using Microsoft.Extensions.Configuration;
-
-namespace WW.Infrastructure.Services.Upload;
+using WW.Infrastructure.Services.Upload.Constants;
+using WW.Infrastructure.Services.Upload.Infrastructures;
+namespace WW.Application.Common.Interfaces;
 public class AwsUploadService : IUploadService
 {
 

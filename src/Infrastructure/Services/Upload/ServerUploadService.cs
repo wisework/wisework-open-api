@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
-using System.Web;
-using IXBI.Net.Helper;
+﻿using IXBI.Net.Helper;
 using WW.Infrastructure.Services.Upload.Constants;
 using WW.Infrastructure.Services.Upload.Models;
 
-namespace WW.Infrastructure.Services.Upload;
+namespace WW.Application.Common.Interfaces;
 public class ServerUploadService : IUploadService
 {
 

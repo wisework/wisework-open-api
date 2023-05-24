@@ -1,10 +1,9 @@
-﻿using System;
-using IXBI.Net.Helper;
+﻿using IXBI.Net.Helper;
 using Microsoft.Extensions.Configuration;
 using WW.Infrastructure.Services.Upload.Constants;
 using WW.Infrastructure.Services.Upload.Infrastructures;
 
-namespace WW.Infrastructure.Services.Upload;
+namespace WW.Application.Common.Interfaces;
 public class AzureUploadService : IUploadService
 {
     public void DeleteStorageBlob(string fileName)

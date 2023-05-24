@@ -1,8 +1,7 @@
-﻿using System;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using WW.Infrastructure.Services.Upload.Constants;
 
-namespace WW.Infrastructure.Services.Upload;
+namespace WW.Application.Common.Interfaces;
 public static class UploadFactory
 {
     private static IUploadService _uploadService;
