@@ -1,4 +1,4 @@
-﻿using WW.Infrastructure.Persistence;
+﻿using WW.Infrastructure.Services.Upload.Infrastructures;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebUIServices();
-
+ConfigurationFactory.Create(builder.Configuration);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -18,10 +18,10 @@ if (app.Environment.IsDevelopment())
     // Initialise and seed database
     //todo: ต่อไปถ้าเรามี ค่าเริ่มต้นให้ กับ db เวลาไปใช้กับลูกค้ารายใหม่ก็มา seed database ได้
     using (var scope = app.Services.CreateScope())
-    {  
+    {
         //var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
         //await initialiser.InitialiseAsync();
-       // await initialiser.SeedAsync();
+        // await initialiser.SeedAsync();
     }
 }
 else
