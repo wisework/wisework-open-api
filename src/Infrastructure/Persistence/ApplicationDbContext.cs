@@ -454,7 +454,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
             entity.Property(e => e.Fax).HasMaxLength(100);
 
-            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.Name).HasMaxLength(100).HasColumnName("Name");
 
             entity.Property(e => e.Phone).HasMaxLength(100);
 
@@ -583,7 +583,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
             entity.Property(e => e.AgeRange).HasMaxLength(20);
 
-            entity.Property(e => e.CardNumber).HasMaxLength(13);
+            entity.Property(e => e.IdCardNumber).HasMaxLength(13).HasColumnName("CardNumber");
 
             entity.Property(e => e.CollectionPointId).HasColumnName("CollectionPointID");
 
@@ -593,31 +593,33 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
             entity.Property(e => e.ConsentSignature).HasColumnType("ntext");
 
-            entity.Property(e => e.CreateDate).HasPrecision(0);
+            entity.Property(e => e.CreateDate).HasPrecision(0).HasColumnName("CreateDate");
 
-            entity.Property(e => e.Email).HasMaxLength(100);
+            entity.Property(e => e.CreateBy).HasColumnName("Createby");
 
-            entity.Property(e => e.EventCode).HasMaxLength(1000);
+            entity.Property(e => e.Email).HasMaxLength(100).HasColumnName("Email");
 
-            entity.Property(e => e.FromBrowser).HasMaxLength(1000);
+            entity.Property(e => e.EventCode).HasMaxLength(1000).HasColumnName("EventCode");
 
-            entity.Property(e => e.FromWebsite).HasMaxLength(1000);
+            entity.Property(e => e.FromBrowser).HasMaxLength(1000).HasColumnName("FromBrowser");
+
+            entity.Property(e => e.FromWebsite).HasMaxLength(1000).HasColumnName("FromWebsite");
 
             entity.Property(e => e.HasNotificationRenew).HasDefaultValueSql("((0))");
 
-            entity.Property(e => e.NameSurname).HasMaxLength(1000);
+            entity.Property(e => e.FullName).HasMaxLength(1000).HasColumnName("NameSurname");
 
-            entity.Property(e => e.Remark).HasMaxLength(1000);
+            entity.Property(e => e.Remark).HasMaxLength(1000).HasColumnName("Remark");
 
-            entity.Property(e => e.Status).HasMaxLength(10);
+            entity.Property(e => e.Status).HasMaxLength(10).HasColumnName("Status");
 
-            entity.Property(e => e.Tel).HasMaxLength(100);
+            entity.Property(e => e.PhoneNumber).HasMaxLength(100).HasColumnName("Tel");
 
             entity.Property(e => e.Uid).HasColumnName("UID");
 
-            entity.Property(e => e.UpdateDate).HasPrecision(0);
+            entity.Property(e => e.UpdateDate).HasPrecision(0).HasColumnName("UpdateDate");
 
-            entity.Property(e => e.VerifyType).HasMaxLength(100);
+            entity.Property(e => e.VerifyType).HasMaxLength(100).HasColumnName("VerifyType");
 
             entity.Property(e => e.WebsiteId).HasColumnName("WebsiteID");
         });
