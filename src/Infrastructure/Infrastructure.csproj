@@ -9,12 +9,19 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Services\DLL\IXBI.Net.Access.dll" />
+      <None Remove="Services\DLL\IXBI.Net.Helper.dll" />
+      <None Remove="Services\DLL\IXBI.Net.Security.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="CsvHelper" Version="15.0.10" />
         <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="6.0.5" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.5" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.5" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.5" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.5" />
+        <PackageReference Include="System.Runtime.Caching" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -23,9 +30,19 @@
 
     <ItemGroup>
       <Folder Include="Persistence\Migrations\" />
+      <Folder Include="Services\DLL\" />
     </ItemGroup>
 
     <ItemGroup>
+      <Reference Include="IXBI.Net.Access">
+        <HintPath>Services\DLL\IXBI.Net.Access.dll</HintPath>
+      </Reference>
+      <Reference Include="IXBI.Net.Helper">
+        <HintPath>Services\DLL\IXBI.Net.Helper.dll</HintPath>
+      </Reference>
+      <Reference Include="IXBI.Net.Security">
+        <HintPath>Services\DLL\IXBI.Net.Security.dll</HintPath>
+      </Reference>
       <Reference Include="Wisework.ConsentManagementSystem.Api">
         <HintPath>..\..\..\..\..\..\Downloads\Wisework.ConsentManagementSystem.Api.dll</HintPath>
       </Reference>
