@@ -15,7 +15,6 @@ public interface IApplicationDbContext
     DbSet<Consent_CollectionPointItem> DbSetConsentCollectionPointItem { get; }
     DbSet<Consent_CollectionPointCustomField> DbSetConsentCollectionPointCustomFields { get; }
     DbSet<Consent_CollectionPointCustomFieldConfig> DbSetConsent_CollectionPointCustomFieldConfig { get; }
-
     DbSet<Companies> DbSetCompanies { get; }
     DbSet<ConsentWebsite> DbSetConsentWebsite { get; } 
     DbSet<User> DbSetUser { get; }
@@ -23,6 +22,8 @@ public interface IApplicationDbContext
     DbSet<V_Consent_Latest_Consent> DbSetVConsentLatestConsents {get; }
     DbSet<Consent_ConsentItem> DbSetConsentItem { get; }
     DbSet<Consent_ConsentTheme> DbSetConsentTheme { get; }
+    DbSet<LanguageDisplay> DbSetLanguage { get; }
+    DbSet<LocalStringResourceDisplay> DbSetLocalStringResource { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     Task<int> SubmitConsent(string query
                         /*,int CompanyId

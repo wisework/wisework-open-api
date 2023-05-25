@@ -463,6 +463,38 @@
         }
       }
     },
+    "/api/Multilanguage/{languageID}": {
+      "get": {
+        "tags": [
+          "Multilanguage"
+        ],
+        "operationId": "Multilanguage_Get",
+        "parameters": [
+          {
+            "name": "languageID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LanguageCulture"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Purpose": {
       "get": {
         "tags": [
@@ -1451,6 +1483,22 @@
           },
           "collectionPointGuid": {
             "type": "string"
+          }
+        }
+      },
+      "LanguageCulture": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "languageCulture1": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
           }
         }
       },

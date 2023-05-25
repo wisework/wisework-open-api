@@ -630,6 +630,75 @@ export class GeneralConsentClient implements IGeneralConsentClient {
     }
 }
 
+export interface IMultilanguageClient {
+    get(languageID: number): Observable<LanguageCulture>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class MultilanguageClient implements IMultilanguageClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    get(languageID: number): Observable<LanguageCulture> {
+        let url_ = this.baseUrl + "/api/Multilanguage/{languageID}";
+        if (languageID === undefined || languageID === null)
+            throw new Error("The parameter 'languageID' must be defined.");
+        url_ = url_.replace("{languageID}", encodeURIComponent("" + languageID));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<LanguageCulture>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<LanguageCulture>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<LanguageCulture> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = LanguageCulture.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
 export interface IPurposeClient {
     getCollectionPointsQuery(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfPurposeActiveList>;
 }
@@ -2465,6 +2534,58 @@ export interface IGeneralConsentInfoRequestQuery {
     email?: string;
     phoneNumber?: string;
     collectionPointGuid?: string;
+}
+
+export class LanguageCulture implements ILanguageCulture {
+    languageCulture1?: string;
+    additionalProperties?: { [key: string]: any; } | undefined;
+
+    constructor(data?: ILanguageCulture) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.languageCulture1 = _data["languageCulture1"];
+            if (_data["additionalProperties"]) {
+                this.additionalProperties = {} as any;
+                for (let key in _data["additionalProperties"]) {
+                    if (_data["additionalProperties"].hasOwnProperty(key))
+                        (<any>this.additionalProperties)![key] = _data["additionalProperties"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): LanguageCulture {
+        data = typeof data === 'object' ? data : {};
+        let result = new LanguageCulture();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["languageCulture1"] = this.languageCulture1;
+        if (this.additionalProperties) {
+            data["additionalProperties"] = {};
+            for (let key in this.additionalProperties) {
+                if (this.additionalProperties.hasOwnProperty(key))
+                    (<any>data["additionalProperties"])[key] = this.additionalProperties[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface ILanguageCulture {
+    languageCulture1?: string;
+    additionalProperties?: { [key: string]: any; } | undefined;
 }
 
 export class PaginatedListOfPurposeActiveList implements IPaginatedListOfPurposeActiveList {

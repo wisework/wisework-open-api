@@ -48,6 +48,10 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     public DbSet<Consent_ConsentTheme> DbSetConsentTheme => Set<Consent_ConsentTheme>();
     public virtual DbSet<V_Consent_Latest_Consent> DbSetVConsentLatestConsents => Set<V_Consent_Latest_Consent>();
 
+    public DbSet<LanguageDisplay> DbSetLanguage => Set<LanguageDisplay>();
+
+    public DbSet<LocalStringResourceDisplay> DbSetLocalStringResource => Set<LocalStringResourceDisplay>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -620,6 +624,46 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
             entity.Property(e => e.VerifyType).HasMaxLength(100);
 
             entity.Property(e => e.WebsiteId).HasColumnName("WebsiteID");
+        });
+
+        builder.Entity<LanguageDisplay>(entity =>
+        {
+            entity.HasKey(e => e.LanguageID)
+                .HasName("PK__Language___F3A82BFAE1699171");
+
+            entity.ToTable("Language");
+
+            entity.Property(e => e.LanguageID).HasColumnName("LanguageID");
+
+            entity.Property(e => e.CompanyID).HasColumnName("CompanyID");
+
+            entity.Property(e => e.LanguageCulture).HasColumnName("LanguageCulture");
+
+            entity.Property(e => e.Name).HasMaxLength(1000);
+
+            entity.Property(e => e.Code).HasMaxLength(20);
+          
+            entity.Property(e => e.CreateDate).HasPrecision(0);
+           
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.UpdateDate).HasPrecision(0);
+        });
+
+        builder.Entity<LocalStringResourceDisplay>(entity =>
+        {
+            entity.HasKey(e => e.LocalStringResourceID)
+                .HasName("PK__LocalStringResource___F3A82BFAE1699171");
+
+            entity.ToTable("LocalStringResource");
+
+            entity.Property(e => e.LanguageCulture).HasColumnName("LanguageCulture");
+
+            entity.Property(e => e.LocalStringResourceID).HasColumnName("LocalStringResourceID");
+
+            entity.Property(e => e.ResourceKey).HasColumnName("ResourceKey");
+
+            entity.Property(e => e.ResourceValue).HasColumnName("ResourceValue");
         });
 
         /*modelBuilder.Entity<ConsentConsentCookie>(entity =>
