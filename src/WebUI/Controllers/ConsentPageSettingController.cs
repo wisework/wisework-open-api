@@ -5,6 +5,7 @@ using WW.Application.ConsentPageSetting.Commands.CreateConsentTheme;
 using WW.Application.ConsentPageSetting.Commands.UpdateConsentThemeCommand;
 using WW.Application.ConsentPageSetting.Queries.GetConsentTheme;
 using WW.Application.ConsentPageSetting.Queries.GetImage;
+using WW.Application.ConsentPageSetting.Queries.GetLogo;
 using WW.Application.CustomField.Queries.GetCustomField;
 using WW.Domain.Entities;
 using WW.OpenAPI.Controllers;
@@ -34,6 +35,12 @@ public class ConsentPageSettingController : ApiControllerBase
         }
 
         return await Mediator.Send(command);
+    }
+
+    [HttpGet("logo/{count}")]
+    public async Task<ActionResult<List<Image>>> GetLogoQuery(int count)
+    {
+        return await Mediator.Send(new GetLogoQuery(count));
     }
 
     [HttpGet("image/{count}")]
