@@ -2,6 +2,7 @@
 using Wisework.ConsentManagementSystem.Api;
 using WW.Application.Common.Models;
 using WW.Application.ConsentPageSetting.Commands.CreateConsentTheme;
+using WW.Application.ConsentPageSetting.Commands.UpdateConsentThemeCommand;
 using WW.Application.ConsentPageSetting.Queries.GetConsentTheme;
 using WW.Application.ConsentPageSetting.Queries.GetImage;
 using WW.Application.CustomField.Queries.GetCustomField;
@@ -21,6 +22,17 @@ public class ConsentPageSettingController : ApiControllerBase
     [HttpPost]
     public async Task<ActionResult<ConsentTheme>> Create(CreateConsentThemeCommand command)
     {
+        return await Mediator.Send(command);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<ConsentTheme>> Update(int id, UpdateConsentThemeCommand command)
+    {
+        if (id != command.ThemeId)
+        {
+            return BadRequest();
+        }
+
         return await Mediator.Send(command);
     }
 
