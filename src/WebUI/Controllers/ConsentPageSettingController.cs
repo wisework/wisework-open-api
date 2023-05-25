@@ -25,7 +25,7 @@ public class ConsentPageSettingController : ApiControllerBase
     }
 
     [HttpGet("image/{count}")]
-    public async Task<Image> Get(int count)
+    public async Task<ActionResult<List<Image>>> GetImageQuery(int count)
     {
         return await Mediator.Send(new GetImageQuery(count));
     }

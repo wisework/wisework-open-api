@@ -46,6 +46,9 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     public DbSet<Consent_Consent> DbSetConsent => Set<Consent_Consent>();
     public DbSet<Consent_ConsentItem> DbSetConsentItem => Set<Consent_ConsentItem>();
     public DbSet<Consent_ConsentTheme> DbSetConsentTheme => Set<Consent_ConsentTheme>();
+    public DbSet<Domain.Entities.File> DbSetFile => Set<Domain.Entities.File>();
+    public DbSet<FileCategory> DbSetFileCategory => Set<FileCategory>();
+    public DbSet<FileType> DbSetFileType => Set<FileType>();
     public virtual DbSet<V_Consent_Latest_Consent> DbSetVConsentLatestConsents => Set<V_Consent_Latest_Consent>();
 
     protected override void OnModelCreating(ModelBuilder builder)

@@ -31,7 +31,7 @@ public class CreateConsentThemeCommandHandler : IRequestHandler<CreateConsentThe
 {
     private readonly IApplicationDbContext _context;
 
-    public CreateConsentThemeCommandHandler(IApplicationDbContext context, iUplad contetx)
+    public CreateConsentThemeCommandHandler(IApplicationDbContext context)
     {
         _context = context;
     }
