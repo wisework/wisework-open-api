@@ -631,7 +631,7 @@ export class GeneralConsentClient implements IGeneralConsentClient {
 }
 
 export interface IMultilanguageClient {
-    get(languageID: number): Observable<LanguageCulture>;
+    get(languageCulture: string | null): Observable<{ [key: string]: { [key: string]: string; }; }>;
 }
 
 @Injectable({
@@ -647,11 +647,11 @@ export class MultilanguageClient implements IMultilanguageClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    get(languageID: number): Observable<LanguageCulture> {
-        let url_ = this.baseUrl + "/api/Multilanguage/{languageID}";
-        if (languageID === undefined || languageID === null)
-            throw new Error("The parameter 'languageID' must be defined.");
-        url_ = url_.replace("{languageID}", encodeURIComponent("" + languageID));
+    get(languageCulture: string | null): Observable<{ [key: string]: { [key: string]: string; }; }> {
+        let url_ = this.baseUrl + "/api/Multilanguage/{languageCulture}";
+        if (languageCulture === undefined || languageCulture === null)
+            throw new Error("The parameter 'languageCulture' must be defined.");
+        url_ = url_.replace("{languageCulture}", encodeURIComponent("" + languageCulture));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -669,14 +669,14 @@ export class MultilanguageClient implements IMultilanguageClient {
                 try {
                     return this.processGet(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<LanguageCulture>;
+                    return _observableThrow(e) as any as Observable<{ [key: string]: { [key: string]: string; }; }>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<LanguageCulture>;
+                return _observableThrow(response_) as any as Observable<{ [key: string]: { [key: string]: string; }; }>;
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<LanguageCulture> {
+    protected processGet(response: HttpResponseBase): Observable<{ [key: string]: { [key: string]: string; }; }> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -687,7 +687,16 @@ export class MultilanguageClient implements IMultilanguageClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = LanguageCulture.fromJS(resultData200);
+            if (resultData200) {
+                result200 = {} as any;
+                for (let key in resultData200) {
+                    if (resultData200.hasOwnProperty(key))
+                        (<any>result200)![key] = resultData200[key] !== undefined ? resultData200[key] : {};
+                }
+            }
+            else {
+                result200 = <any>null;
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2534,58 +2543,6 @@ export interface IGeneralConsentInfoRequestQuery {
     email?: string;
     phoneNumber?: string;
     collectionPointGuid?: string;
-}
-
-export class LanguageCulture implements ILanguageCulture {
-    languageCulture1?: string;
-    additionalProperties?: { [key: string]: any; } | undefined;
-
-    constructor(data?: ILanguageCulture) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.languageCulture1 = _data["languageCulture1"];
-            if (_data["additionalProperties"]) {
-                this.additionalProperties = {} as any;
-                for (let key in _data["additionalProperties"]) {
-                    if (_data["additionalProperties"].hasOwnProperty(key))
-                        (<any>this.additionalProperties)![key] = _data["additionalProperties"][key];
-                }
-            }
-        }
-    }
-
-    static fromJS(data: any): LanguageCulture {
-        data = typeof data === 'object' ? data : {};
-        let result = new LanguageCulture();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["languageCulture1"] = this.languageCulture1;
-        if (this.additionalProperties) {
-            data["additionalProperties"] = {};
-            for (let key in this.additionalProperties) {
-                if (this.additionalProperties.hasOwnProperty(key))
-                    (<any>data["additionalProperties"])[key] = this.additionalProperties[key];
-            }
-        }
-        return data;
-    }
-}
-
-export interface ILanguageCulture {
-    languageCulture1?: string;
-    additionalProperties?: { [key: string]: any; } | undefined;
 }
 
 export class PaginatedListOfPurposeActiveList implements IPaginatedListOfPurposeActiveList {

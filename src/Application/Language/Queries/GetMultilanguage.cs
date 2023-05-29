@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Wisework.ConsentManagementSystem.Api;
 using WW.Application.Common.Interfaces;
 using WW.Application.CustomField.Queries.GetCustomField;
@@ -13,41 +14,43 @@ using WW.Domain.Enums;
 
 namespace WW.Application.Language.Queries;
 
-public record GetMultilanguage(int LanguageCulture) : IRequest<LanguageCulture>;
 
+public record GetMultilanguage(String Key) : IRequest<Dictionary<string, Dictionary<string, string>>>;
 
-public class GetMultilanguageQueryHandler : IRequestHandler<GetMultilanguage, LanguageCulture>
+public class GetMultilanguageHandler : IRequestHandler<GetMultilanguage, Dictionary<string, Dictionary<string, string>>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
 
-    public GetMultilanguageQueryHandler(IApplicationDbContext context, IMapper mapper)
+
+    public GetMultilanguageHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
+
     }
 
-    public async Task<LanguageCulture> Handle(GetMultilanguage request, CancellationToken cancellationToken)
+    public async Task<Dictionary<string, Dictionary<string, string>>> Handle(GetMultilanguage request, CancellationToken cancellationToken)
     {
-        MapperConfiguration config = new MapperConfiguration(cfg =>
+        var result = await (from lc in _context.DbSetLanguage
+                            join lsr in _context.DbSetLocalStringResource on lc.LanguageCulture equals lsr.LanguageCulture
+                            where lsr.LanguageCulture == request.Key
+                            select new { lc.LanguageCulture, lsr.ResourceKey, lsr.ResourceValue })
+                            .ToListAsync();
+
+        var languageDictionary = new Dictionary<string, Dictionary<string, string>>();
+
+        foreach (var item in result)
         {
-            cfg.CreateMap<LanguageDisplay, LanguageCulture>();
-        });
+            if (!languageDictionary.TryGetValue(item.LanguageCulture, out var resourceDictionary))
+            {
+                resourceDictionary = new Dictionary<string, string>();
+                languageDictionary[item.LanguageCulture] = resourceDictionary;
+            }
 
-        Mapper mapper = new Mapper(config);
-
-        var languageInfo = (from cf in _context.DbSetLanguage
-                               where cf.LanguageID == request.LanguageCulture
-                               select new LanguageCulture
-                               {
-                                  LanguageCulture1 = cf.LanguageCulture,
-                               }).FirstOrDefault();
-
-        if (languageInfo == null)
-        {
-            return new LanguageCulture();
+            resourceDictionary[item.ResourceKey] = item.ResourceValue;
         }
 
-        return languageInfo;
+        return languageDictionary;
     }
 }

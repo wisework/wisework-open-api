@@ -12,10 +12,12 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace Wiskwork.OpenAPI.Controllers;
 public class MultilanguageController : ApiControllerBase
 {
-    [HttpGet("{languageID}")]
-    public async Task<LanguageCulture> Get(int languageID)
+    
+
+    [HttpGet("{languageCulture}")]
+    public async Task<Dictionary<string, Dictionary<string, string>>> Get(String languageCulture)
     {
-        return await Mediator.Send(new GetMultilanguage(languageID));
+        return await Mediator.Send(new GetMultilanguage(languageCulture));
     }
 
 }
