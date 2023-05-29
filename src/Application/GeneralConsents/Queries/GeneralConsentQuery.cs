@@ -56,7 +56,7 @@ public class GeneralConsentQueryHandler : IRequestHandler<GeneralConsentQuery, P
         var collectionpointList = (from cp in _context.DbSetConsentCollectionPoints
                                    join c in _context.DbSetCompanies on cp.CompanyId equals (int)(long)c.CompanyId
                                    join w in _context.DbSetConsentWebsite on (int)(long)cp.CompanyId equals w.CompanyId
-                                   where collectionPointIds.Contains(cp.CollectionPointId) && cp.CompanyId == 80158 && cp.Status != Status.X.ToString()
+                                   where collectionPointIds.Contains(cp.CollectionPointId) && cp.CompanyId == 1 && cp.Status != Status.X.ToString()
                                    select new KeyValuePair<int, CollectionPointInfo>(cp.CollectionPointId,
                                    new CollectionPointInfo
                                    {
@@ -70,10 +70,9 @@ public class GeneralConsentQueryHandler : IRequestHandler<GeneralConsentQuery, P
         #endregion
 
         #region fetch company
-        var companyList = (from cp in _context.DbSetConsentCollectionPointItem
-                           join c in _context.DbSetCompanies on cp.CompanyId equals (int)c.CompanyId
+        var companyList = (from cp in _context.DbSetConsentCollectionPoints
+                           join c in _context.DbSetCompanies on cp.CompanyId equals (int)(long)c.CompanyId
                            where cp.Status == Status.Active.ToString()
-                           && c.Status == Status.Active.ToString()
                            && collectionPointIds.Contains(cp.CollectionPointId)
                            select new KeyValuePair<int, Company>(cp.CollectionPointId,
                                new Company
@@ -83,8 +82,8 @@ public class GeneralConsentQueryHandler : IRequestHandler<GeneralConsentQuery, P
                                    Status = c.Status
                                }));
         var companyLookup = companyList.ToLookup(item => item.Key, item => item.Value);
-
         #endregion
+
         #region fetch purpose
         var purposeList = (from cp in _context.DbSetConsentCollectionPointItem
                            join p in _context.DbSetConsentPurpose on cp.PurposeId equals p.PurposeId
@@ -109,20 +108,19 @@ public class GeneralConsentQueryHandler : IRequestHandler<GeneralConsentQuery, P
 
         var purposeLookup = purposeList.ToLookup(item => item.Key, item => item.Value);
         #endregion
+
         #region fetch website
         var websiteList = (from cp in _context.DbSetConsentCollectionPoints
                            join w in _context.DbSetConsentWebsite on cp.WebsiteId equals w.WebsiteId
-                           where cp.Status == Status.Active.ToString()
-                           && w.Status == Status.Active.ToString()
-                           && collectionPointIds.Contains(cp.CollectionPointId)
-                           select new KeyValuePair<int, WebsiteActiveList>(cp.CollectionPointId,
-                               new WebsiteActiveList
+                           where collectionPointIds.Contains(cp.CollectionPointId)
+                           select new KeyValuePair<int, Website4>(cp.CollectionPointId,
+                               new Website4
                                {
-                                  WebsiteId = w.WebsiteId,
-                                  Name = w.Description,
+                                  Id = w.WebsiteId,
+                                  Description = w.Description,
                                   UrlHomePage = w.Url,
                                   UrlPolicyPage = w.Urlpolicy,
-                               }));
+                               })).ToList();
 
         var websiteLookup = websiteList.ToLookup(item => item.Key, item => item.Value);
         #endregion
@@ -130,12 +128,12 @@ public class GeneralConsentQueryHandler : IRequestHandler<GeneralConsentQuery, P
         foreach (var item in model.Items)
         {
             item.CompanyId = (int)(long)item.CompanyId;
-            //item.CollectionPointId = (int)(long)item.CollectionPointId;
+            item.CollectionPointId = (int)(long)item.CollectionPointId;
             item.Uid = (int)(long)item.Uid;
             //item.TotalTransactions = (int)(long)item.TotalTransactions;
             item.FullName = (string)item.FullName;
-            //item.Website = websiteLookup[item.CollectionPointId.Value];  //JSON
-            //item.CollectionPointGuid = 
+            item.Website = websiteLookup[item.CollectionPointId.Value].FirstOrDefault();  //JSON
+            item.CollectionPointGuid = collectionpointList.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Guid.ToString()).FirstOrDefault();
             item.CollectionPointVersion = collectionpointList.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Version).FirstOrDefault();
             item.PurposeList = purposeLookup[item.CollectionPointId.Value].ToList(); // JSON 
             item.FromBrowser = (string)item.FromBrowser;
@@ -145,7 +143,7 @@ public class GeneralConsentQueryHandler : IRequestHandler<GeneralConsentQuery, P
             item.Remark = (string)item.Remark;
             //item.TotalCount = (int)item.TotalCount;
             item.CompanyId = (int)item.CompanyId;
-            item.CompanyName = companyList.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CompanyName).FirstOrDefault();
+            //item.CompanyName = companyList.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CompanyName).FirstOrDefault();
             item.Status = (string)item.Status;
             item.VerifyType = (string)item.VerifyType;
             //item.Purpose = strPurpose;

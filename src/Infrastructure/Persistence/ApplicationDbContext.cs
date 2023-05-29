@@ -260,7 +260,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
             entity.Property(e => e.UpdateDate).HasPrecision(0);
 
-            entity.Property(e => e.WarningDescription).HasColumnType("ntext");
+            entity.Property(e => e.WarningDescription).HasColumnType("ntext").HasColumnName("WarningDescription");
         });
 
         builder.Entity<Consent_Page>(entity =>
