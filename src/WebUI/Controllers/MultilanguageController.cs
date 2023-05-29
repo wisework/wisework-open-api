@@ -13,11 +13,10 @@ namespace Wiskwork.OpenAPI.Controllers;
 public class MultilanguageController : ApiControllerBase
 {
     
-
-    [HttpGet("{languageCulture}")]
-    public async Task<Dictionary<string, Dictionary<string, string>>> Get(String languageCulture)
+    [HttpGet("{languageCultureKeys}")]
+    public async Task<Dictionary<string, Dictionary<string, string>>> Get(String languageCultureKeys, String resourceKeys)
     {
-        return await Mediator.Send(new GetMultilanguage(languageCulture));
+        return await Mediator.Send(new GetMultilanguage(languageCultureKeys, resourceKeys));
     }
 
 }

@@ -631,7 +631,7 @@ export class GeneralConsentClient implements IGeneralConsentClient {
 }
 
 export interface IMultilanguageClient {
-    get(languageCulture: string | null): Observable<{ [key: string]: { [key: string]: string; }; }>;
+    get(languageCultureKeys: string | null, resourceKeys: string | null | undefined): Observable<{ [key: string]: { [key: string]: string; }; }>;
 }
 
 @Injectable({
@@ -647,11 +647,13 @@ export class MultilanguageClient implements IMultilanguageClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    get(languageCulture: string | null): Observable<{ [key: string]: { [key: string]: string; }; }> {
-        let url_ = this.baseUrl + "/api/Multilanguage/{languageCulture}";
-        if (languageCulture === undefined || languageCulture === null)
-            throw new Error("The parameter 'languageCulture' must be defined.");
-        url_ = url_.replace("{languageCulture}", encodeURIComponent("" + languageCulture));
+    get(languageCultureKeys: string | null, resourceKeys: string | null | undefined): Observable<{ [key: string]: { [key: string]: string; }; }> {
+        let url_ = this.baseUrl + "/api/Multilanguage/{languageCultureKeys}?";
+        if (languageCultureKeys === undefined || languageCultureKeys === null)
+            throw new Error("The parameter 'languageCultureKeys' must be defined.");
+        url_ = url_.replace("{languageCultureKeys}", encodeURIComponent("" + languageCultureKeys));
+        if (resourceKeys !== undefined && resourceKeys !== null)
+            url_ += "resourceKeys=" + encodeURIComponent("" + resourceKeys) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

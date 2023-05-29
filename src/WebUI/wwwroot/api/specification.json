@@ -463,7 +463,7 @@
         }
       }
     },
-    "/api/Multilanguage/{languageCulture}": {
+    "/api/Multilanguage/{languageCultureKeys}": {
       "get": {
         "tags": [
           "Multilanguage"
@@ -471,7 +471,7 @@
         "operationId": "Multilanguage_Get",
         "parameters": [
           {
-            "name": "languageCulture",
+            "name": "languageCultureKeys",
             "in": "path",
             "required": true,
             "schema": {
@@ -479,6 +479,15 @@
               "nullable": true
             },
             "x-position": 1
+          },
+          {
+            "name": "resourceKeys",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
           }
         ],
         "responses": {
