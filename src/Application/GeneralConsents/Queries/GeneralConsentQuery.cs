@@ -54,24 +54,10 @@ public class GeneralConsentQueryHandler : IRequestHandler<GeneralConsentQuery, P
         var collectionpoints = _context.DbSetConsentCollectionPoints.Where(cp => cp.CompanyId == 1 && cp.Status != Status.X.ToString()).ToList();
         var companies = _context.DbSetCompanies.Where(c => c.Status == "A").ToList();
         var webSites = _context.DbSetConsentWebsite.Where(ws => ws.CompanyId == 1 && ws.Status != Status.X.ToString()).ToList();
+        var purposes = _context.DbSetConsentPurpose.Where(p => p.CompanyId == 1 && p.Status != Status.X.ToString()).ToList();
 
         #region fetch collectionpoint
         var collectionPointIds = model.Items.Select(c => c.CollectionPointId);
-        /*var collectionpointList = (from cp in _context.DbSetConsentCollectionPoints
-                                   join c in _context.DbSetCompanies on cp.CompanyId equals (int)(long)c.CompanyId
-                                   join w in _context.DbSetConsentWebsite on (int)(long)cp.CompanyId equals w.CompanyId
-                                   where collectionPointIds.Contains(cp.CollectionPointId) && cp.CompanyId == 1 && cp.Status != Status.X.ToString()
-                                   select new KeyValuePair<int, CollectionPointInfo>(cp.CollectionPointId,
-                                   new CollectionPointInfo
-                                   {
-                                       CollectionPointId = cp.CollectionPointId,
-                                       Guid = new Guid(cp.Guid),
-                                       CompanyId = (int)(long)c.CompanyId,
-                                       Version = cp.Version,
-                                       Status = cp.Status,
-                                 
-                                   })).ToList();*/
-
         var collectionpointList = (from cp in collectionpoints
                                    join c in companies on cp.CompanyId equals (int)c.CompanyId
                                    join ws in webSites on cp.WebsiteId equals ws.WebsiteId
@@ -88,17 +74,6 @@ public class GeneralConsentQueryHandler : IRequestHandler<GeneralConsentQuery, P
         #endregion
 
         #region fetch company
-        /*var companyList = (from cp in _context.DbSetConsentCollectionPoints
-                           join c in _context.DbSetCompanies on cp.CompanyId equals (int)(long)c.CompanyId
-                           where cp.Status == Status.Active.ToString()
-                           && collectionPointIds.Contains(cp.CollectionPointId)
-                           select new KeyValuePair<int, Company>(cp.CollectionPointId,
-                               new Company
-                               {
-                                   CompanyId = c.CompanyId,
-                                   CompanyName = c.Name,
-                                   Status = c.Status
-                               }));*/
         var companyList = (from cp in collectionpoints 
                            join c in companies on cp.CompanyId equals (int)c.CompanyId 
                            where collectionPointIds.Contains(cp.CollectionPointId)
@@ -173,60 +148,8 @@ public class GeneralConsentQueryHandler : IRequestHandler<GeneralConsentQuery, P
             item.CompanyName = companyList.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CompanyName).FirstOrDefault();
             item.Status = (string)item.Status;
             item.VerifyType = (string)item.VerifyType;
-            //item.Purpose = strPurpose;
-            //item.WebsiteDescription = collectionpointList.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.WebsiteDescription).FirstOrDefault();
-            /*item.CreateBy = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateBy).FirstOrDefault();
-            item.CreateByDisplay = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateByDisplay).FirstOrDefault();
-            item.CreateDate = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateDate).FirstOrDefault();
-            item.CreateDateDisplay = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateDateDisplay).FirstOrDefault();
-            item.UpdateBy = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.UpdateBy).FirstOrDefault();
-            item.UpdateByDisplay = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.UpdateByDisplay).FirstOrDefault();
-            item.IsStatus = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.IsStatus).FirstOrDefault();
-            item.CollectionPointGuid = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Guid).FirstOrDefault();*/
         }
 
-        return model;
-
-
-        string strPurpose = "";
-        foreach (KeyValuePair<int, GeneralConsentPurpose> purpose in purposeList)
-        {
-            strPurpose = strPurpose + "," + purpose.Value.Description;
-
-        }
-
-       
-        var generalConsents = (from cc in _context.DbSetConsent
-                               where  cc.CompanyId == 1 && cc.Status != Status.X.ToString()
-                               select new GeneralConsent
-                               {
-                                   ConsentId = cc.ConsentId,
-                                   CollectionPointId = cc.CollectionPointId,
-                                   Uid = cc.Uid,
-                                   TotalTransactions = cc.TotalTransactions,
-                                   FullName = cc.FullName,
-                                   //CollectionPointGuid = cc.GUID,
-                                   ConsentDateTime = "Test",
-                                   //Website = cc.WebsiteId,
-                                   //CollectionPointVersion = cc.ColloctionPointVersion,
-                                   //PurposeList = cc.Purpose
-                                   FromBrowser = cc.FromBrowser,
-                                   //PhoneNumber = cc.PhoneNumber,
-                                   IdCardNumber = cc.CardNumber,
-                                   Email = cc.Email,
-                                   Remark = cc.Remark,
-                                   //TotalCount = cc.TotalCount,
-                                   CompanyId = cc.CompanyId,
-                                   //CompanyName = cc.CompanyName,
-                                   Status = cc.Status,
-                                   VerifyType = cc.VerifyType,
-
-                               }).ToList();
-
-        if (generalConsents == null)
-        {
-            return new PaginatedList<GeneralConsent>();
-        }
         return model;
     }
     
