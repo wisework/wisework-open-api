@@ -70,7 +70,7 @@ public class GeneralConsentInfoRequestQueryHandler : IRequestHandler<GeneralCons
                          CollectionPointId = c.CollectionPointId,
                          Uid = c.Uid,
                          TotalTransactions = c.TotalTransactions,
-                         FullName = c.NameSurname,
+                         FullName = c.FullName,
                          CollectionPointGuid = cp.Guid,
                          /*ConsentDateTime = c.ConsentDatetime.Value,
                          ConsentDateTimeDisplay = c.CreateDate.Value.LocalDateTime.ToShortDateString(),
@@ -80,7 +80,7 @@ public class GeneralConsentInfoRequestQueryHandler : IRequestHandler<GeneralCons
                          Purpose = "",
                          FromBrowser = c.FromBrowser,
                          FromWebsite = c.FromWebsite,*/
-                         PhoneNumber = c.Tel,
+                         PhoneNumber = c.PhoneNumber,
                          IdCardNumber = c.CardNumber,
                          Email = c.Email,
                          Remark = c.Remark,

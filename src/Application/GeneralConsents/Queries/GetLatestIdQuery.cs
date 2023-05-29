@@ -33,9 +33,9 @@ public class GetLatestIdRequestQueryHandler : IRequestHandler<GetLatestIdRequest
         var query = (from c in _context.DbSetConsent
                      join cp in _context.DbSetConsentCollectionPoints on c.CollectionPointId equals cp.CollectionPointId
                      where cp.Guid == request.CollectionPointGuid && c.CompanyId == 80158
-                     && c.NameSurname == request.FullName
+                     && c.FullName == request.FullName
                      || c.Email == request.Email
-                     || c.Tel == request.PhoneNumber
+                     || c.PhoneNumber == request.PhoneNumber
                      || c.CardNumber == request.IdCardNumber
                      select c.ConsentId).ToList().FirstOrDefault();
 

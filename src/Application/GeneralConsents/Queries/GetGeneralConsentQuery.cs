@@ -44,9 +44,9 @@ public class GeneralConsentListRequestQueryHandler : IRequestHandler<GeneralCons
         MapperConfiguration config = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<Consent_Consent, GeneralConsent>()
-            .ForMember(d => d.FullName, a => a.MapFrom(s => s.NameSurname))
+            .ForMember(d => d.FullName, a => a.MapFrom(s => s.FullName))
             .ForMember(d => d.IdCardNumber, a => a.MapFrom(s => s.CardNumber))
-            .ForMember(d => d.PhoneNumber, a => a.MapFrom(s => s.Tel))
+            .ForMember(d => d.PhoneNumber, a => a.MapFrom(s => s.PhoneNumber))
             //.ForMember(d => d.ConsentDateTimeDisplay, a => a.MapFrom(s => s.ConsentDatetime.Value.LocalDateTime.ToShortDateString()))
             ;
         });
@@ -118,7 +118,7 @@ public class GeneralConsentListRequestQueryHandler : IRequestHandler<GeneralCons
         if (request.GeneralConsentFilterKey != null) {
             if (request.GeneralConsentFilterKey.FullName != null)
             {
-                query = query.Where(p => p.NameSurname == request.GeneralConsentFilterKey.FullName);
+                query = query.Where(p => p.FullName == request.GeneralConsentFilterKey.FullName);
             }
             if (request.GeneralConsentFilterKey.IdCardNumber != null)
             {
@@ -126,7 +126,7 @@ public class GeneralConsentListRequestQueryHandler : IRequestHandler<GeneralCons
             }
             if (request.GeneralConsentFilterKey.PhoneNumber != null)
             {
-                query = query.Where(p => p.Tel == request.GeneralConsentFilterKey.PhoneNumber);
+                query = query.Where(p => p.PhoneNumber == request.GeneralConsentFilterKey.PhoneNumber);
             }
             if (request.GeneralConsentFilterKey.Email != null)
             {

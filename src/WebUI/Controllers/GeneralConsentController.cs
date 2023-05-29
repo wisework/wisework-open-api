@@ -11,6 +11,14 @@ namespace Wiskwork.OpenAPI.Controllers;
 public class GeneralConsentController : ApiControllerBase
 {
     [HttpGet]
+    [Route("list", Name = "List")]
+    public async Task<ActionResult<PaginatedList<GeneralConsent>>> GeneralConsentQuery([FromQuery] GeneralConsentQuery query)
+    {
+        return await Mediator.Send(query);
+    }
+
+    [HttpGet]
+    [Route("list-with-filter", Name = "ListWithFilter")]
     public async Task<ActionResult<PaginatedList<GeneralConsent>>> GetGeneralConsentQuery([FromQuery] GeneralConsentListRequestQuery query)
     {
         return  await Mediator.Send(query);
