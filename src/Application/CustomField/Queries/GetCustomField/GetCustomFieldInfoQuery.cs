@@ -15,12 +15,12 @@ namespace WW.Application.CustomField.Queries.GetCustomField;
 
 public record GetCustomFieldInfoQuery(int id) : IRequest<CollectionPointCustomFieldActiveList>;
 
-public class GetCustomFieldInfoQueryHandler : IRequestHandler<GetCustomFieldInfoQuery, CollectionPointCustomFieldActiveList>
+public class GetCustomFieldInfoHandler : IRequestHandler<GetCustomFieldInfoQuery, CollectionPointCustomFieldActiveList>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
 
-    public GetCustomFieldInfoQueryHandler(IApplicationDbContext context, IMapper mapper)
+    public GetCustomFieldInfoHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;

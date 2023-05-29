@@ -23,6 +23,9 @@ public interface IApplicationDbContext
     DbSet<V_Consent_Latest_Consent> DbSetVConsentLatestConsents {get; }
     DbSet<Consent_ConsentItem> DbSetConsentItem { get; }
     DbSet<Consent_ConsentTheme> DbSetConsentTheme { get; }
+    DbSet<Domain.Entities.File> DbSetFile { get; }
+    DbSet<FileCategory> DbSetFileCategory { get; }
+    DbSet<FileType> DbSetFileType { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     Task<int> SubmitConsent(string query
                         /*,int CompanyId
