@@ -12,8 +12,8 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace Wiskwork.OpenAPI.Controllers;
 public class MultilanguageController : ApiControllerBase
 {
-    
-    [HttpGet("{languageCultureKeys}")]
+
+    [HttpGet("{languageCultureKeys}/{resourceKeys?}")]
     public async Task<Dictionary<string, Dictionary<string, string>>> Get(String languageCultureKeys, String resourceKeys)
     {
         return await Mediator.Send(new GetMultilanguage(languageCultureKeys, resourceKeys));
