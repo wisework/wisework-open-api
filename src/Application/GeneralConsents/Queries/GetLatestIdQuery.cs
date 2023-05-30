@@ -8,10 +8,10 @@ using WW.Domain.Enums;
 namespace WW.Application.GeneralConsents.Queries;
 public record GetLatestIdRequestQuery : IRequest<int>
 {
-    public string IdCardNumber { get; set; }
-    public string FullName { get; set; }
-    public string Email { get; set; }
-    public string PhoneNumber { get; set; }
+    public string? IdCardNumber { get; set; }
+    public string? FullName { get; set; }
+    public string? Email { get; set; }
+    public string? PhoneNumber { get; set; }
     public string CollectionPointGuid { get; set; }
 
 }
@@ -30,17 +30,29 @@ public class GetLatestIdRequestQueryHandler : IRequestHandler<GetLatestIdRequest
 
     public Task<int> Handle(GetLatestIdRequestQuery request, CancellationToken cancellationToken)
     {
-        var query = (from c in _context.DbSetConsent
-                     join cp in _context.DbSetConsentCollectionPoints on c.CollectionPointId equals cp.CollectionPointId
-                     where cp.Guid == request.CollectionPointGuid && c.CompanyId == 80158
-                     && c.FullName == request.FullName
-                     || c.Email == request.Email
-                     || c.PhoneNumber == request.PhoneNumber
-                     || c.CardNumber == request.IdCardNumber
-                     select c.ConsentId).ToList().FirstOrDefault();
+        //var query = (from c in _context.DbSetConsent
+        //             join cp in _context.DbSetConsentCollectionPoints on c.CollectionPointId equals cp.CollectionPointId
+        //             where cp.Guid == request.CollectionPointGuid && c.CompanyId == 1
+        //             && c.FullName == request.FullName
+        //             || c.Email == request.Email
+        //             || c.PhoneNumber == request.PhoneNumber
+        //             || c.CardNumber == request.IdCardNumber
+        //             select c.ConsentId).ToList().FirstOrDefault();
+
+        var latestId = (from c in _context.DbSetConsent
+                        join cp in _context.DbSetConsentCollectionPoints on c.CollectionPointId equals cp.CollectionPointId
+                        where cp.Guid == request.CollectionPointGuid
+                              && c.CompanyId == 1
+                              && (c.FullName == request.FullName
+                                  || c.Email == request.Email
+                                  || c.PhoneNumber == request.PhoneNumber
+                                  || c.IdCardNumber == request.IdCardNumber)
+                        orderby c.ConsentId descending
+                        select c.ConsentId)
+                 .FirstOrDefault();
 
 
-        return Task.FromResult(query);
+        return Task.FromResult(latestId);
     }
 }
 

@@ -22,7 +22,7 @@ public class Consent_Consent : Base
     public string? VerifyType { get; set; }
     public int? TotalTransactions { get; set; }
     public int? New { get; set; }
-    public string? CardNumber { get; set; }
+    //public string? CardNumber { get; set; }
     public string? Remark { get; set; }
     public string? EventCode { get; set; }
     public DateTimeOffset? Expired { get; set; }
