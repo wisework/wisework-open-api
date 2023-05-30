@@ -8,9 +8,9 @@ namespace Wiskwork.OpenAPI.Controllers;
 
 public class CompanyController : ApiControllerBase
 {
-    [HttpGet("{id}")]
-    public async Task<Company> Get(int id)
+    [HttpGet]
+    public async Task<ActionResult<List<Company>>> Get()
     {
-        return await Mediator.Send(new GetCompanyQuery(id));
+        return await Mediator.Send(new GetCompanyQuery());
     }
 }

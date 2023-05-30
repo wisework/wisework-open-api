@@ -14,9 +14,9 @@ using WW.Domain.Enums;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WW.Application.CompanyProfile.Queies.GetCompany;
-public record GetCompanyQuery(int id) : IRequest<Company>;
+public record GetCompanyQuery : IRequest<List<Company>>;
 
-public class GetCompanyQueryHandler : IRequestHandler<GetCompanyQuery, Company>
+public class GetCompanyQueryHandler : IRequestHandler<GetCompanyQuery, List<Company>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -27,7 +27,7 @@ public class GetCompanyQueryHandler : IRequestHandler<GetCompanyQuery, Company>
         _mapper = mapper;
     }
 
-    public async Task<Company> Handle(GetCompanyQuery request, CancellationToken cancellationToken)
+    public async Task<List<Company>> Handle(GetCompanyQuery request, CancellationToken cancellationToken)
     {
         MapperConfiguration config = new MapperConfiguration(cfg =>
         {
@@ -37,23 +37,19 @@ public class GetCompanyQueryHandler : IRequestHandler<GetCompanyQuery, Company>
         Mapper mapper = new Mapper(config);
 
         var companyInfo = (from cf in _context.DbSetCompanies
-                               where cf.CompanyId == request.id && cf.CompanyId == 1 && cf.Status != Status.X.ToString()
-                               select new Company
-                               {
-                                  CompanyId = cf.CompanyId,
-                                   CompanyName =cf.Name,
-                                   LogoImage = cf.LogoImage,
-                                   Status = cf.Status,
-                                   CreateBy = cf.CreateBy.ToString(),
-                                   CreateDate= cf.CreateDate.ToString(),
-                                   UpdateBy= cf.UpdateBy.ToString(),
-                                   UpdateDate= cf.UpdateDate.ToString(),
-                               }).FirstOrDefault();
+                           where cf.Status != Status.X.ToString()
+                           select new Company
+                           {
+                               CompanyId = cf.CompanyId,
+                               CompanyName = cf.Name,
+                               LogoImage = cf.LogoImage,
+                               Status = cf.Status,
+                               CreateBy = cf.CreateBy.ToString(),
+                               CreateDate = cf.CreateDate.ToString(),
+                               UpdateBy = cf.UpdateBy.ToString(),
+                               UpdateDate = cf.UpdateDate.ToString(),
+                           }).ToList();
 
-        if (companyInfo == null)
-        {
-            return new Company();
-        }
         return companyInfo;
     }
 }
