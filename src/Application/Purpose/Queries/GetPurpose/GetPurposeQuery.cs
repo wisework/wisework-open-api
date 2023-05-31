@@ -18,8 +18,8 @@ namespace WW.Application.Purpose.Queries.GetPurpose;
 
 public record GetPurposeQuery : IRequest<PaginatedList<PurposeActiveList>>
 {
-    public int PageNumber { get; init; } = 1;
-    public int PageSize { get; init; } = 10;
+    public int Offset { get; init; } = 1;
+    public int Limit { get; init; } = 10;
 }
 public class GetWebsiteQueryHandler : IRequestHandler<GetPurposeQuery, PaginatedList<PurposeActiveList>>
 {
@@ -34,8 +34,12 @@ public class GetWebsiteQueryHandler : IRequestHandler<GetPurposeQuery, Paginated
     {
         MapperConfiguration config = new MapperConfiguration(cfg =>
         {
-            cfg.CreateMap<Consent_Purpose, PurposeActiveList>().ForMember(d => d.ExpiredDateTime, a => a.MapFrom(p => Calulate.ExpiredDateTime(p.KeepAliveData, p.CreateDate)))
+            cfg.CreateMap<Consent_Purpose, PurposeActiveList>()
+            .ForMember(d => d.ExpiredDateTime, a => a.MapFrom(p => Calulate.ExpiredDateTime(p.KeepAliveData, p.CreateDate)))
+            .ForMember(d => d.CategoryID, a => a.MapFrom(s => s.PurposeCategoryId))
             ;
+
+            cfg.CreateMap<string, Guid?>().ConvertUsing(s => String.IsNullOrWhiteSpace(s) ? (Guid?)null : Guid.Parse(s));
         });
 
         Mapper mapper = new Mapper(config);
@@ -43,7 +47,7 @@ public class GetWebsiteQueryHandler : IRequestHandler<GetPurposeQuery, Paginated
         //todo:edit conpanyid หลังมีการทำ identity server
         PaginatedList<PurposeActiveList> model =
             await _context.DbSetConsentPurpose.Where(p => p.CompanyId == 1 && p.Status == Status.Active.ToString())
-            .ProjectTo<PurposeActiveList>(mapper.ConfigurationProvider).PaginatedListAsync(request.PageNumber, request.PageSize);
+            .ProjectTo<PurposeActiveList>(mapper.ConfigurationProvider).PaginatedListAsync(request.Offset, request.Limit);
 
         return model;
     }
