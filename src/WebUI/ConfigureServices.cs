@@ -1,16 +1,17 @@
-﻿using WW.Application.Common.Interfaces;
-using WW.Infrastructure.Persistence;
-using WW.OpenAPI.Filters;
-using WW.OpenAPI.Services;
-using FluentValidation.AspNetCore;
+﻿using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using NSwag;
 using NSwag.Generation.Processors.Security;
+using WW.Application.Common.Interfaces;
+using WW.Infrastructure.Persistence;
+using WW.OpenAPI.Filters;
+using WW.OpenAPI.Services;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ConfigureServices
 {
+
     public static IServiceCollection AddWebUIServices(this IServiceCollection services)
     {
         services.AddDatabaseDeveloperPageExceptionFilter();
@@ -25,6 +26,7 @@ public static class ConfigureServices
         services.AddControllersWithViews(options =>
             options.Filters.Add<ApiExceptionFilterAttribute>())
                 .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
+
 
         services.AddRazorPages();
 

@@ -9,12 +9,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AWSSDK.S3" Version="3.7.104.19" />
         <PackageReference Include="CsvHelper" Version="15.0.10" />
         <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="6.0.5" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.5" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.5" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.5" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.5" />
+        <PackageReference Include="WindowsAzure.Storage" Version="9.3.2" />
     </ItemGroup>
 
     <ItemGroup>
@@ -26,8 +28,11 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Reference Include="IXBI.Net.Helper">
+        <HintPath>..\..\dll\IXBI.Net.Helper.dll</HintPath>
+      </Reference>
       <Reference Include="Wisework.ConsentManagementSystem.Api">
-        <HintPath>..\..\..\..\..\..\Downloads\Wisework.ConsentManagementSystem.Api.dll</HintPath>
+        <HintPath>..\..\dll\v1.0.17.0\Wisework.ConsentManagementSystem.Api.dll</HintPath>
       </Reference>
     </ItemGroup>
 

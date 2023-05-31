@@ -15,9 +15,79 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
+export interface ICompanyClient {
+    get(id: number): Observable<Company>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class CompanyClient implements ICompanyClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    get(id: number): Observable<Company> {
+        let url_ = this.baseUrl + "/api/Company/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Company>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Company>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<Company> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Company.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
 export interface IConsentPageSettingClient {
     getConsentThemeQuery(offset: number | undefined, limit: number | undefined): Observable<PaginatedListOfConsentTheme>;
     create(command: CreateConsentThemeCommand): Observable<ConsentTheme>;
+    get(count: number): Observable<Image>;
 }
 
 @Injectable({
@@ -131,6 +201,57 @@ export class ConsentPageSettingClient implements IConsentPageSettingClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = ConsentTheme.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    get(count: number): Observable<Image> {
+        let url_ = this.baseUrl + "/api/ConsentPageSetting/image/{count}";
+        if (count === undefined || count === null)
+            throw new Error("The parameter 'count' must be defined.");
+        url_ = url_.replace("{count}", encodeURIComponent("" + count));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Image>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Image>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<Image> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Image.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -705,7 +826,10 @@ export class PurposeClient implements IPurposeClient {
 }
 
 export interface ISectionClient {
-    getCollectionPointsQuery(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfSectionActiveList>;
+    getCollectionPointsQuery(offset: number | undefined, limit: number | undefined): Observable<PaginatedListOfSectionActiveList>;
+    create(command: CreateSectionCommand): Observable<SectionActiveList>;
+    update(id: number, command: UpdateSectionCommand): Observable<SectionActiveList>;
+    get(id: number): Observable<SectionActiveList>;
 }
 
 @Injectable({
@@ -721,16 +845,16 @@ export class SectionClient implements ISectionClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getCollectionPointsQuery(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfSectionActiveList> {
+    getCollectionPointsQuery(offset: number | undefined, limit: number | undefined): Observable<PaginatedListOfSectionActiveList> {
         let url_ = this.baseUrl + "/api/Section?";
-        if (pageNumber === null)
-            throw new Error("The parameter 'pageNumber' cannot be null.");
-        else if (pageNumber !== undefined)
-            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
-        if (pageSize === null)
-            throw new Error("The parameter 'pageSize' cannot be null.");
-        else if (pageSize !== undefined)
-            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (offset === null)
+            throw new Error("The parameter 'offset' cannot be null.");
+        else if (offset !== undefined)
+            url_ += "offset=" + encodeURIComponent("" + offset) + "&";
+        if (limit === null)
+            throw new Error("The parameter 'limit' cannot be null.");
+        else if (limit !== undefined)
+            url_ += "limit=" + encodeURIComponent("" + limit) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -767,6 +891,164 @@ export class SectionClient implements ISectionClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PaginatedListOfSectionActiveList.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    create(command: CreateSectionCommand): Observable<SectionActiveList> {
+        let url_ = this.baseUrl + "/api/Section";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SectionActiveList>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SectionActiveList>;
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<SectionActiveList> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SectionActiveList.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    update(id: number, command: UpdateSectionCommand): Observable<SectionActiveList> {
+        let url_ = this.baseUrl + "/api/Section/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SectionActiveList>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SectionActiveList>;
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<SectionActiveList> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SectionActiveList.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    get(id: number): Observable<SectionActiveList> {
+        let url_ = this.baseUrl + "/api/Section/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SectionActiveList>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SectionActiveList>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<SectionActiveList> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SectionActiveList.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1155,6 +1437,86 @@ export class CollectionPointsClient implements ICollectionPointsClient {
     }
 }
 
+export class Company implements ICompany {
+    companyId?: number;
+    companyName?: string;
+    logoImage?: string;
+    status?: string;
+    createBy?: string;
+    createDate?: any;
+    updateBy?: string;
+    updateDate?: any;
+    additionalProperties?: { [key: string]: any; } | undefined;
+
+    constructor(data?: ICompany) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.companyId = _data["companyId"];
+            this.companyName = _data["companyName"];
+            this.logoImage = _data["logoImage"];
+            this.status = _data["status"];
+            this.createBy = _data["createBy"];
+            this.createDate = _data["createDate"];
+            this.updateBy = _data["updateBy"];
+            this.updateDate = _data["updateDate"];
+            if (_data["additionalProperties"]) {
+                this.additionalProperties = {} as any;
+                for (let key in _data["additionalProperties"]) {
+                    if (_data["additionalProperties"].hasOwnProperty(key))
+                        (<any>this.additionalProperties)![key] = _data["additionalProperties"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): Company {
+        data = typeof data === 'object' ? data : {};
+        let result = new Company();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["companyId"] = this.companyId;
+        data["companyName"] = this.companyName;
+        data["logoImage"] = this.logoImage;
+        data["status"] = this.status;
+        data["createBy"] = this.createBy;
+        data["createDate"] = this.createDate;
+        data["updateBy"] = this.updateBy;
+        data["updateDate"] = this.updateDate;
+        if (this.additionalProperties) {
+            data["additionalProperties"] = {};
+            for (let key in this.additionalProperties) {
+                if (this.additionalProperties.hasOwnProperty(key))
+                    (<any>data["additionalProperties"])[key] = this.additionalProperties[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface ICompany {
+    companyId?: number;
+    companyName?: string;
+    logoImage?: string;
+    status?: string;
+    createBy?: string;
+    createDate?: any;
+    updateBy?: string;
+    updateDate?: any;
+    additionalProperties?: { [key: string]: any; } | undefined;
+}
+
 export class PaginatedListOfConsentTheme implements IPaginatedListOfConsentTheme {
     items?: ConsentTheme[];
     pageNumber?: number;
@@ -1405,6 +1767,58 @@ export interface ICreateConsentThemeCommand {
     cancelTextButtonColor?: string;
     linkToPolicyTextColor?: string;
     policyUrlTextColor?: string;
+}
+
+export class Image implements IImage {
+    fullPath?: string;
+    additionalProperties?: { [key: string]: any; } | undefined;
+
+    constructor(data?: IImage) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.fullPath = _data["fullPath"];
+            if (_data["additionalProperties"]) {
+                this.additionalProperties = {} as any;
+                for (let key in _data["additionalProperties"]) {
+                    if (_data["additionalProperties"].hasOwnProperty(key))
+                        (<any>this.additionalProperties)![key] = _data["additionalProperties"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): Image {
+        data = typeof data === 'object' ? data : {};
+        let result = new Image();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["fullPath"] = this.fullPath;
+        if (this.additionalProperties) {
+            data["additionalProperties"] = {};
+            for (let key in this.additionalProperties) {
+                if (this.additionalProperties.hasOwnProperty(key))
+                    (<any>data["additionalProperties"])[key] = this.additionalProperties[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface IImage {
+    fullPath?: string;
+    additionalProperties?: { [key: string]: any; } | undefined;
 }
 
 export class PaginatedListOfCollectionPointCustomFieldActiveList implements IPaginatedListOfCollectionPointCustomFieldActiveList {
@@ -2667,24 +3081,13 @@ export interface ISectionActiveList {
     additionalProperties?: { [key: string]: any; } | undefined;
 }
 
-export class UserInfo implements IUserInfo {
-    address?: string;
-    birthDate?: string;
-    citizenId?: string;
-    companyId?: number;
-    email?: string;
-    fullName?: string;
-    guid?: string;
-    gender?: string;
-    positionDescription?: string;
-    profileImage?: string;
-    tel?: string;
-    userID?: number;
-    username?: string;
-    version?: number;
-    additionalProperties?: { [key: string]: any; } | undefined;
 
-    constructor(data?: IUserInfo) {
+export class CreateSectionCommand implements ICreateSectionCommand {
+    code?: string;
+    description?: string;
+    status?: string;
+
+    constructor(data?: ICreateSectionCommand) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2695,80 +3098,82 @@ export class UserInfo implements IUserInfo {
 
     init(_data?: any) {
         if (_data) {
-            this.address = _data["address"];
-            this.birthDate = _data["birthDate"];
-            this.citizenId = _data["citizenId"];
-            this.companyId = _data["companyId"];
-            this.email = _data["email"];
-            this.fullName = _data["fullName"];
-            this.guid = _data["guid"];
-            this.gender = _data["gender"];
-            this.positionDescription = _data["positionDescription"];
-            this.profileImage = _data["profileImage"];
-            this.tel = _data["tel"];
-            this.userID = _data["userID"];
-            this.username = _data["username"];
-            this.version = _data["version"];
-            if (_data["additionalProperties"]) {
-                this.additionalProperties = {} as any;
-                for (let key in _data["additionalProperties"]) {
-                    if (_data["additionalProperties"].hasOwnProperty(key))
-                        (<any>this.additionalProperties)![key] = _data["additionalProperties"][key];
-                }
-            }
+            this.code = _data["code"];
+            this.description = _data["description"];
+            this.status = _data["status"];
         }
     }
 
-    static fromJS(data: any): UserInfo {
+    static fromJS(data: any): CreateSectionCommand {
         data = typeof data === 'object' ? data : {};
-        let result = new UserInfo();
+        let result = new CreateSectionCommand();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["address"] = this.address;
-        data["birthDate"] = this.birthDate;
-        data["citizenId"] = this.citizenId;
-        data["companyId"] = this.companyId;
-        data["email"] = this.email;
-        data["fullName"] = this.fullName;
-        data["guid"] = this.guid;
-        data["gender"] = this.gender;
-        data["positionDescription"] = this.positionDescription;
-        data["profileImage"] = this.profileImage;
-        data["tel"] = this.tel;
-        data["userID"] = this.userID;
-        data["username"] = this.username;
-        data["version"] = this.version;
-        if (this.additionalProperties) {
-            data["additionalProperties"] = {};
-            for (let key in this.additionalProperties) {
-                if (this.additionalProperties.hasOwnProperty(key))
-                    (<any>data["additionalProperties"])[key] = this.additionalProperties[key];
-            }
-        }
+        data["code"] = this.code;
+        data["description"] = this.description;
+        data["status"] = this.status;
         return data;
     }
 }
 
-export interface IUserInfo {
-    address?: string;
-    birthDate?: string;
-    citizenId?: string;
-    companyId?: number;
-    email?: string;
-    fullName?: string;
-    guid?: string;
-    gender?: string;
-    positionDescription?: string;
-    profileImage?: string;
-    tel?: string;
-    userID?: number;
-    username?: string;
-    version?: number;
-    additionalProperties?: { [key: string]: any; } | undefined;
+export interface ICreateSectionCommand {
+    code?: string;
+    description?: string;
+    status?: string;
+}
+
+export class UpdateSectionCommand implements IUpdateSectionCommand {
+    id?: number;
+    code?: string;
+    description?: string;
+    status?: string;
+
+    constructor(data?: IUpdateSectionCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.code = _data["code"];
+            this.description = _data["description"];
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): UpdateSectionCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateSectionCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["code"] = this.code;
+        data["description"] = this.description;
+        data["status"] = this.status;
+        return data;
+    }
+}
+
+
+export interface IUpdateSectionCommand {
+    id?: number;
+    code?: string;
+    description?: string;
+    status?: string;
+
 }
 
 export class PaginatedListOfWebsiteActiveList implements IPaginatedListOfWebsiteActiveList {
