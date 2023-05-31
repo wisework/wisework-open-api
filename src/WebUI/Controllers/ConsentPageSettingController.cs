@@ -6,6 +6,7 @@ using WW.Application.ConsentPageSetting.Commands.UpdateConsentTheme;
 using WW.Application.ConsentPageSetting.Queries.GetConsentTheme;
 using WW.Application.ConsentPageSetting.Queries.GetImage;
 using WW.Application.ConsentPageSetting.Queries.GetLogo;
+using WW.Application.ConsentPageSetting.Queries.GetShortUrl;
 using WW.Domain.Entities;
 using WW.OpenAPI.Controllers;
 
@@ -34,6 +35,12 @@ public class ConsentPageSettingController : ApiControllerBase
         }
 
         return await Mediator.Send(command);
+    }
+
+    [HttpGet("short-url/{id}")]
+    public async Task<ActionResult<ShortUrl>> GetShortUrlQuery(int id)
+    {
+        return await Mediator.Send(new GetShortUrlQuery(id));
     }
 
     [HttpGet("logo/{count}")]

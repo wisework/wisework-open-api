@@ -51,6 +51,7 @@ public static class ConfigureServices
         {
             return UploadFactory.Create(configuration);
         });
+        services.AddTransient<IGenerateURLService, GenerateURLService>();
         services.AddAuthentication()
             .AddIdentityServerJwt();
 
