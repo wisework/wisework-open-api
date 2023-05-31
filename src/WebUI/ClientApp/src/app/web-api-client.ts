@@ -15,6 +15,75 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
+export interface ICompanyClient {
+    get(id: number): Observable<Company>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class CompanyClient implements ICompanyClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    get(id: number): Observable<Company> {
+        let url_ = this.baseUrl + "/api/Company/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Company>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Company>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<Company> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Company.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
 export interface IConsentPageSettingClient {
     getConsentThemeQuery(offset: number | undefined, limit: number | undefined): Observable<PaginatedListOfConsentTheme>;
     create(command: CreateConsentThemeCommand): Observable<ConsentTheme>;
@@ -1297,6 +1366,86 @@ export class CollectionPointsClient implements ICollectionPointsClient {
         }
         return _observableOf(null as any);
     }
+}
+
+export class Company implements ICompany {
+    companyId?: number;
+    companyName?: string;
+    logoImage?: string;
+    status?: string;
+    createBy?: string;
+    createDate?: any;
+    updateBy?: string;
+    updateDate?: any;
+    additionalProperties?: { [key: string]: any; } | undefined;
+
+    constructor(data?: ICompany) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.companyId = _data["companyId"];
+            this.companyName = _data["companyName"];
+            this.logoImage = _data["logoImage"];
+            this.status = _data["status"];
+            this.createBy = _data["createBy"];
+            this.createDate = _data["createDate"];
+            this.updateBy = _data["updateBy"];
+            this.updateDate = _data["updateDate"];
+            if (_data["additionalProperties"]) {
+                this.additionalProperties = {} as any;
+                for (let key in _data["additionalProperties"]) {
+                    if (_data["additionalProperties"].hasOwnProperty(key))
+                        (<any>this.additionalProperties)![key] = _data["additionalProperties"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): Company {
+        data = typeof data === 'object' ? data : {};
+        let result = new Company();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["companyId"] = this.companyId;
+        data["companyName"] = this.companyName;
+        data["logoImage"] = this.logoImage;
+        data["status"] = this.status;
+        data["createBy"] = this.createBy;
+        data["createDate"] = this.createDate;
+        data["updateBy"] = this.updateBy;
+        data["updateDate"] = this.updateDate;
+        if (this.additionalProperties) {
+            data["additionalProperties"] = {};
+            for (let key in this.additionalProperties) {
+                if (this.additionalProperties.hasOwnProperty(key))
+                    (<any>data["additionalProperties"])[key] = this.additionalProperties[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface ICompany {
+    companyId?: number;
+    companyName?: string;
+    logoImage?: string;
+    status?: string;
+    createBy?: string;
+    createDate?: any;
+    updateBy?: string;
+    updateDate?: any;
+    additionalProperties?: { [key: string]: any; } | undefined;
 }
 
 export class PaginatedListOfConsentTheme implements IPaginatedListOfConsentTheme {
