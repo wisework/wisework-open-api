@@ -2,11 +2,10 @@
 using Wisework.ConsentManagementSystem.Api;
 using WW.Application.Common.Models;
 using WW.Application.ConsentPageSetting.Commands.CreateConsentTheme;
-using WW.Application.ConsentPageSetting.Commands.UpdateConsentThemeCommand;
+using WW.Application.ConsentPageSetting.Commands.UpdateConsentTheme;
 using WW.Application.ConsentPageSetting.Queries.GetConsentTheme;
 using WW.Application.ConsentPageSetting.Queries.GetImage;
 using WW.Application.ConsentPageSetting.Queries.GetLogo;
-using WW.Application.CustomField.Queries.GetCustomField;
 using WW.Domain.Entities;
 using WW.OpenAPI.Controllers;
 

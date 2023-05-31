@@ -9,7 +9,7 @@ using WW.Application.Common.Interfaces;
 using WW.Domain.Entities;
 using WW.Domain.Enums;
 
-namespace WW.Application.ConsentPageSetting.Commands.UpdateConsentThemeCommand;
+namespace WW.Application.ConsentPageSetting.Commands.UpdateConsentTheme;
 
 public record UpdateConsentThemeCommand : IRequest<ConsentTheme>
 {
