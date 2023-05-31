@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WW.Application.CollectionPoints.Queries.GetCollectionPoints;
 using System.Data.SqlClient;
 using WW.Application.GeneralConsents.Commands;
+using Wisework.ConsentManagementSystem.Api;
 
 namespace WW.Application.Common.Interfaces;
 
@@ -27,6 +28,8 @@ public interface IApplicationDbContext
     DbSet<Domain.Entities.File> DbSetFile { get; }
     DbSet<FileCategory> DbSetFileCategory { get; }
     DbSet<FileType> DbSetFileType { get; }
+    DbSet<LanguageDisplay> DbSetLanguage { get; }
+    DbSet<LocalStringResource> DbSetLocalStringResource { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     Task<int> SubmitConsent(string query
                         /*,int CompanyId
