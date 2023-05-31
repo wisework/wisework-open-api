@@ -35,6 +35,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     public DbSet<Consent_CollectionPointCustomField> DbSetConsentCollectionPointCustomFields => Set<Consent_CollectionPointCustomField>();
     public DbSet<Consent_SectionInfo> DbSetConsentSectionInfo => Set<Consent_SectionInfo>();
     public DbSet<Consent_Purpose> DbSetConsentPurpose => Set<Consent_Purpose>();
+    public DbSet<Consent_PurposeCategory> DbSetConsentPurposeCategory => Set<Consent_PurposeCategory>();
     public DbSet<Consent_Page> DbSetConsentPage => Set<Consent_Page>();
     public DbSet<Consent_CollectionPointCustomFieldConfig> DbSetConsent_CollectionPointCustomFieldConfig => Set<Consent_CollectionPointCustomFieldConfig>();
 
@@ -265,6 +266,39 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
             entity.Property(e => e.WarningDescription).HasColumnType("ntext");
         });
+
+
+        builder.Entity<Consent_PurposeCategory>(entity =>
+        {
+            entity.HasKey(e => e.ID)
+                .HasName("PK__Consent___3214EC274E856C2F");
+
+            entity.ToTable("Consent_PurposeCategory");
+
+            entity.Property(e => e.PurposeCategoryID).HasColumnName("PurposeCategoryID");
+
+            entity.Property(e => e.CompanyID).HasColumnName("CompanyID");
+
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.Version).HasColumnName("Version");
+
+            entity.Property(e => e.CreateBy).HasPrecision(0);
+
+            entity.Property(e => e.CreateDate).HasPrecision(0);
+
+            entity.Property(e => e.UpdateBy).HasPrecision(0);
+
+            entity.Property(e => e.UpdateDate).HasPrecision(0);
+
+            entity.Property(e => e.Code).HasMaxLength(20);
+
+            entity.Property(e => e.Description).HasMaxLength(1000);
+
+            entity.Property(e => e.Language).HasMaxLength(2);
+
+        });
+
 
         builder.Entity<Consent_Page>(entity =>
         {
