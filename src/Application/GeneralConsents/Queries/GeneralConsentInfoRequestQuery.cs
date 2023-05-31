@@ -72,30 +72,20 @@ public class GeneralConsentInfoRequestQueryHandler : IRequestHandler<GeneralCons
                          TotalTransactions = c.TotalTransactions,
                          FullName = c.FullName,
                          CollectionPointGuid = cp.Guid,
-                         /*ConsentDateTime = c.ConsentDatetime.Value,
-                         ConsentDateTimeDisplay = c.CreateDate.Value.LocalDateTime.ToShortDateString(),
-                         WebsiteId = c.WebsiteId,*/
-                         CollectionPointVersion = cp.Version,
-                         /*WebsiteDescription = w.Description,
-                         Purpose = "",
+                         ConsentDateTime = c.ConsentDatetime.ToString(),                      
+                         //Website = "",
+                         CollectionPointVersion = cp.Version,                    
+                         //PurposeList = "",
                          FromBrowser = c.FromBrowser,
-                         FromWebsite = c.FromWebsite,*/
                          PhoneNumber = c.PhoneNumber,
-                         IdCardNumber = c.CardNumber,
+                         IdCardNumber = c.IdCardNumber,
                          Email = c.Email,
                          Remark = c.Remark,
                          CompanyId = c.CompanyId,
                          CompanyName = company.Name,
                          Status = c.Status,
-                         /*EventCode = c.EventCode,
-                         CreateBy = cp.CreateBy,
-                         CreateByDisplay = String.Format("{0} {1}", uCreate.FirstName, uCreate.LastName),
-                         CreateDate = c.CreateDate.Value.ToLocalTime(),
-                         CreateDateDisplay = c.CreateDate.Value.LocalDateTime.ToShortDateString(),
-                         UpdateBy = c.UpdateBy,
-                         UpdateByDisplay = String.Format("{0} {1}", uUpdate.FirstName, uUpdate.LastName),*/
+                         //EventCode = c.EventCode, <- dll.TotalCount 
                          VerifyType = c.VerifyType,
-                         //IsStatus = c.Status == "Active" ? true : false
                      });
 
         #region Filter consent primary key
@@ -121,40 +111,79 @@ public class GeneralConsentInfoRequestQueryHandler : IRequestHandler<GeneralCons
         var model = query.FirstOrDefault();
         
         var consentIdIds = query.Select(c => c.ConsentId);
-       
-        if(consentIdIds.ToList().Count > 0)
-        {
-            var purposeList = (from c in _context.DbSetConsent
-            join ci in _context.DbSetConsentItem on c.ConsentId equals ci.ConsentId
-            join cp in _context.DbSetConsentCollectionPointItem on ci.CollectionPointItemId equals cp.CollectionPointItemId
-            join p in _context.DbSetConsentPurpose on cp.PurposeId equals p.PurposeId
-            where c.CompanyId == 1
-            && c.New == 1
-            && consentIdIds.Contains(c.ConsentId)
-            select
-                new GeneralConsentPurpose
-                {
-                    PurposeId = c.CompanyId,
-                    //PurposeType = p.PurposeType == 1 ? PurposeType.Consent.ToString() : PurposeType.Cookie.ToString(),
-                    Code = p.Code,
-                    Description = p.Description,
-                    WarningDescription = p.WarningDescription,
-                    PurposeCategoryId = p.PurposeCategoryId,
-                    ExpiredDateTime = Calulate.ExpiredDateTime(p.KeepAliveData, p.CreateDate),
-                    //Guid = p.Guid,
-                    Version = p.Version,
-                    Priority = cp.Priority,
-                    Status = p.Status,
-                    /*CreateBy = p.CreateBy,
-                    CreateDate = p.CreateDate.ToLocalTime(),
-                    UpdateBy = p.UpdateBy,*/
-                    CompanyId = p.CompanyId,
-                    /*UpdateDate = p.UpdateDate.ToLocalTime(),
-                    Active = p.Status == "Active" ? true : false,*/
-                }).ToList();
-            model.PurposeList = purposeList;
-        }
 
+        var collectionPointIds = query.Select(c => c.CollectionPointId);
+
+
+        if (consentIdIds.ToList().Count > 0)
+        {
+            #region fetch website
+            var websiteList = (from cp in _context.DbSetConsentCollectionPoints
+                               join w in _context.DbSetConsentWebsite on cp.WebsiteId equals w.WebsiteId
+                               where collectionPointIds.Contains(cp.CollectionPointId)
+                               select 
+                                   new Website4
+                                   {
+                                       Id = w.WebsiteId,
+                                       Description = w.Description,
+                                       UrlHomePage = w.Url,
+                                       UrlPolicyPage = w.Urlpolicy,
+                                   }).ToList();
+
+            model.Website = websiteList.FirstOrDefault();
+            //var websiteLookup = websiteList.ToLookup(item => item.Key, item => item.Value);
+            #endregion
+            #region fetch purpose
+            var purposeLists = (from cp in _context.DbSetConsentCollectionPointItem
+                                join p in _context.DbSetConsentPurpose on cp.PurposeId equals p.PurposeId
+                                where cp.Status == Status.Active.ToString()
+                                && p.Status == Status.Active.ToString()
+                                && collectionPointIds.Contains(cp.CollectionPointId)
+                                select 
+                                    new GeneralConsentPurpose
+                                    {
+                                        PurposeId = p.PurposeId,
+                                        CompanyId = p.CompanyId,
+                                        Code = p.Code,
+                                        Description = p.Description,
+                                        WarningDescription = p.WarningDescription,
+                                        PurposeCategoryId = p.PurposeCategoryId,
+                                        ExpiredDateTime = Calulate.ExpiredDateTime(p.KeepAliveData, p.CreateDate),
+                                        Guid = new Guid(p.Guid),
+                                        Version = p.Version,
+                                        Priority = cp.Priority,
+                                        Status = p.Status
+                                    }).ToList();
+
+            //var purposeLookup = purposeLists.ToLookup(item => item.Key, item => item.Value);
+            #endregion
+
+            //var purposeList = (from c in _context.DbSetConsent
+            //join ci in _context.DbSetConsentItem on c.ConsentId equals ci.ConsentId
+            //join cp in _context.DbSetConsentCollectionPointItem on ci.CollectionPointItemId equals cp.CollectionPointItemId
+            //join p in _context.DbSetConsentPurpose on cp.PurposeId equals p.PurposeId
+            //where c.CompanyId == 1
+            //&& c.New == 1
+            //&& consentIdIds.Contains(c.ConsentId)
+            //select
+            //    new GeneralConsentPurpose
+            //    {
+            //        PurposeId = p.PurposeId,
+            //        CompanyId = p.CompanyId,
+            //        Code = p.Code,
+            //        Description = p.Description,
+            //        WarningDescription = p.WarningDescription,
+            //        PurposeCategoryId = p.PurposeCategoryId,
+            //        ExpiredDateTime = Calulate.ExpiredDateTime(p.KeepAliveData, p.CreateDate),
+            //        Guid = new Guid(p.Guid),
+            //        Version = p.Version,
+            //        Priority = cp.Priority,
+            //        Status = p.Status
+            //    }).ToList();
+
+            model.PurposeList = purposeLists;
+        }
+      
 
         return model;
     }
