@@ -18,7 +18,7 @@ public interface IApplicationDbContext
 
     DbSet<Companies> DbSetCompanies { get; }
     DbSet<ConsentWebsite> DbSetConsentWebsite { get; } 
-    DbSet<Users> DbSetUser { get; }
+    DbSet<User> DbSetUser { get; }
     DbSet<Consent_Consent> DbSetConsent { get; }
     DbSet<V_Consent_Latest_Consent> DbSetVConsentLatestConsents {get; }
     DbSet<Consent_ConsentItem> DbSetConsentItem { get; }
