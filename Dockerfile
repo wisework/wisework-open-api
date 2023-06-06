@@ -8,17 +8,17 @@ ENV ASPNETCORE_ENVIRONMENT=$ENVIRONMENT
 
 WORKDIR /src
 COPY . /src/
-RUN dotnet new nugetconfig && \
-  dotnet nuget add source --username $NUGET_USERNAME \
-  --password $NUGET_PASSWORD \
-  --store-password-in-clear-text \
-  --name github "https://nuget.pkg.github.com/wisework/index.json"
+#RUN dotnet new nugetconfig && \
+#  dotnet nuget add source --username $NUGET_USERNAME \
+#  --password $NUGET_PASSWORD \
+#  --store-password-in-clear-text \
+#  --name github "https://nuget.pkg.github.com/wisework/index.json"
 
 RUN dotnet restore
 RUN dotnet publish -c Release -o app
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 WORKDIR /app
-EXPOSE 5000
+EXPOSE 5001
 COPY --from=build /src/app ./
-ENTRYPOINT ["dotnet", "notify-bg.dll"] 
+ENTRYPOINT ["dotnet", "WW.Application.dll"] 
