@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
 
-namespace WW.Application.ConsentPageSetting.Commands.UpdateConsentThemeCommand;
+namespace WW.Application.ConsentPageSetting.Commands.UpdateConsentTheme;
 
 public class UpdateConsentThemeCommandValidator : AbstractValidator<UpdateConsentThemeCommand>
 {
