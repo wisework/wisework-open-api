@@ -50,6 +50,8 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     public DbSet<Domain.Entities.File> DbSetFile => Set<Domain.Entities.File>();
     public DbSet<FileCategory> DbSetFileCategory => Set<FileCategory>();
     public DbSet<FileType> DbSetFileType => Set<FileType>();
+    public DbSet<Position> DbSetPosition => Set<Position>(); 
+    public DbSet<CompanyUser> DbSetCompanyUser => Set<CompanyUser>();
     public DbSet<LanguageDisplay> DbSetLanguage => Set<LanguageDisplay>();
     public DbSet<LocalStringResource> DbSetLocalStringResource => Set<LocalStringResource>();
     public virtual DbSet<V_Consent_Latest_Consent> DbSetVConsentLatestConsents => Set<V_Consent_Latest_Consent>();
@@ -463,6 +465,27 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
             entity.Property(e => e.UpdateDate).HasPrecision(0);
         });
 
+        builder.Entity<Position>(entity =>
+        {
+            entity.ToTable("Position");
+
+            entity.Property(e => e.PositionID).HasColumnName("PositionID");
+
+            entity.Property(e => e.CompanyID).HasColumnName("CompanyID");
+
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.CreateDate).HasPrecision(0);
+
+            entity.Property(e => e.UpdateDate).HasPrecision(0);
+
+            entity.Property(e => e.Code).HasMaxLength(20);
+
+            entity.Property(e => e.Description).HasMaxLength(100);
+
+            entity.Property(e => e.DepartmentID).HasColumnName("DepartmentID");
+        });
+
         builder.Entity<Companies>(entity =>
         {
             entity.ToTable("Company");
@@ -518,6 +541,21 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
             entity.Property(e => e.UpdateDate)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetimeoffset())");
+        });
+
+        builder.Entity<CompanyUser>(entity =>
+        {
+            entity.ToTable("CompanyUser");
+
+            entity.Property(e => e.CompanyUserID).HasColumnName("CompanyUserID");
+
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.UserID).HasColumnName("UserID");
+
+            entity.Property(e => e.CompanyID).HasColumnName("CompanyID");
+
+            entity.Property(e => e.DefaultBranch).HasColumnName("DefaultBranch");
         });
 
         builder.Entity<ConsentWebsite>(entity =>
