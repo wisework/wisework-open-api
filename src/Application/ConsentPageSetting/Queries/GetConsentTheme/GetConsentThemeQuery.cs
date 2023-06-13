@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using FluentValidation.Results;
 using MediatR;
 using Wisework.ConsentManagementSystem.Api;
+using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
 using WW.Application.Common.Mappings;
 using WW.Application.Common.Models;
@@ -31,18 +33,43 @@ public class GetConsentThemeHandler : IRequestHandler<GetConsentThemeQuery, Pagi
     }
     public async Task<PaginatedList<ConsentTheme>> Handle(GetConsentThemeQuery request, CancellationToken cancellationToken)
     {
-        MapperConfiguration config = new MapperConfiguration(cfg =>
+        if(request.offset < 0 || request.limit < 0)
         {
-            cfg.CreateMap<Consent_ConsentTheme, ConsentTheme>()
-            .ForMember(d => d.HerderTextColor, a => a.MapFrom(s => s.HeaderTextColor));
-        });
+            List<ValidationFailure> failures = new List<ValidationFailure>{ };
 
-        Mapper mapper = new Mapper(config);
+            if (request.offset < 0)
+            {
+                failures.Add(new ValidationFailure("Offset", "Offset must be greater than 0"));
+            }
+            if (request.limit < 0)
+            {
+                failures.Add(new ValidationFailure("Limit", "Limit must be greater than 0"));
+            }
 
-        PaginatedList<ConsentTheme> model =
-            await _context.DbSetConsentTheme.Where(p => p.CompanyId == 1 && p.Status == Status.Active.ToString())
-            .ProjectTo<ConsentTheme>(mapper.ConfigurationProvider).PaginatedListAsync(request.offset, request.limit);
+            throw new ValidationException(failures);
+        }
 
-        return model;
+
+        try
+        {
+            MapperConfiguration config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Consent_ConsentTheme, ConsentTheme>()
+                .ForMember(d => d.HerderTextColor, a => a.MapFrom(s => s.HeaderTextColor));
+            });
+
+            Mapper mapper = new Mapper(config);
+
+            PaginatedList<ConsentTheme> model =
+                await _context.DbSetConsentTheme.Where(p => p.CompanyId == 1 && p.Status == Status.Active.ToString())
+                .ProjectTo<ConsentTheme>(mapper.ConfigurationProvider).PaginatedListAsync(request.offset, request.limit);
+
+            return model;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Internal Error");
+        }
+
     }
 }

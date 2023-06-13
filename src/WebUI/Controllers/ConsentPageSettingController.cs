@@ -14,19 +14,19 @@ namespace Wiskwork.OpenAPI.Controllers;
 
 public class ConsentPageSettingController : ApiControllerBase
 {
-    [HttpGet]
+    [HttpGet("themes")]
     public async Task<ActionResult<PaginatedList<ConsentTheme>>> GetConsentThemeQuery([FromQuery] GetConsentThemeQuery query)
     {
         return await Mediator.Send(query);
     }
 
-    [HttpPost]
+    [HttpPost("theme")]
     public async Task<ActionResult<ConsentTheme>> Create(CreateConsentThemeCommand command)
     {
         return await Mediator.Send(command);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("update-theme/{id}")]
     public async Task<ActionResult<ConsentTheme>> Update(int id, UpdateConsentThemeCommand command)
     {
         if (id != command.ThemeId)
