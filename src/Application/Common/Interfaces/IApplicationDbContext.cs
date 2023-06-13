@@ -27,6 +27,8 @@ public interface IApplicationDbContext
     DbSet<Domain.Entities.File> DbSetFile { get; }
     DbSet<FileCategory> DbSetFileCategory { get; }
     DbSet<FileType> DbSetFileType { get; }
+    DbSet<Position> DbSetPosition { get; }
+    DbSet<CompanyUser> DbSetCompanyUser { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     Task<int> SubmitConsent(string query
                         /*,int CompanyId

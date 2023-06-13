@@ -8,6 +8,7 @@ using WW.Infrastructure.Identity;
 using WW.Infrastructure.Persistence;
 using WW.Infrastructure.Persistence.Interceptors;
 using WW.Infrastructure.Services;
+using WW.Infrastructure.Services.Authentication;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -52,6 +53,8 @@ public static class ConfigureServices
             return UploadFactory.Create(configuration);
         });
         services.AddTransient<IGenerateURLService, GenerateURLService>();
+        services.AddTransient<ICryptography, CryptographyService>();
+        services.AddTransient<ISecurityService, SecurityService>();
         services.AddAuthentication()
             .AddIdentityServerJwt();
 

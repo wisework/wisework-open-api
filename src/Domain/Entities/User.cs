@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace WW.Domain.Entities;
 public class User
 {
-    public int UserId { get; set; }
+    public long UserId { get; set; }
     public int? ProfileImageId { get; set; }
     public int PositionId { get; set; }
     public int Version { get; set; }
