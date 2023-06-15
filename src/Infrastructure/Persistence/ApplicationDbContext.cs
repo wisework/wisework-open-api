@@ -42,7 +42,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     public DbSet<Consent_CollectionPointItem> DbSetConsentCollectionPointItem => Set<Consent_CollectionPointItem>();
     public DbSet<Companies> DbSetCompanies => Set<Companies>();
     public DbSet<ConsentWebsite> DbSetConsentWebsite => Set<ConsentWebsite>();
-    public DbSet<User> DbSetUser => Set<User>();
+    public DbSet<Users> DbSetUser => Set<Users>();
 
     public DbSet<Consent_Consent> DbSetConsent => Set<Consent_Consent>();
     public DbSet<Consent_ConsentItem> DbSetConsentItem => Set<Consent_ConsentItem>();
@@ -588,13 +588,19 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
                 .HasColumnName("URLPolicy");
         });
 
-        builder.Entity<User>(entity =>
+        builder.Entity<Users>(entity =>
         {
+            entity.HasKey(e => e.UserId)
+                .HasName("PK__User___3F146A492FC12559");
+
+
             entity.ToTable("User");
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.Property(e => e.Address).HasMaxLength(1000);
+
+            entity.Property(e => e.CompanyId).HasColumnName("CompanyID");
 
             entity.Property(e => e.BirthDate).HasColumnType("date");
 
