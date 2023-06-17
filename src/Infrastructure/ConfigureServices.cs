@@ -53,7 +53,8 @@ public static class ConfigureServices
             return UploadFactory.Create(configuration);
         });
         services.AddTransient<IGenerateURLService, GenerateURLService>();
-        services.AddTransient<ICryptography, CryptographyService>();
+        services.AddTransient<WW.Application.Common.Interfaces.IAuthenticationService, WW.Infrastructure.Services.Authentication.AuthenticationService>();
+        services.AddTransient<ICryptographyService, CryptographyService>();
         services.AddTransient<ISecurityService, SecurityService>();
         services.AddAuthentication()
             .AddIdentityServerJwt();

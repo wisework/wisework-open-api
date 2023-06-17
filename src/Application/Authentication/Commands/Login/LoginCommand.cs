@@ -28,13 +28,13 @@ public record LoginCommand : IRequest<AuthenticationInfo>
 public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthenticationInfo>
 {
     private readonly IApplicationDbContext _context;
-    private readonly ICryptography _cryptography;
+    private readonly ICryptographyService _cryptographyService;
     private readonly ISecurityService _securityService;
 
-    public LoginCommandHandler(IApplicationDbContext context, ICryptography cryptography, ISecurityService securityService)
+    public LoginCommandHandler(IApplicationDbContext context, ICryptographyService cryptographyService, ISecurityService securityService)
     {
         _context = context;
-        _cryptography = cryptography;
+        _cryptographyService = cryptographyService;
         _securityService = securityService;
     }
 
@@ -59,7 +59,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthenticationI
 
         if (loginInfo != null )
         {
-            password = _cryptography.generatePassword(request.Password, loginInfo.Guid);
+            password = _cryptographyService.generatePassword(request.Password, loginInfo.Guid);
         }
 
         var authentication = (from u in _context.DbSetUser
@@ -70,7 +70,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthenticationI
                                   TokenID = Guid.NewGuid().ToString().ToUpper(),
                                   UserID = Convert.ToInt32(u.UserId),
                                   CompanyID = Convert.ToInt32(cu.CompanyID),
-                                  TokenDate = DateTime.Now,
+                                  TokenDate = DateTime.Now.AddDays(1),
                                   VisitorId = "",
                               }).FirstOrDefault();
 
