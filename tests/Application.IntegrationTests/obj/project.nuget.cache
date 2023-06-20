@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "TugO97igXqMNRrcxZNbYpcIy0+bfXW/uOCCbvKROX57nNeS3OOaLwStJ1BfMWpJ6VlLwfb036o1ENI07b3bkYA==",
+  "dgSpecHash": "oAd4CZB2skUL7XCOmZbHRmlRAJ2vrWBMxLtM7rS8zcou6ugUrC6UXhyfOEFxE4Qv8yw/B9/pBlMj/r36OdnDDg==",
   "success": true,
   "projectFilePath": "D:\\pdpa-q4\\wisework-open-api\\tests\\Application.IntegrationTests\\Application.IntegrationTests.csproj",
   "expectedPackageFiles": [

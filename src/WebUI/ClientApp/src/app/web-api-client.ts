@@ -47,6 +47,7 @@ export class CustomFieldClient implements ICustomFieldClient {
         let options_ : any = {
             observe: "response",
             responseType: "blob",
+            withCredentials: true,
             headers: new HttpHeaders({
                 "Accept": "application/json"
             })
@@ -142,6 +143,7 @@ export class GeneralConsentClient implements IGeneralConsentClient {
         let options_ : any = {
             observe: "response",
             responseType: "blob",
+            withCredentials: true,
             headers: new HttpHeaders({
                 "Accept": "application/json"
             })
@@ -193,6 +195,7 @@ export class GeneralConsentClient implements IGeneralConsentClient {
             body: content_,
             observe: "response",
             responseType: "blob",
+            withCredentials: true,
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
                 "Accept": "application/json"
@@ -246,6 +249,7 @@ export class GeneralConsentClient implements IGeneralConsentClient {
             body: content_,
             observe: "response",
             responseType: "blob",
+            withCredentials: true,
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
                 "Accept": "application/json"
@@ -299,6 +303,7 @@ export class GeneralConsentClient implements IGeneralConsentClient {
             body: content_,
             observe: "response",
             responseType: "blob",
+            withCredentials: true,
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
                 "Accept": "application/json"
@@ -374,6 +379,7 @@ export class PurposeClient implements IPurposeClient {
         let options_ : any = {
             observe: "response",
             responseType: "blob",
+            withCredentials: true,
             headers: new HttpHeaders({
                 "Accept": "application/json"
             })
@@ -448,6 +454,7 @@ export class SectionClient implements ISectionClient {
         let options_ : any = {
             observe: "response",
             responseType: "blob",
+            withCredentials: true,
             headers: new HttpHeaders({
                 "Accept": "application/json"
             })
@@ -522,6 +529,7 @@ export class WebsiteClient implements IWebsiteClient {
         let options_ : any = {
             observe: "response",
             responseType: "blob",
+            withCredentials: true,
             headers: new HttpHeaders({
                 "Accept": "application/json"
             })
@@ -599,6 +607,7 @@ export class CollectionPointsClient implements ICollectionPointsClient {
         let options_ : any = {
             observe: "response",
             responseType: "blob",
+            withCredentials: true,
             headers: new HttpHeaders({
                 "Accept": "application/json"
             })
@@ -650,6 +659,7 @@ export class CollectionPointsClient implements ICollectionPointsClient {
             body: content_,
             observe: "response",
             responseType: "blob",
+            withCredentials: true,
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
                 "Accept": "application/json"
@@ -706,6 +716,7 @@ export class CollectionPointsClient implements ICollectionPointsClient {
             body: content_,
             observe: "response",
             responseType: "blob",
+            withCredentials: true,
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
                 "Accept": "application/octet-stream"
@@ -756,6 +767,7 @@ export class CollectionPointsClient implements ICollectionPointsClient {
         let options_ : any = {
             observe: "response",
             responseType: "blob",
+            withCredentials: true,
             headers: new HttpHeaders({
                 "Accept": "application/json"
             })
