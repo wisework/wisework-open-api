@@ -16,6 +16,9 @@ public class AuthorizationFilter : ActionFilterAttribute
             throw new UnauthorizedAccessException();
         }
 
+        var authentication = _authenticationService.GetAuthentication(token);
+        context.HttpContext.Items["Authentication"] = authentication;
+
         base.OnActionExecuting(context);
     }
 }

@@ -19,6 +19,13 @@ public class ConsentPageSettingController : ApiControllerBase
     [AuthorizationFilter]
     public async Task<ActionResult<PaginatedList<ConsentTheme>>> GetConsentThemeQuery([FromQuery] GetConsentThemeQuery query)
     {
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            query.authentication = authentication;
+        }
+       
+           
         return await Mediator.Send(query);
     }
 

@@ -21,6 +21,7 @@ public record GetConsentThemeQuery : IRequest<PaginatedList<ConsentTheme>>
 {
     public int offset { get; init; } = 1;
     public int limit { get; init; } = 10;
+    public AuthenticationModel? authentication { get; set; }
 }
 public class GetConsentThemeHandler : IRequestHandler<GetConsentThemeQuery, PaginatedList<ConsentTheme>>
 {
@@ -33,6 +34,11 @@ public class GetConsentThemeHandler : IRequestHandler<GetConsentThemeQuery, Pagi
     }
     public async Task<PaginatedList<ConsentTheme>> Handle(GetConsentThemeQuery request, CancellationToken cancellationToken)
     {
+        if(request.authentication == null) 
+        {
+            throw new UnauthorizedAccessException();
+        }
+
         if(request.offset < 0 || request.limit < 0)
         {
             List<ValidationFailure> failures = new List<ValidationFailure>{ };
