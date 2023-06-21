@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using FluentValidation.Results;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Wisework.ConsentManagementSystem.Api;
 using WW.Application.Common.Exceptions;
