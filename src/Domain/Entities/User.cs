@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace WW.Domain.Entities;
-public class User
+public class Users
 {
-    public int UserId { get; set; }
+    public long UserId { get; set; }
     public int? ProfileImageId { get; set; }
     public int PositionId { get; set; }
     public int Version { get; set; }
@@ -35,4 +35,7 @@ public class User
     public DateTimeOffset? LoginFailEnd { get; set; }
     public int? LoginFailCount { get; set; }
     public int? ForceChangePassword { get; set; }
+    public int? CompanyId { get; set; }
+    public string? PositionDescription { get; set; }
+    public string? ProfileImage { get; set; }
 }

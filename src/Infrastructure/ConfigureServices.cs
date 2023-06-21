@@ -1,13 +1,14 @@
-﻿using WW.Application.Common.Interfaces;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using WW.Application.Common.Interfaces;
 using WW.Infrastructure.Files;
 using WW.Infrastructure.Identity;
 using WW.Infrastructure.Persistence;
 using WW.Infrastructure.Persistence.Interceptors;
 using WW.Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using WW.Infrastructure.Services.Authentication;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -46,7 +47,14 @@ public static class ConfigureServices
         services.AddTransient<IDateTime, DateTimeService>();
         services.AddTransient<IIdentityService, IdentityService>();
         services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
-
+        UploadFactory.Create(configuration);
+        services.AddTransient<IUploadService>(x =>
+        {
+            return UploadFactory.Create(configuration);
+        });
+        services.AddTransient<IGenerateURLService, GenerateURLService>();
+        services.AddTransient<ICryptography, CryptographyService>();
+        services.AddTransient<ISecurityService, SecurityService>();
         services.AddAuthentication()
             .AddIdentityServerJwt();
 

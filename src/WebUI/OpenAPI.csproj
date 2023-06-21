@@ -23,6 +23,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.5" />
         <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.5" />
         <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="6.0.5" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="NSwag.AspNetCore" Version="13.16.0" />
         <PackageReference Include="NSwag.MSBuild" Version="13.16.0">
             <PrivateAssets>all</PrivateAssets>
@@ -43,8 +44,7 @@
 
     <ItemGroup>
       <Reference Include="Wisework.ConsentManagementSystem.Api">
-        <HintPath>..\..\..\..\PDPA\wisework-package\Wisework.ConsentManagementSystem.Api\bin\Release\netstandard2.0\Wisework.ConsentManagementSystem.Api.dll</HintPath>
-        <CopyLocal>True</CopyLocal>
+        <HintPath>..\..\dll\v1.0.17.0\Wisework.ConsentManagementSystem.Api.dll</HintPath>
       </Reference>
     </ItemGroup>
 

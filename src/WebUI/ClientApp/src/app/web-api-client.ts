@@ -15,8 +15,259 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
+export interface ICompanyClient {
+    get(id: number): Observable<Company>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class CompanyClient implements ICompanyClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    get(id: number): Observable<Company> {
+        let url_ = this.baseUrl + "/api/Company/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Company>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Company>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<Company> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Company.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export interface IConsentPageSettingClient {
+    getConsentThemeQuery(offset: number | undefined, limit: number | undefined): Observable<PaginatedListOfConsentTheme>;
+    create(command: CreateConsentThemeCommand): Observable<ConsentTheme>;
+    get(count: number): Observable<Image>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ConsentPageSettingClient implements IConsentPageSettingClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getConsentThemeQuery(offset: number | undefined, limit: number | undefined): Observable<PaginatedListOfConsentTheme> {
+        let url_ = this.baseUrl + "/api/ConsentPageSetting?";
+        if (offset === null)
+            throw new Error("The parameter 'offset' cannot be null.");
+        else if (offset !== undefined)
+            url_ += "offset=" + encodeURIComponent("" + offset) + "&";
+        if (limit === null)
+            throw new Error("The parameter 'limit' cannot be null.");
+        else if (limit !== undefined)
+            url_ += "limit=" + encodeURIComponent("" + limit) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetConsentThemeQuery(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetConsentThemeQuery(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PaginatedListOfConsentTheme>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PaginatedListOfConsentTheme>;
+        }));
+    }
+
+    protected processGetConsentThemeQuery(response: HttpResponseBase): Observable<PaginatedListOfConsentTheme> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginatedListOfConsentTheme.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    create(command: CreateConsentThemeCommand): Observable<ConsentTheme> {
+        let url_ = this.baseUrl + "/api/ConsentPageSetting";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ConsentTheme>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ConsentTheme>;
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<ConsentTheme> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ConsentTheme.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    get(count: number): Observable<Image> {
+        let url_ = this.baseUrl + "/api/ConsentPageSetting/image/{count}";
+        if (count === undefined || count === null)
+            throw new Error("The parameter 'count' must be defined.");
+        url_ = url_.replace("{count}", encodeURIComponent("" + count));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Image>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Image>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<Image> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Image.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
 export interface ICustomFieldClient {
-    getCollectionPointsQuery(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfCollectionPointCustomFieldActiveList>;
+    getCollectionPointsQuery(offset: number | undefined, limit: number | undefined): Observable<PaginatedListOfCollectionPointCustomFieldActiveList>;
+    create(command: CreateCustomFieldCommand): Observable<CollectionPointCustomFieldActiveList>;
+    update(id: number, command: UpdateCustomFieldCommand): Observable<CollectionPointCustomFieldActiveList>;
+    get(id: number): Observable<CollectionPointCustomFieldActiveList>;
 }
 
 @Injectable({
@@ -32,16 +283,16 @@ export class CustomFieldClient implements ICustomFieldClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getCollectionPointsQuery(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfCollectionPointCustomFieldActiveList> {
+    getCollectionPointsQuery(offset: number | undefined, limit: number | undefined): Observable<PaginatedListOfCollectionPointCustomFieldActiveList> {
         let url_ = this.baseUrl + "/api/CustomField?";
-        if (pageNumber === null)
-            throw new Error("The parameter 'pageNumber' cannot be null.");
-        else if (pageNumber !== undefined)
-            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
-        if (pageSize === null)
-            throw new Error("The parameter 'pageSize' cannot be null.");
-        else if (pageSize !== undefined)
-            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (offset === null)
+            throw new Error("The parameter 'offset' cannot be null.");
+        else if (offset !== undefined)
+            url_ += "offset=" + encodeURIComponent("" + offset) + "&";
+        if (limit === null)
+            throw new Error("The parameter 'limit' cannot be null.");
+        else if (limit !== undefined)
+            url_ += "limit=" + encodeURIComponent("" + limit) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -78,6 +329,164 @@ export class CustomFieldClient implements ICustomFieldClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PaginatedListOfCollectionPointCustomFieldActiveList.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    create(command: CreateCustomFieldCommand): Observable<CollectionPointCustomFieldActiveList> {
+        let url_ = this.baseUrl + "/api/CustomField";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CollectionPointCustomFieldActiveList>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CollectionPointCustomFieldActiveList>;
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<CollectionPointCustomFieldActiveList> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CollectionPointCustomFieldActiveList.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    update(id: number, command: UpdateCustomFieldCommand): Observable<CollectionPointCustomFieldActiveList> {
+        let url_ = this.baseUrl + "/api/CustomField/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CollectionPointCustomFieldActiveList>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CollectionPointCustomFieldActiveList>;
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<CollectionPointCustomFieldActiveList> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CollectionPointCustomFieldActiveList.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    get(id: number): Observable<CollectionPointCustomFieldActiveList> {
+        let url_ = this.baseUrl + "/api/CustomField/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CollectionPointCustomFieldActiveList>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CollectionPointCustomFieldActiveList>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<CollectionPointCustomFieldActiveList> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CollectionPointCustomFieldActiveList.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -417,7 +826,10 @@ export class PurposeClient implements IPurposeClient {
 }
 
 export interface ISectionClient {
-    getCollectionPointsQuery(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfSectionActiveList>;
+    getCollectionPointsQuery(offset: number | undefined, limit: number | undefined): Observable<PaginatedListOfSectionActiveList>;
+    create(command: CreateSectionCommand): Observable<SectionActiveList>;
+    update(id: number, command: UpdateSectionCommand): Observable<SectionActiveList>;
+    get(id: number): Observable<SectionActiveList>;
 }
 
 @Injectable({
@@ -433,16 +845,16 @@ export class SectionClient implements ISectionClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getCollectionPointsQuery(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfSectionActiveList> {
+    getCollectionPointsQuery(offset: number | undefined, limit: number | undefined): Observable<PaginatedListOfSectionActiveList> {
         let url_ = this.baseUrl + "/api/Section?";
-        if (pageNumber === null)
-            throw new Error("The parameter 'pageNumber' cannot be null.");
-        else if (pageNumber !== undefined)
-            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
-        if (pageSize === null)
-            throw new Error("The parameter 'pageSize' cannot be null.");
-        else if (pageSize !== undefined)
-            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (offset === null)
+            throw new Error("The parameter 'offset' cannot be null.");
+        else if (offset !== undefined)
+            url_ += "offset=" + encodeURIComponent("" + offset) + "&";
+        if (limit === null)
+            throw new Error("The parameter 'limit' cannot be null.");
+        else if (limit !== undefined)
+            url_ += "limit=" + encodeURIComponent("" + limit) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -479,6 +891,164 @@ export class SectionClient implements ISectionClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PaginatedListOfSectionActiveList.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    create(command: CreateSectionCommand): Observable<SectionActiveList> {
+        let url_ = this.baseUrl + "/api/Section";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SectionActiveList>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SectionActiveList>;
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<SectionActiveList> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SectionActiveList.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    update(id: number, command: UpdateSectionCommand): Observable<SectionActiveList> {
+        let url_ = this.baseUrl + "/api/Section/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SectionActiveList>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SectionActiveList>;
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<SectionActiveList> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SectionActiveList.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    get(id: number): Observable<SectionActiveList> {
+        let url_ = this.baseUrl + "/api/Section/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SectionActiveList>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SectionActiveList>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<SectionActiveList> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SectionActiveList.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -798,6 +1368,390 @@ export class CollectionPointsClient implements ICollectionPointsClient {
     }
 }
 
+export class Company implements ICompany {
+    companyId?: number;
+    companyName?: string;
+    logoImage?: string;
+    status?: string;
+    createBy?: string;
+    createDate?: any;
+    updateBy?: string;
+    updateDate?: any;
+    additionalProperties?: { [key: string]: any; } | undefined;
+
+    constructor(data?: ICompany) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.companyId = _data["companyId"];
+            this.companyName = _data["companyName"];
+            this.logoImage = _data["logoImage"];
+            this.status = _data["status"];
+            this.createBy = _data["createBy"];
+            this.createDate = _data["createDate"];
+            this.updateBy = _data["updateBy"];
+            this.updateDate = _data["updateDate"];
+            if (_data["additionalProperties"]) {
+                this.additionalProperties = {} as any;
+                for (let key in _data["additionalProperties"]) {
+                    if (_data["additionalProperties"].hasOwnProperty(key))
+                        (<any>this.additionalProperties)![key] = _data["additionalProperties"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): Company {
+        data = typeof data === 'object' ? data : {};
+        let result = new Company();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["companyId"] = this.companyId;
+        data["companyName"] = this.companyName;
+        data["logoImage"] = this.logoImage;
+        data["status"] = this.status;
+        data["createBy"] = this.createBy;
+        data["createDate"] = this.createDate;
+        data["updateBy"] = this.updateBy;
+        data["updateDate"] = this.updateDate;
+        if (this.additionalProperties) {
+            data["additionalProperties"] = {};
+            for (let key in this.additionalProperties) {
+                if (this.additionalProperties.hasOwnProperty(key))
+                    (<any>data["additionalProperties"])[key] = this.additionalProperties[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface ICompany {
+    companyId?: number;
+    companyName?: string;
+    logoImage?: string;
+    status?: string;
+    createBy?: string;
+    createDate?: any;
+    updateBy?: string;
+    updateDate?: any;
+    additionalProperties?: { [key: string]: any; } | undefined;
+}
+
+export class PaginatedListOfConsentTheme implements IPaginatedListOfConsentTheme {
+    items?: ConsentTheme[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+
+    constructor(data?: IPaginatedListOfConsentTheme) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(ConsentTheme.fromJS(item));
+            }
+            this.pageNumber = _data["pageNumber"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.hasPreviousPage = _data["hasPreviousPage"];
+            this.hasNextPage = _data["hasNextPage"];
+        }
+    }
+
+    static fromJS(data: any): PaginatedListOfConsentTheme {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedListOfConsentTheme();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pageNumber"] = this.pageNumber;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
+        return data;
+    }
+}
+
+export interface IPaginatedListOfConsentTheme {
+    items?: ConsentTheme[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+}
+
+export class ConsentTheme implements IConsentTheme {
+    themeId?: any;
+    themeTitle?: string;
+    status?: string;
+    herderTextColor?: string;
+    headerBackgroundColor?: string;
+    bodyBackgroudColor?: string;
+    topDescriptionTextColor?: string;
+    bottomDescriptionTextColor?: string;
+    acceptionConsentTextColor?: string;
+    linkToPolicyTextColor?: string;
+    acceptionButtonColor?: string;
+    cancelButtonColor?: string;
+    cancelTextButtonColor?: string;
+    policyUrlTextColor?: string;
+    companyId?: number;
+    additionalProperties?: { [key: string]: any; } | undefined;
+
+    constructor(data?: IConsentTheme) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.themeId = _data["themeId"];
+            this.themeTitle = _data["themeTitle"];
+            this.status = _data["status"];
+            this.herderTextColor = _data["herderTextColor"];
+            this.headerBackgroundColor = _data["headerBackgroundColor"];
+            this.bodyBackgroudColor = _data["bodyBackgroudColor"];
+            this.topDescriptionTextColor = _data["topDescriptionTextColor"];
+            this.bottomDescriptionTextColor = _data["bottomDescriptionTextColor"];
+            this.acceptionConsentTextColor = _data["acceptionConsentTextColor"];
+            this.linkToPolicyTextColor = _data["linkToPolicyTextColor"];
+            this.acceptionButtonColor = _data["acceptionButtonColor"];
+            this.cancelButtonColor = _data["cancelButtonColor"];
+            this.cancelTextButtonColor = _data["cancelTextButtonColor"];
+            this.policyUrlTextColor = _data["policyUrlTextColor"];
+            this.companyId = _data["companyId"];
+            if (_data["additionalProperties"]) {
+                this.additionalProperties = {} as any;
+                for (let key in _data["additionalProperties"]) {
+                    if (_data["additionalProperties"].hasOwnProperty(key))
+                        (<any>this.additionalProperties)![key] = _data["additionalProperties"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): ConsentTheme {
+        data = typeof data === 'object' ? data : {};
+        let result = new ConsentTheme();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["themeId"] = this.themeId;
+        data["themeTitle"] = this.themeTitle;
+        data["status"] = this.status;
+        data["herderTextColor"] = this.herderTextColor;
+        data["headerBackgroundColor"] = this.headerBackgroundColor;
+        data["bodyBackgroudColor"] = this.bodyBackgroudColor;
+        data["topDescriptionTextColor"] = this.topDescriptionTextColor;
+        data["bottomDescriptionTextColor"] = this.bottomDescriptionTextColor;
+        data["acceptionConsentTextColor"] = this.acceptionConsentTextColor;
+        data["linkToPolicyTextColor"] = this.linkToPolicyTextColor;
+        data["acceptionButtonColor"] = this.acceptionButtonColor;
+        data["cancelButtonColor"] = this.cancelButtonColor;
+        data["cancelTextButtonColor"] = this.cancelTextButtonColor;
+        data["policyUrlTextColor"] = this.policyUrlTextColor;
+        data["companyId"] = this.companyId;
+        if (this.additionalProperties) {
+            data["additionalProperties"] = {};
+            for (let key in this.additionalProperties) {
+                if (this.additionalProperties.hasOwnProperty(key))
+                    (<any>data["additionalProperties"])[key] = this.additionalProperties[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface IConsentTheme {
+    themeId?: any;
+    themeTitle?: string;
+    status?: string;
+    herderTextColor?: string;
+    headerBackgroundColor?: string;
+    bodyBackgroudColor?: string;
+    topDescriptionTextColor?: string;
+    bottomDescriptionTextColor?: string;
+    acceptionConsentTextColor?: string;
+    linkToPolicyTextColor?: string;
+    acceptionButtonColor?: string;
+    cancelButtonColor?: string;
+    cancelTextButtonColor?: string;
+    policyUrlTextColor?: string;
+    companyId?: number;
+    additionalProperties?: { [key: string]: any; } | undefined;
+}
+
+export class CreateConsentThemeCommand implements ICreateConsentThemeCommand {
+    themeTitle?: string;
+    headerTextColor?: string;
+    headerBackgroundColor?: string;
+    bodyBackgroudColor?: string;
+    topDescriptionTextColor?: string;
+    bottomDescriptionTextColor?: string;
+    acceptionButtonColor?: string;
+    acceptionConsentTextColor?: string;
+    cancelButtonColor?: string;
+    cancelTextButtonColor?: string;
+    linkToPolicyTextColor?: string;
+    policyUrlTextColor?: string;
+
+    constructor(data?: ICreateConsentThemeCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.themeTitle = _data["themeTitle"];
+            this.headerTextColor = _data["headerTextColor"];
+            this.headerBackgroundColor = _data["headerBackgroundColor"];
+            this.bodyBackgroudColor = _data["bodyBackgroudColor"];
+            this.topDescriptionTextColor = _data["topDescriptionTextColor"];
+            this.bottomDescriptionTextColor = _data["bottomDescriptionTextColor"];
+            this.acceptionButtonColor = _data["acceptionButtonColor"];
+            this.acceptionConsentTextColor = _data["acceptionConsentTextColor"];
+            this.cancelButtonColor = _data["cancelButtonColor"];
+            this.cancelTextButtonColor = _data["cancelTextButtonColor"];
+            this.linkToPolicyTextColor = _data["linkToPolicyTextColor"];
+            this.policyUrlTextColor = _data["policyUrlTextColor"];
+        }
+    }
+
+    static fromJS(data: any): CreateConsentThemeCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateConsentThemeCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["themeTitle"] = this.themeTitle;
+        data["headerTextColor"] = this.headerTextColor;
+        data["headerBackgroundColor"] = this.headerBackgroundColor;
+        data["bodyBackgroudColor"] = this.bodyBackgroudColor;
+        data["topDescriptionTextColor"] = this.topDescriptionTextColor;
+        data["bottomDescriptionTextColor"] = this.bottomDescriptionTextColor;
+        data["acceptionButtonColor"] = this.acceptionButtonColor;
+        data["acceptionConsentTextColor"] = this.acceptionConsentTextColor;
+        data["cancelButtonColor"] = this.cancelButtonColor;
+        data["cancelTextButtonColor"] = this.cancelTextButtonColor;
+        data["linkToPolicyTextColor"] = this.linkToPolicyTextColor;
+        data["policyUrlTextColor"] = this.policyUrlTextColor;
+        return data;
+    }
+}
+
+export interface ICreateConsentThemeCommand {
+    themeTitle?: string;
+    headerTextColor?: string;
+    headerBackgroundColor?: string;
+    bodyBackgroudColor?: string;
+    topDescriptionTextColor?: string;
+    bottomDescriptionTextColor?: string;
+    acceptionButtonColor?: string;
+    acceptionConsentTextColor?: string;
+    cancelButtonColor?: string;
+    cancelTextButtonColor?: string;
+    linkToPolicyTextColor?: string;
+    policyUrlTextColor?: string;
+}
+
+export class Image implements IImage {
+    fullPath?: string;
+    additionalProperties?: { [key: string]: any; } | undefined;
+
+    constructor(data?: IImage) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.fullPath = _data["fullPath"];
+            if (_data["additionalProperties"]) {
+                this.additionalProperties = {} as any;
+                for (let key in _data["additionalProperties"]) {
+                    if (_data["additionalProperties"].hasOwnProperty(key))
+                        (<any>this.additionalProperties)![key] = _data["additionalProperties"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): Image {
+        data = typeof data === 'object' ? data : {};
+        let result = new Image();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["fullPath"] = this.fullPath;
+        if (this.additionalProperties) {
+            data["additionalProperties"] = {};
+            for (let key in this.additionalProperties) {
+                if (this.additionalProperties.hasOwnProperty(key))
+                    (<any>data["additionalProperties"])[key] = this.additionalProperties[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface IImage {
+    fullPath?: string;
+    additionalProperties?: { [key: string]: any; } | undefined;
+}
+
 export class PaginatedListOfCollectionPointCustomFieldActiveList implements IPaginatedListOfCollectionPointCustomFieldActiveList {
     items?: CollectionPointCustomFieldActiveList[];
     pageNumber?: number;
@@ -865,9 +1819,13 @@ export interface IPaginatedListOfCollectionPointCustomFieldActiveList {
 export class CollectionPointCustomFieldActiveList implements ICollectionPointCustomFieldActiveList {
     id?: number;
     code?: string;
-    description?: string;
-    type?: string;
     owner?: string;
+    inputType?: string;
+    title?: string;
+    placeholder?: string;
+    lengthLimit?: number;
+    maxLines?: number;
+    minLines?: number;
     additionalProperties?: { [key: string]: any; } | undefined;
 
     constructor(data?: ICollectionPointCustomFieldActiveList) {
@@ -883,9 +1841,13 @@ export class CollectionPointCustomFieldActiveList implements ICollectionPointCus
         if (_data) {
             this.id = _data["id"];
             this.code = _data["code"];
-            this.description = _data["description"];
-            this.type = _data["type"];
             this.owner = _data["owner"];
+            this.inputType = _data["inputType"];
+            this.title = _data["title"];
+            this.placeholder = _data["placeholder"];
+            this.lengthLimit = _data["lengthLimit"];
+            this.maxLines = _data["maxLines"];
+            this.minLines = _data["minLines"];
             if (_data["additionalProperties"]) {
                 this.additionalProperties = {} as any;
                 for (let key in _data["additionalProperties"]) {
@@ -907,9 +1869,13 @@ export class CollectionPointCustomFieldActiveList implements ICollectionPointCus
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["code"] = this.code;
-        data["description"] = this.description;
-        data["type"] = this.type;
         data["owner"] = this.owner;
+        data["inputType"] = this.inputType;
+        data["title"] = this.title;
+        data["placeholder"] = this.placeholder;
+        data["lengthLimit"] = this.lengthLimit;
+        data["maxLines"] = this.maxLines;
+        data["minLines"] = this.minLines;
         if (this.additionalProperties) {
             data["additionalProperties"] = {};
             for (let key in this.additionalProperties) {
@@ -924,10 +1890,146 @@ export class CollectionPointCustomFieldActiveList implements ICollectionPointCus
 export interface ICollectionPointCustomFieldActiveList {
     id?: number;
     code?: string;
-    description?: string;
-    type?: string;
     owner?: string;
+    inputType?: string;
+    title?: string;
+    placeholder?: string;
+    lengthLimit?: number;
+    maxLines?: number;
+    minLines?: number;
     additionalProperties?: { [key: string]: any; } | undefined;
+}
+
+export class CreateCustomFieldCommand implements ICreateCustomFieldCommand {
+    code?: string;
+    owner?: string;
+    inputType?: string;
+    title?: string;
+    placeholder?: string;
+    lengthLimit?: number;
+    maxLines?: number;
+    minLines?: number;
+
+    constructor(data?: ICreateCustomFieldCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.code = _data["code"];
+            this.owner = _data["owner"];
+            this.inputType = _data["inputType"];
+            this.title = _data["title"];
+            this.placeholder = _data["placeholder"];
+            this.lengthLimit = _data["lengthLimit"];
+            this.maxLines = _data["maxLines"];
+            this.minLines = _data["minLines"];
+        }
+    }
+
+    static fromJS(data: any): CreateCustomFieldCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCustomFieldCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
+        data["owner"] = this.owner;
+        data["inputType"] = this.inputType;
+        data["title"] = this.title;
+        data["placeholder"] = this.placeholder;
+        data["lengthLimit"] = this.lengthLimit;
+        data["maxLines"] = this.maxLines;
+        data["minLines"] = this.minLines;
+        return data;
+    }
+}
+
+export interface ICreateCustomFieldCommand {
+    code?: string;
+    owner?: string;
+    inputType?: string;
+    title?: string;
+    placeholder?: string;
+    lengthLimit?: number;
+    maxLines?: number;
+    minLines?: number;
+}
+
+export class UpdateCustomFieldCommand implements IUpdateCustomFieldCommand {
+    id?: number;
+    code?: string;
+    owner?: string;
+    inputType?: string;
+    title?: string;
+    placeholder?: string;
+    lengthLimit?: number;
+    maxLines?: number;
+    minLines?: number;
+
+    constructor(data?: IUpdateCustomFieldCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.code = _data["code"];
+            this.owner = _data["owner"];
+            this.inputType = _data["inputType"];
+            this.title = _data["title"];
+            this.placeholder = _data["placeholder"];
+            this.lengthLimit = _data["lengthLimit"];
+            this.maxLines = _data["maxLines"];
+            this.minLines = _data["minLines"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCustomFieldCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCustomFieldCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["code"] = this.code;
+        data["owner"] = this.owner;
+        data["inputType"] = this.inputType;
+        data["title"] = this.title;
+        data["placeholder"] = this.placeholder;
+        data["lengthLimit"] = this.lengthLimit;
+        data["maxLines"] = this.maxLines;
+        data["minLines"] = this.minLines;
+        return data;
+    }
+}
+
+export interface IUpdateCustomFieldCommand {
+    id?: number;
+    code?: string;
+    owner?: string;
+    inputType?: string;
+    title?: string;
+    placeholder?: string;
+    lengthLimit?: number;
+    maxLines?: number;
+    minLines?: number;
 }
 
 export class PaginatedListOfGeneralConsent implements IPaginatedListOfGeneralConsent {
@@ -1001,35 +2103,20 @@ export class GeneralConsent implements IGeneralConsent {
     totalTransactions?: number;
     fullName?: string;
     collectionPointGuid?: string;
-    consentDateTime?: Date;
-    consentDateTimeDisplay?: string;
-    websiteId?: number;
+    consentDateTime?: string;
+    website?: Website4;
     collectionPointVersion?: number;
-    websiteDescription?: string;
     purposeList?: GeneralConsentPurpose[];
-    purpose?: string;
     fromBrowser?: string;
-    fromWebsite?: string;
     phoneNumber?: string;
     idCardNumber?: string;
     email?: string;
     remark?: string;
-    eventCode?: string;
     totalCount?: number;
     companyId?: number;
     companyName?: string;
     status?: string;
-    createBy?: number;
-    createByDisplay?: string;
-    createDate?: Date;
-    createDateDisplay?: string;
-    updateBy?: number;
-    updateByDisplay?: string;
-    updateDate?: Date;
-    updateDateDisplay?: string;
     verifyType?: string;
-    row?: number;
-    isStatus?: boolean;
     additionalProperties?: { [key: string]: any; } | undefined;
 
     constructor(data?: IGeneralConsent) {
@@ -1049,39 +2136,24 @@ export class GeneralConsent implements IGeneralConsent {
             this.totalTransactions = _data["totalTransactions"];
             this.fullName = _data["fullName"];
             this.collectionPointGuid = _data["collectionPointGuid"];
-            this.consentDateTime = _data["consentDateTime"] ? new Date(_data["consentDateTime"].toString()) : <any>undefined;
-            this.consentDateTimeDisplay = _data["consentDateTimeDisplay"];
-            this.websiteId = _data["websiteId"];
+            this.consentDateTime = _data["consentDateTime"];
+            this.website = _data["website"] ? Website4.fromJS(_data["website"]) : <any>undefined;
             this.collectionPointVersion = _data["collectionPointVersion"];
-            this.websiteDescription = _data["websiteDescription"];
             if (Array.isArray(_data["purposeList"])) {
                 this.purposeList = [] as any;
                 for (let item of _data["purposeList"])
                     this.purposeList!.push(GeneralConsentPurpose.fromJS(item));
             }
-            this.purpose = _data["purpose"];
             this.fromBrowser = _data["fromBrowser"];
-            this.fromWebsite = _data["fromWebsite"];
             this.phoneNumber = _data["phoneNumber"];
             this.idCardNumber = _data["idCardNumber"];
             this.email = _data["email"];
             this.remark = _data["remark"];
-            this.eventCode = _data["eventCode"];
             this.totalCount = _data["totalCount"];
             this.companyId = _data["companyId"];
             this.companyName = _data["companyName"];
             this.status = _data["status"];
-            this.createBy = _data["createBy"];
-            this.createByDisplay = _data["createByDisplay"];
-            this.createDate = _data["createDate"] ? new Date(_data["createDate"].toString()) : <any>undefined;
-            this.createDateDisplay = _data["createDateDisplay"];
-            this.updateBy = _data["updateBy"];
-            this.updateByDisplay = _data["updateByDisplay"];
-            this.updateDate = _data["updateDate"] ? new Date(_data["updateDate"].toString()) : <any>undefined;
-            this.updateDateDisplay = _data["updateDateDisplay"];
             this.verifyType = _data["verifyType"];
-            this.row = _data["row"];
-            this.isStatus = _data["isStatus"];
             if (_data["additionalProperties"]) {
                 this.additionalProperties = {} as any;
                 for (let key in _data["additionalProperties"]) {
@@ -1107,39 +2179,24 @@ export class GeneralConsent implements IGeneralConsent {
         data["totalTransactions"] = this.totalTransactions;
         data["fullName"] = this.fullName;
         data["collectionPointGuid"] = this.collectionPointGuid;
-        data["consentDateTime"] = this.consentDateTime ? this.consentDateTime.toISOString() : <any>undefined;
-        data["consentDateTimeDisplay"] = this.consentDateTimeDisplay;
-        data["websiteId"] = this.websiteId;
+        data["consentDateTime"] = this.consentDateTime;
+        data["website"] = this.website ? this.website.toJSON() : <any>undefined;
         data["collectionPointVersion"] = this.collectionPointVersion;
-        data["websiteDescription"] = this.websiteDescription;
         if (Array.isArray(this.purposeList)) {
             data["purposeList"] = [];
             for (let item of this.purposeList)
                 data["purposeList"].push(item.toJSON());
         }
-        data["purpose"] = this.purpose;
         data["fromBrowser"] = this.fromBrowser;
-        data["fromWebsite"] = this.fromWebsite;
         data["phoneNumber"] = this.phoneNumber;
         data["idCardNumber"] = this.idCardNumber;
         data["email"] = this.email;
         data["remark"] = this.remark;
-        data["eventCode"] = this.eventCode;
         data["totalCount"] = this.totalCount;
         data["companyId"] = this.companyId;
         data["companyName"] = this.companyName;
         data["status"] = this.status;
-        data["createBy"] = this.createBy;
-        data["createByDisplay"] = this.createByDisplay;
-        data["createDate"] = this.createDate ? this.createDate.toISOString() : <any>undefined;
-        data["createDateDisplay"] = this.createDateDisplay;
-        data["updateBy"] = this.updateBy;
-        data["updateByDisplay"] = this.updateByDisplay;
-        data["updateDate"] = this.updateDate ? this.updateDate.toISOString() : <any>undefined;
-        data["updateDateDisplay"] = this.updateDateDisplay;
         data["verifyType"] = this.verifyType;
-        data["row"] = this.row;
-        data["isStatus"] = this.isStatus;
         if (this.additionalProperties) {
             data["additionalProperties"] = {};
             for (let key in this.additionalProperties) {
@@ -1158,42 +2215,90 @@ export interface IGeneralConsent {
     totalTransactions?: number;
     fullName?: string;
     collectionPointGuid?: string;
-    consentDateTime?: Date;
-    consentDateTimeDisplay?: string;
-    websiteId?: number;
+    consentDateTime?: string;
+    website?: Website4;
     collectionPointVersion?: number;
-    websiteDescription?: string;
     purposeList?: GeneralConsentPurpose[];
-    purpose?: string;
     fromBrowser?: string;
-    fromWebsite?: string;
     phoneNumber?: string;
     idCardNumber?: string;
     email?: string;
     remark?: string;
-    eventCode?: string;
     totalCount?: number;
     companyId?: number;
     companyName?: string;
     status?: string;
-    createBy?: number;
-    createByDisplay?: string;
-    createDate?: Date;
-    createDateDisplay?: string;
-    updateBy?: number;
-    updateByDisplay?: string;
-    updateDate?: Date;
-    updateDateDisplay?: string;
     verifyType?: string;
-    row?: number;
-    isStatus?: boolean;
+    additionalProperties?: { [key: string]: any; } | undefined;
+}
+
+export class Website4 implements IWebsite4 {
+    id?: number;
+    description?: string;
+    urlPolicyPage?: string;
+    urlHomePage?: string;
+    additionalProperties?: { [key: string]: any; } | undefined;
+
+    constructor(data?: IWebsite4) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.description = _data["description"];
+            this.urlPolicyPage = _data["urlPolicyPage"];
+            this.urlHomePage = _data["urlHomePage"];
+            if (_data["additionalProperties"]) {
+                this.additionalProperties = {} as any;
+                for (let key in _data["additionalProperties"]) {
+                    if (_data["additionalProperties"].hasOwnProperty(key))
+                        (<any>this.additionalProperties)![key] = _data["additionalProperties"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): Website4 {
+        data = typeof data === 'object' ? data : {};
+        let result = new Website4();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["description"] = this.description;
+        data["urlPolicyPage"] = this.urlPolicyPage;
+        data["urlHomePage"] = this.urlHomePage;
+        if (this.additionalProperties) {
+            data["additionalProperties"] = {};
+            for (let key in this.additionalProperties) {
+                if (this.additionalProperties.hasOwnProperty(key))
+                    (<any>data["additionalProperties"])[key] = this.additionalProperties[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface IWebsite4 {
+    id?: number;
+    description?: string;
+    urlPolicyPage?: string;
+    urlHomePage?: string;
     additionalProperties?: { [key: string]: any; } | undefined;
 }
 
 export class GeneralConsentPurpose implements IGeneralConsentPurpose {
     purposeId?: number;
     companyId?: number;
-    purposeType?: string;
     code?: string;
     description?: string;
     warningDescription?: string;
@@ -1203,11 +2308,6 @@ export class GeneralConsentPurpose implements IGeneralConsentPurpose {
     version?: number;
     priority?: number;
     status?: string;
-    createBy?: number;
-    createDate?: Date;
-    updateBy?: number;
-    updateDate?: Date;
-    active?: boolean;
     additionalProperties?: { [key: string]: any; } | undefined;
 
     constructor(data?: IGeneralConsentPurpose) {
@@ -1223,7 +2323,6 @@ export class GeneralConsentPurpose implements IGeneralConsentPurpose {
         if (_data) {
             this.purposeId = _data["purposeId"];
             this.companyId = _data["companyId"];
-            this.purposeType = _data["purposeType"];
             this.code = _data["code"];
             this.description = _data["description"];
             this.warningDescription = _data["warningDescription"];
@@ -1233,11 +2332,6 @@ export class GeneralConsentPurpose implements IGeneralConsentPurpose {
             this.version = _data["version"];
             this.priority = _data["priority"];
             this.status = _data["status"];
-            this.createBy = _data["createBy"];
-            this.createDate = _data["createDate"] ? new Date(_data["createDate"].toString()) : <any>undefined;
-            this.updateBy = _data["updateBy"];
-            this.updateDate = _data["updateDate"] ? new Date(_data["updateDate"].toString()) : <any>undefined;
-            this.active = _data["active"];
             if (_data["additionalProperties"]) {
                 this.additionalProperties = {} as any;
                 for (let key in _data["additionalProperties"]) {
@@ -1259,7 +2353,6 @@ export class GeneralConsentPurpose implements IGeneralConsentPurpose {
         data = typeof data === 'object' ? data : {};
         data["purposeId"] = this.purposeId;
         data["companyId"] = this.companyId;
-        data["purposeType"] = this.purposeType;
         data["code"] = this.code;
         data["description"] = this.description;
         data["warningDescription"] = this.warningDescription;
@@ -1269,11 +2362,6 @@ export class GeneralConsentPurpose implements IGeneralConsentPurpose {
         data["version"] = this.version;
         data["priority"] = this.priority;
         data["status"] = this.status;
-        data["createBy"] = this.createBy;
-        data["createDate"] = this.createDate ? this.createDate.toISOString() : <any>undefined;
-        data["updateBy"] = this.updateBy;
-        data["updateDate"] = this.updateDate ? this.updateDate.toISOString() : <any>undefined;
-        data["active"] = this.active;
         if (this.additionalProperties) {
             data["additionalProperties"] = {};
             for (let key in this.additionalProperties) {
@@ -1288,7 +2376,6 @@ export class GeneralConsentPurpose implements IGeneralConsentPurpose {
 export interface IGeneralConsentPurpose {
     purposeId?: number;
     companyId?: number;
-    purposeType?: string;
     code?: string;
     description?: string;
     warningDescription?: string;
@@ -1298,11 +2385,6 @@ export interface IGeneralConsentPurpose {
     version?: number;
     priority?: number;
     status?: string;
-    createBy?: number;
-    createDate?: Date;
-    updateBy?: number;
-    updateDate?: Date;
-    active?: boolean;
     additionalProperties?: { [key: string]: any; } | undefined;
 }
 
@@ -1425,7 +2507,6 @@ export interface ISubmitConsentCommand {
 export class SubmitConsentPurpose implements ISubmitConsentPurpose {
     purposeGuid!: string;
     active?: boolean;
-    expiredDateTime?: Date;
     additionalProperties?: { [key: string]: any; } | undefined;
 
     constructor(data?: ISubmitConsentPurpose) {
@@ -1441,7 +2522,6 @@ export class SubmitConsentPurpose implements ISubmitConsentPurpose {
         if (_data) {
             this.purposeGuid = _data["purposeGuid"];
             this.active = _data["active"];
-            this.expiredDateTime = _data["expiredDateTime"] ? new Date(_data["expiredDateTime"].toString()) : <any>undefined;
             if (_data["additionalProperties"]) {
                 this.additionalProperties = {} as any;
                 for (let key in _data["additionalProperties"]) {
@@ -1463,7 +2543,6 @@ export class SubmitConsentPurpose implements ISubmitConsentPurpose {
         data = typeof data === 'object' ? data : {};
         data["purposeGuid"] = this.purposeGuid;
         data["active"] = this.active;
-        data["expiredDateTime"] = this.expiredDateTime ? this.expiredDateTime.toISOString() : <any>undefined;
         if (this.additionalProperties) {
             data["additionalProperties"] = {};
             for (let key in this.additionalProperties) {
@@ -1478,7 +2557,6 @@ export class SubmitConsentPurpose implements ISubmitConsentPurpose {
 export interface ISubmitConsentPurpose {
     purposeGuid: string;
     active?: boolean;
-    expiredDateTime?: Date;
     additionalProperties?: { [key: string]: any; } | undefined;
 }
 
@@ -1707,10 +2785,19 @@ export interface IPaginatedListOfPurposeActiveList {
 }
 
 export class PurposeActiveList implements IPurposeActiveList {
-    purposeId?: number;
+    purposeID?: number;
+    guid?: string;
+    purposeType?: number;
+    categoryID?: number;
     code?: string;
     description?: string;
+    keepAliveData?: string;
+    linkMoreDetail?: string;
+    status?: string;
+    textMoreDetail?: string;
+    warningDescription?: string;
     expiredDateTime?: string;
+    language?: string;
     additionalProperties?: { [key: string]: any; } | undefined;
 
     constructor(data?: IPurposeActiveList) {
@@ -1724,10 +2811,19 @@ export class PurposeActiveList implements IPurposeActiveList {
 
     init(_data?: any) {
         if (_data) {
-            this.purposeId = _data["purposeId"];
+            this.purposeID = _data["purposeID"];
+            this.guid = _data["guid"];
+            this.purposeType = _data["purposeType"];
+            this.categoryID = _data["categoryID"];
             this.code = _data["code"];
             this.description = _data["description"];
+            this.keepAliveData = _data["keepAliveData"];
+            this.linkMoreDetail = _data["linkMoreDetail"];
+            this.status = _data["status"];
+            this.textMoreDetail = _data["textMoreDetail"];
+            this.warningDescription = _data["warningDescription"];
             this.expiredDateTime = _data["expiredDateTime"];
+            this.language = _data["language"];
             if (_data["additionalProperties"]) {
                 this.additionalProperties = {} as any;
                 for (let key in _data["additionalProperties"]) {
@@ -1747,10 +2843,19 @@ export class PurposeActiveList implements IPurposeActiveList {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["purposeId"] = this.purposeId;
+        data["purposeID"] = this.purposeID;
+        data["guid"] = this.guid;
+        data["purposeType"] = this.purposeType;
+        data["categoryID"] = this.categoryID;
         data["code"] = this.code;
         data["description"] = this.description;
+        data["keepAliveData"] = this.keepAliveData;
+        data["linkMoreDetail"] = this.linkMoreDetail;
+        data["status"] = this.status;
+        data["textMoreDetail"] = this.textMoreDetail;
+        data["warningDescription"] = this.warningDescription;
         data["expiredDateTime"] = this.expiredDateTime;
+        data["language"] = this.language;
         if (this.additionalProperties) {
             data["additionalProperties"] = {};
             for (let key in this.additionalProperties) {
@@ -1763,10 +2868,19 @@ export class PurposeActiveList implements IPurposeActiveList {
 }
 
 export interface IPurposeActiveList {
-    purposeId?: number;
+    purposeID?: number;
+    guid?: string;
+    purposeType?: number;
+    categoryID?: number;
     code?: string;
     description?: string;
+    keepAliveData?: string;
+    linkMoreDetail?: string;
+    status?: string;
+    textMoreDetail?: string;
+    warningDescription?: string;
     expiredDateTime?: string;
+    language?: string;
     additionalProperties?: { [key: string]: any; } | undefined;
 }
 
@@ -1838,6 +2952,7 @@ export class SectionActiveList implements ISectionActiveList {
     sectionId?: number;
     code?: string;
     description?: string;
+    status?: string;
     additionalProperties?: { [key: string]: any; } | undefined;
 
     constructor(data?: ISectionActiveList) {
@@ -1854,6 +2969,7 @@ export class SectionActiveList implements ISectionActiveList {
             this.sectionId = _data["sectionId"];
             this.code = _data["code"];
             this.description = _data["description"];
+            this.status = _data["status"];
             if (_data["additionalProperties"]) {
                 this.additionalProperties = {} as any;
                 for (let key in _data["additionalProperties"]) {
@@ -1876,6 +2992,7 @@ export class SectionActiveList implements ISectionActiveList {
         data["sectionId"] = this.sectionId;
         data["code"] = this.code;
         data["description"] = this.description;
+        data["status"] = this.status;
         if (this.additionalProperties) {
             data["additionalProperties"] = {};
             for (let key in this.additionalProperties) {
@@ -1891,7 +3008,100 @@ export interface ISectionActiveList {
     sectionId?: number;
     code?: string;
     description?: string;
+    status?: string;
     additionalProperties?: { [key: string]: any; } | undefined;
+}
+
+export class CreateSectionCommand implements ICreateSectionCommand {
+    code?: string;
+    description?: string;
+    status?: string;
+
+    constructor(data?: ICreateSectionCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.code = _data["code"];
+            this.description = _data["description"];
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): CreateSectionCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateSectionCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
+        data["description"] = this.description;
+        data["status"] = this.status;
+        return data;
+    }
+}
+
+export interface ICreateSectionCommand {
+    code?: string;
+    description?: string;
+    status?: string;
+}
+
+export class UpdateSectionCommand implements IUpdateSectionCommand {
+    id?: number;
+    code?: string;
+    description?: string;
+    status?: string;
+
+    constructor(data?: IUpdateSectionCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.code = _data["code"];
+            this.description = _data["description"];
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): UpdateSectionCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateSectionCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["code"] = this.code;
+        data["description"] = this.description;
+        data["status"] = this.status;
+        return data;
+    }
+}
+
+export interface IUpdateSectionCommand {
+    id?: number;
+    code?: string;
+    description?: string;
+    status?: string;
 }
 
 export class PaginatedListOfWebsiteActiveList implements IPaginatedListOfWebsiteActiveList {
@@ -1960,8 +3170,9 @@ export interface IPaginatedListOfWebsiteActiveList {
 
 export class WebsiteActiveList implements IWebsiteActiveList {
     websiteId?: number;
-    code?: string;
-    description?: string;
+    name?: string;
+    urlHomePage?: string;
+    urlPolicyPage?: string;
     additionalProperties?: { [key: string]: any; } | undefined;
 
     constructor(data?: IWebsiteActiveList) {
@@ -1976,8 +3187,9 @@ export class WebsiteActiveList implements IWebsiteActiveList {
     init(_data?: any) {
         if (_data) {
             this.websiteId = _data["websiteId"];
-            this.code = _data["code"];
-            this.description = _data["description"];
+            this.name = _data["name"];
+            this.urlHomePage = _data["urlHomePage"];
+            this.urlPolicyPage = _data["urlPolicyPage"];
             if (_data["additionalProperties"]) {
                 this.additionalProperties = {} as any;
                 for (let key in _data["additionalProperties"]) {
@@ -1998,8 +3210,9 @@ export class WebsiteActiveList implements IWebsiteActiveList {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["websiteId"] = this.websiteId;
-        data["code"] = this.code;
-        data["description"] = this.description;
+        data["name"] = this.name;
+        data["urlHomePage"] = this.urlHomePage;
+        data["urlPolicyPage"] = this.urlPolicyPage;
         if (this.additionalProperties) {
             data["additionalProperties"] = {};
             for (let key in this.additionalProperties) {
@@ -2013,8 +3226,9 @@ export class WebsiteActiveList implements IWebsiteActiveList {
 
 export interface IWebsiteActiveList {
     websiteId?: number;
-    code?: string;
-    description?: string;
+    name?: string;
+    urlHomePage?: string;
+    urlPolicyPage?: string;
     additionalProperties?: { [key: string]: any; } | undefined;
 }
 
@@ -2084,32 +3298,15 @@ export interface IPaginatedListOfCollectionPointInfo {
 
 export class CollectionPointInfo implements ICollectionPointInfo {
     collectionPointId?: number;
-    collectionPoint?: string;
-    websiteId?: number;
-    accessToken?: string;
+    collectionPointName?: string;
     guid?: string;
-    websiteDescription?: string;
-    websiteUrl?: string;
-    websitePolicy?: string;
-    description?: string;
-    script?: string;
+    website?: Website;
     purposeList?: GeneralConsentPurpose[];
-    customFieldsList?: CollectionPointCustomFields[];
+    customFieldsList?: CustomFields[];
     expiredDateTime?: string;
     companyId?: number;
     version?: number;
     status?: string;
-    statusDisplay?: string;
-    createBy?: number;
-    createByDisplay?: string;
-    createDate?: Date;
-    createDateDisplay?: string;
-    updateBy?: number;
-    updateByDisplay?: string;
-    updateDate?: Date;
-    updateDateDisplay?: string;
-    row?: number;
-    isStatus?: boolean;
     pageDetail?: CollectionPointPageDetail;
     additionalProperties?: { [key: string]: any; } | undefined;
 
@@ -2125,15 +3322,9 @@ export class CollectionPointInfo implements ICollectionPointInfo {
     init(_data?: any) {
         if (_data) {
             this.collectionPointId = _data["collectionPointId"];
-            this.collectionPoint = _data["collectionPoint"];
-            this.websiteId = _data["websiteId"];
-            this.accessToken = _data["accessToken"];
+            this.collectionPointName = _data["collectionPointName"];
             this.guid = _data["guid"];
-            this.websiteDescription = _data["websiteDescription"];
-            this.websiteUrl = _data["websiteUrl"];
-            this.websitePolicy = _data["websitePolicy"];
-            this.description = _data["description"];
-            this.script = _data["script"];
+            this.website = _data["website"] ? Website.fromJS(_data["website"]) : <any>undefined;
             if (Array.isArray(_data["purposeList"])) {
                 this.purposeList = [] as any;
                 for (let item of _data["purposeList"])
@@ -2142,23 +3333,12 @@ export class CollectionPointInfo implements ICollectionPointInfo {
             if (Array.isArray(_data["customFieldsList"])) {
                 this.customFieldsList = [] as any;
                 for (let item of _data["customFieldsList"])
-                    this.customFieldsList!.push(CollectionPointCustomFields.fromJS(item));
+                    this.customFieldsList!.push(CustomFields.fromJS(item));
             }
             this.expiredDateTime = _data["expiredDateTime"];
             this.companyId = _data["companyId"];
             this.version = _data["version"];
             this.status = _data["status"];
-            this.statusDisplay = _data["statusDisplay"];
-            this.createBy = _data["createBy"];
-            this.createByDisplay = _data["createByDisplay"];
-            this.createDate = _data["createDate"] ? new Date(_data["createDate"].toString()) : <any>undefined;
-            this.createDateDisplay = _data["createDateDisplay"];
-            this.updateBy = _data["updateBy"];
-            this.updateByDisplay = _data["updateByDisplay"];
-            this.updateDate = _data["updateDate"] ? new Date(_data["updateDate"].toString()) : <any>undefined;
-            this.updateDateDisplay = _data["updateDateDisplay"];
-            this.row = _data["row"];
-            this.isStatus = _data["isStatus"];
             this.pageDetail = _data["pageDetail"] ? CollectionPointPageDetail.fromJS(_data["pageDetail"]) : <any>undefined;
             if (_data["additionalProperties"]) {
                 this.additionalProperties = {} as any;
@@ -2180,15 +3360,9 @@ export class CollectionPointInfo implements ICollectionPointInfo {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["collectionPointId"] = this.collectionPointId;
-        data["collectionPoint"] = this.collectionPoint;
-        data["websiteId"] = this.websiteId;
-        data["accessToken"] = this.accessToken;
+        data["collectionPointName"] = this.collectionPointName;
         data["guid"] = this.guid;
-        data["websiteDescription"] = this.websiteDescription;
-        data["websiteUrl"] = this.websiteUrl;
-        data["websitePolicy"] = this.websitePolicy;
-        data["description"] = this.description;
-        data["script"] = this.script;
+        data["website"] = this.website ? this.website.toJSON() : <any>undefined;
         if (Array.isArray(this.purposeList)) {
             data["purposeList"] = [];
             for (let item of this.purposeList)
@@ -2203,17 +3377,6 @@ export class CollectionPointInfo implements ICollectionPointInfo {
         data["companyId"] = this.companyId;
         data["version"] = this.version;
         data["status"] = this.status;
-        data["statusDisplay"] = this.statusDisplay;
-        data["createBy"] = this.createBy;
-        data["createByDisplay"] = this.createByDisplay;
-        data["createDate"] = this.createDate ? this.createDate.toISOString() : <any>undefined;
-        data["createDateDisplay"] = this.createDateDisplay;
-        data["updateBy"] = this.updateBy;
-        data["updateByDisplay"] = this.updateByDisplay;
-        data["updateDate"] = this.updateDate ? this.updateDate.toISOString() : <any>undefined;
-        data["updateDateDisplay"] = this.updateDateDisplay;
-        data["row"] = this.row;
-        data["isStatus"] = this.isStatus;
         data["pageDetail"] = this.pageDetail ? this.pageDetail.toJSON() : <any>undefined;
         if (this.additionalProperties) {
             data["additionalProperties"] = {};
@@ -2228,43 +3391,96 @@ export class CollectionPointInfo implements ICollectionPointInfo {
 
 export interface ICollectionPointInfo {
     collectionPointId?: number;
-    collectionPoint?: string;
-    websiteId?: number;
-    accessToken?: string;
+    collectionPointName?: string;
     guid?: string;
-    websiteDescription?: string;
-    websiteUrl?: string;
-    websitePolicy?: string;
-    description?: string;
-    script?: string;
+    website?: Website;
     purposeList?: GeneralConsentPurpose[];
-    customFieldsList?: CollectionPointCustomFields[];
+    customFieldsList?: CustomFields[];
     expiredDateTime?: string;
     companyId?: number;
     version?: number;
     status?: string;
-    statusDisplay?: string;
-    createBy?: number;
-    createByDisplay?: string;
-    createDate?: Date;
-    createDateDisplay?: string;
-    updateBy?: number;
-    updateByDisplay?: string;
-    updateDate?: Date;
-    updateDateDisplay?: string;
-    row?: number;
-    isStatus?: boolean;
     pageDetail?: CollectionPointPageDetail;
     additionalProperties?: { [key: string]: any; } | undefined;
 }
 
-export class CollectionPointCustomFields implements ICollectionPointCustomFields {
-    id!: number;
-    isRequired!: boolean;
-    sequence!: number;
+export class Website implements IWebsite {
+    id?: number;
+    description?: string;
+    urlPolicyPage?: string;
+    urlHomePage?: string;
     additionalProperties?: { [key: string]: any; } | undefined;
 
-    constructor(data?: ICollectionPointCustomFields) {
+    constructor(data?: IWebsite) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.description = _data["description"];
+            this.urlPolicyPage = _data["urlPolicyPage"];
+            this.urlHomePage = _data["urlHomePage"];
+            if (_data["additionalProperties"]) {
+                this.additionalProperties = {} as any;
+                for (let key in _data["additionalProperties"]) {
+                    if (_data["additionalProperties"].hasOwnProperty(key))
+                        (<any>this.additionalProperties)![key] = _data["additionalProperties"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): Website {
+        data = typeof data === 'object' ? data : {};
+        let result = new Website();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["description"] = this.description;
+        data["urlPolicyPage"] = this.urlPolicyPage;
+        data["urlHomePage"] = this.urlHomePage;
+        if (this.additionalProperties) {
+            data["additionalProperties"] = {};
+            for (let key in this.additionalProperties) {
+                if (this.additionalProperties.hasOwnProperty(key))
+                    (<any>data["additionalProperties"])[key] = this.additionalProperties[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface IWebsite {
+    id?: number;
+    description?: string;
+    urlPolicyPage?: string;
+    urlHomePage?: string;
+    additionalProperties?: { [key: string]: any; } | undefined;
+}
+
+export class CustomFields implements ICustomFields {
+    id?: number;
+    isRequired?: boolean;
+    sequence?: number;
+    inputType?: string;
+    title?: string;
+    placeholder?: string;
+    lengthLimit?: number;
+    maxLines?: number;
+    minLines?: number;
+    additionalProperties?: { [key: string]: any; } | undefined;
+
+    constructor(data?: ICustomFields) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2278,6 +3494,12 @@ export class CollectionPointCustomFields implements ICollectionPointCustomFields
             this.id = _data["id"];
             this.isRequired = _data["isRequired"];
             this.sequence = _data["sequence"];
+            this.inputType = _data["inputType"];
+            this.title = _data["title"];
+            this.placeholder = _data["placeholder"];
+            this.lengthLimit = _data["lengthLimit"];
+            this.maxLines = _data["maxLines"];
+            this.minLines = _data["minLines"];
             if (_data["additionalProperties"]) {
                 this.additionalProperties = {} as any;
                 for (let key in _data["additionalProperties"]) {
@@ -2288,9 +3510,9 @@ export class CollectionPointCustomFields implements ICollectionPointCustomFields
         }
     }
 
-    static fromJS(data: any): CollectionPointCustomFields {
+    static fromJS(data: any): CustomFields {
         data = typeof data === 'object' ? data : {};
-        let result = new CollectionPointCustomFields();
+        let result = new CustomFields();
         result.init(data);
         return result;
     }
@@ -2300,6 +3522,12 @@ export class CollectionPointCustomFields implements ICollectionPointCustomFields
         data["id"] = this.id;
         data["isRequired"] = this.isRequired;
         data["sequence"] = this.sequence;
+        data["inputType"] = this.inputType;
+        data["title"] = this.title;
+        data["placeholder"] = this.placeholder;
+        data["lengthLimit"] = this.lengthLimit;
+        data["maxLines"] = this.maxLines;
+        data["minLines"] = this.minLines;
         if (this.additionalProperties) {
             data["additionalProperties"] = {};
             for (let key in this.additionalProperties) {
@@ -2311,45 +3539,36 @@ export class CollectionPointCustomFields implements ICollectionPointCustomFields
     }
 }
 
-export interface ICollectionPointCustomFields {
-    id: number;
-    isRequired: boolean;
-    sequence: number;
+export interface ICustomFields {
+    id?: number;
+    isRequired?: boolean;
+    sequence?: number;
+    inputType?: string;
+    title?: string;
+    placeholder?: string;
+    lengthLimit?: number;
+    maxLines?: number;
+    minLines?: number;
     additionalProperties?: { [key: string]: any; } | undefined;
 }
 
 export class CollectionPointPageDetail implements ICollectionPointPageDetail {
-    acceptCheckBoxLabel?: string;
-    acceptCheckBoxLabelFontColor?: string;
-    bodyBackgroundColor?: string;
-    bodyBackgroundId?: number;
-    bodyBackground?: string;
-    bodyBottomDescription?: string;
-    bodyBottomDescriptionFontColor?: string;
-    bodyTopDescription?: string;
-    bodyTopDerscriptionFontColor?: string;
-    cancelButtonBackgroundColor?: string;
-    cancelButtonFontColor?: string;
-    cancelButtonLabel?: string;
-    confirmButtonLabel?: string;
-    headerBackgroundColor?: string;
-    headerBackgroundId?: number;
-    headerBackground?: string;
-    headerFontColor?: string;
-    headerLabel?: string;
-    logo?: string;
-    logoId?: number;
-    okButtonBackgroundColor?: string;
-    okButtonFontColor?: string;
+    themeId!: number;
+    acceptCheckBoxText!: string;
+    backgroundImageId?: number;
+    bodyBottomDescriptionText!: string;
+    bodyTopDescriptionText!: string;
+    cancelButtonText!: string;
+    confirmButtonText!: string;
+    headerBackgroundImageId?: number;
+    headerText!: string;
+    logoImageId?: number;
+    policyUrlText!: string;
     policyUrl?: string;
-    policyUrlLabel?: string;
-    purposeAcceptLabel?: string;
-    policyUrlLabelFontColor?: string;
-    purposeRejectLabel?: string;
     redirectUrl?: string;
-    successHeaderLabel?: string;
-    successDescription?: string;
-    successButtonLabel?: string;
+    successHeaderText!: string;
+    successDescriptionText?: string;
+    successButtonText!: string;
     additionalProperties?: { [key: string]: any; } | undefined;
 
     constructor(data?: ICollectionPointPageDetail) {
@@ -2363,37 +3582,22 @@ export class CollectionPointPageDetail implements ICollectionPointPageDetail {
 
     init(_data?: any) {
         if (_data) {
-            this.acceptCheckBoxLabel = _data["acceptCheckBoxLabel"];
-            this.acceptCheckBoxLabelFontColor = _data["acceptCheckBoxLabelFontColor"];
-            this.bodyBackgroundColor = _data["bodyBackgroundColor"];
-            this.bodyBackgroundId = _data["bodyBackgroundId"];
-            this.bodyBackground = _data["bodyBackground"];
-            this.bodyBottomDescription = _data["bodyBottomDescription"];
-            this.bodyBottomDescriptionFontColor = _data["bodyBottomDescriptionFontColor"];
-            this.bodyTopDescription = _data["bodyTopDescription"];
-            this.bodyTopDerscriptionFontColor = _data["bodyTopDerscriptionFontColor"];
-            this.cancelButtonBackgroundColor = _data["cancelButtonBackgroundColor"];
-            this.cancelButtonFontColor = _data["cancelButtonFontColor"];
-            this.cancelButtonLabel = _data["cancelButtonLabel"];
-            this.confirmButtonLabel = _data["confirmButtonLabel"];
-            this.headerBackgroundColor = _data["headerBackgroundColor"];
-            this.headerBackgroundId = _data["headerBackgroundId"];
-            this.headerBackground = _data["headerBackground"];
-            this.headerFontColor = _data["headerFontColor"];
-            this.headerLabel = _data["headerLabel"];
-            this.logo = _data["logo"];
-            this.logoId = _data["logoId"];
-            this.okButtonBackgroundColor = _data["okButtonBackgroundColor"];
-            this.okButtonFontColor = _data["okButtonFontColor"];
+            this.themeId = _data["themeId"];
+            this.acceptCheckBoxText = _data["acceptCheckBoxText"];
+            this.backgroundImageId = _data["backgroundImageId"];
+            this.bodyBottomDescriptionText = _data["bodyBottomDescriptionText"];
+            this.bodyTopDescriptionText = _data["bodyTopDescriptionText"];
+            this.cancelButtonText = _data["cancelButtonText"];
+            this.confirmButtonText = _data["confirmButtonText"];
+            this.headerBackgroundImageId = _data["headerBackgroundImageId"];
+            this.headerText = _data["headerText"];
+            this.logoImageId = _data["logoImageId"];
+            this.policyUrlText = _data["policyUrlText"];
             this.policyUrl = _data["policyUrl"];
-            this.policyUrlLabel = _data["policyUrlLabel"];
-            this.purposeAcceptLabel = _data["purposeAcceptLabel"];
-            this.policyUrlLabelFontColor = _data["policyUrlLabelFontColor"];
-            this.purposeRejectLabel = _data["purposeRejectLabel"];
             this.redirectUrl = _data["redirectUrl"];
-            this.successHeaderLabel = _data["successHeaderLabel"];
-            this.successDescription = _data["successDescription"];
-            this.successButtonLabel = _data["successButtonLabel"];
+            this.successHeaderText = _data["successHeaderText"];
+            this.successDescriptionText = _data["successDescriptionText"];
+            this.successButtonText = _data["successButtonText"];
             if (_data["additionalProperties"]) {
                 this.additionalProperties = {} as any;
                 for (let key in _data["additionalProperties"]) {
@@ -2413,37 +3617,22 @@ export class CollectionPointPageDetail implements ICollectionPointPageDetail {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["acceptCheckBoxLabel"] = this.acceptCheckBoxLabel;
-        data["acceptCheckBoxLabelFontColor"] = this.acceptCheckBoxLabelFontColor;
-        data["bodyBackgroundColor"] = this.bodyBackgroundColor;
-        data["bodyBackgroundId"] = this.bodyBackgroundId;
-        data["bodyBackground"] = this.bodyBackground;
-        data["bodyBottomDescription"] = this.bodyBottomDescription;
-        data["bodyBottomDescriptionFontColor"] = this.bodyBottomDescriptionFontColor;
-        data["bodyTopDescription"] = this.bodyTopDescription;
-        data["bodyTopDerscriptionFontColor"] = this.bodyTopDerscriptionFontColor;
-        data["cancelButtonBackgroundColor"] = this.cancelButtonBackgroundColor;
-        data["cancelButtonFontColor"] = this.cancelButtonFontColor;
-        data["cancelButtonLabel"] = this.cancelButtonLabel;
-        data["confirmButtonLabel"] = this.confirmButtonLabel;
-        data["headerBackgroundColor"] = this.headerBackgroundColor;
-        data["headerBackgroundId"] = this.headerBackgroundId;
-        data["headerBackground"] = this.headerBackground;
-        data["headerFontColor"] = this.headerFontColor;
-        data["headerLabel"] = this.headerLabel;
-        data["logo"] = this.logo;
-        data["logoId"] = this.logoId;
-        data["okButtonBackgroundColor"] = this.okButtonBackgroundColor;
-        data["okButtonFontColor"] = this.okButtonFontColor;
+        data["themeId"] = this.themeId;
+        data["acceptCheckBoxText"] = this.acceptCheckBoxText;
+        data["backgroundImageId"] = this.backgroundImageId;
+        data["bodyBottomDescriptionText"] = this.bodyBottomDescriptionText;
+        data["bodyTopDescriptionText"] = this.bodyTopDescriptionText;
+        data["cancelButtonText"] = this.cancelButtonText;
+        data["confirmButtonText"] = this.confirmButtonText;
+        data["headerBackgroundImageId"] = this.headerBackgroundImageId;
+        data["headerText"] = this.headerText;
+        data["logoImageId"] = this.logoImageId;
+        data["policyUrlText"] = this.policyUrlText;
         data["policyUrl"] = this.policyUrl;
-        data["policyUrlLabel"] = this.policyUrlLabel;
-        data["purposeAcceptLabel"] = this.purposeAcceptLabel;
-        data["policyUrlLabelFontColor"] = this.policyUrlLabelFontColor;
-        data["purposeRejectLabel"] = this.purposeRejectLabel;
         data["redirectUrl"] = this.redirectUrl;
-        data["successHeaderLabel"] = this.successHeaderLabel;
-        data["successDescription"] = this.successDescription;
-        data["successButtonLabel"] = this.successButtonLabel;
+        data["successHeaderText"] = this.successHeaderText;
+        data["successDescriptionText"] = this.successDescriptionText;
+        data["successButtonText"] = this.successButtonText;
         if (this.additionalProperties) {
             data["additionalProperties"] = {};
             for (let key in this.additionalProperties) {
@@ -2456,37 +3645,22 @@ export class CollectionPointPageDetail implements ICollectionPointPageDetail {
 }
 
 export interface ICollectionPointPageDetail {
-    acceptCheckBoxLabel?: string;
-    acceptCheckBoxLabelFontColor?: string;
-    bodyBackgroundColor?: string;
-    bodyBackgroundId?: number;
-    bodyBackground?: string;
-    bodyBottomDescription?: string;
-    bodyBottomDescriptionFontColor?: string;
-    bodyTopDescription?: string;
-    bodyTopDerscriptionFontColor?: string;
-    cancelButtonBackgroundColor?: string;
-    cancelButtonFontColor?: string;
-    cancelButtonLabel?: string;
-    confirmButtonLabel?: string;
-    headerBackgroundColor?: string;
-    headerBackgroundId?: number;
-    headerBackground?: string;
-    headerFontColor?: string;
-    headerLabel?: string;
-    logo?: string;
-    logoId?: number;
-    okButtonBackgroundColor?: string;
-    okButtonFontColor?: string;
+    themeId: number;
+    acceptCheckBoxText: string;
+    backgroundImageId?: number;
+    bodyBottomDescriptionText: string;
+    bodyTopDescriptionText: string;
+    cancelButtonText: string;
+    confirmButtonText: string;
+    headerBackgroundImageId?: number;
+    headerText: string;
+    logoImageId?: number;
+    policyUrlText: string;
     policyUrl?: string;
-    policyUrlLabel?: string;
-    purposeAcceptLabel?: string;
-    policyUrlLabelFontColor?: string;
-    purposeRejectLabel?: string;
     redirectUrl?: string;
-    successHeaderLabel?: string;
-    successDescription?: string;
-    successButtonLabel?: string;
+    successHeaderText: string;
+    successDescriptionText?: string;
+    successButtonText: string;
     additionalProperties?: { [key: string]: any; } | undefined;
 }
 
@@ -2639,6 +3813,66 @@ export interface ICollectionPointConsentKeyIdentifier {
     label?: string;
     isPrimaryKey: boolean;
     isRequired: boolean;
+    additionalProperties?: { [key: string]: any; } | undefined;
+}
+
+export class CollectionPointCustomFields implements ICollectionPointCustomFields {
+    id!: number;
+    isRequired!: boolean;
+    sequence!: number;
+    additionalProperties?: { [key: string]: any; } | undefined;
+
+    constructor(data?: ICollectionPointCustomFields) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.isRequired = _data["isRequired"];
+            this.sequence = _data["sequence"];
+            if (_data["additionalProperties"]) {
+                this.additionalProperties = {} as any;
+                for (let key in _data["additionalProperties"]) {
+                    if (_data["additionalProperties"].hasOwnProperty(key))
+                        (<any>this.additionalProperties)![key] = _data["additionalProperties"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): CollectionPointCustomFields {
+        data = typeof data === 'object' ? data : {};
+        let result = new CollectionPointCustomFields();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["isRequired"] = this.isRequired;
+        data["sequence"] = this.sequence;
+        if (this.additionalProperties) {
+            data["additionalProperties"] = {};
+            for (let key in this.additionalProperties) {
+                if (this.additionalProperties.hasOwnProperty(key))
+                    (<any>data["additionalProperties"])[key] = this.additionalProperties[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface ICollectionPointCustomFields {
+    id: number;
+    isRequired: boolean;
+    sequence: number;
     additionalProperties?: { [key: string]: any; } | undefined;
 }
 

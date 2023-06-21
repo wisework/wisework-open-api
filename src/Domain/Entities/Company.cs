@@ -37,4 +37,5 @@ public class Companies
     public int? TrialStatusId { get; set; }
     public int? CountConcurrent { get; set; }
     public string? DsrToken { get; set; }
+    public string? LogoImage { get; set; }
 }

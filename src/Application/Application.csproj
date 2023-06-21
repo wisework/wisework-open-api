@@ -9,16 +9,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="Authentication\**" />
-      <EmbeddedResource Remove="Authentication\**" />
-      <None Remove="Authentication\**" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.3.4" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.5" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
     </ItemGroup>
 
@@ -28,8 +23,7 @@
 
     <ItemGroup>
       <Reference Include="Wisework.ConsentManagementSystem.Api">
-        <HintPath>..\..\..\..\PDPA\wisework-package\Wisework.ConsentManagementSystem.Api\bin\Release\netstandard2.0\Wisework.ConsentManagementSystem.Api.dll</HintPath>
-        <CopyLocal>True</CopyLocal>
+        <HintPath>..\..\dll\v1.0.17.0\Wisework.ConsentManagementSystem.Api.dll</HintPath>
       </Reference>
     </ItemGroup>
 
