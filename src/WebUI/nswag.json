@@ -38,7 +38,9 @@
       "infoVersion": "1.0.0",
       "documentTemplate": null,
       "documentProcessorTypes": [],
-      "operationProcessorTypes": [],
+      "operationProcessorTypes": [
+        "NSwag.Generation.Processors.Security.AspNetCoreOperationSecurityScopeProcessor, NSwag.Generation.AspNetCore"
+      ],
       "typeNameGeneratorType": null,
       "schemaNameGeneratorType": null,
       "contractResolverType": null,
@@ -71,7 +73,7 @@
       "withCredentials": false,
       "useSingletonProvider": true,
       "injectionTokenType": "InjectionToken",
-      "rxJsVersion": 7.0,
+      "rxJsVersion": 6.0,
       "dateTimeType": "Date",
       "nullValue": "Undefined",
       "generateClientClasses": true,
