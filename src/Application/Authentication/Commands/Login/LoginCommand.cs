@@ -21,8 +21,8 @@ namespace WW.Application.Authentication.Commands.Login;
 
 public record LoginCommand : IRequest<AuthenticationInfo>
 {
-    public string Username { get; init; }
-    public string Password { get; init; }
+    public string username { get; init; }
+    public string password { get; init; }
 }
 
 public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthenticationInfo>
@@ -44,7 +44,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthenticationI
 
         var loginInfo = (from u in _context.DbSetUser
                         join cu in companyUsers on u.UserId equals cu.UserID
-                        where u.Username == request.Username && u.Status == "A"
+                        where u.Username == request.username && u.Status == "A"
                         select new LoginModel
                         {
                             CompanyId = Convert.ToInt32(cu.CompanyID),
@@ -55,32 +55,33 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthenticationI
                             Version = u.Version,
                         }).FirstOrDefault();
 
-        string password = "";
+        
 
-        if (loginInfo != null )
+        if (loginInfo == null)
         {
-            password = _cryptographyService.generatePassword(request.Password, loginInfo.Guid);
+            throw new UnauthorizedAccessException("Invalid username or password");
         }
+
+        string password = _cryptographyService.generatePassword(request.password, loginInfo.Guid!);
 
         var authentication = (from u in _context.DbSetUser
                               join cu in companyUsers on u.UserId equals cu.UserID
-                              where u.Username == request.Username && u.Password == password && u.Status == "A"
+                              where u.Username == request.username && u.Password == password && u.Status == "A"
                               select new AuthenticationModel
                               {
                                   TokenID = Guid.NewGuid().ToString().ToUpper(),
                                   UserID = Convert.ToInt32(u.UserId),
                                   CompanyID = Convert.ToInt32(cu.CompanyID),
                                   TokenDate = DateTime.Now.AddDays(1),
-                                  VisitorId = "",
+                                  VisitorId = Guid.NewGuid().ToString(),
                               }).FirstOrDefault();
 
-        string jsonAuthentication = "";
-
-
-        if (authentication != null)
+        if (authentication == null)
         {
-            jsonAuthentication = Newtonsoft.Json.JsonConvert.SerializeObject(authentication);
+            throw new UnauthorizedAccessException("Invalid username or password");
         }
+
+        string jsonAuthentication = Newtonsoft.Json.JsonConvert.SerializeObject(authentication);
 
         var token = _securityService.Encrypt(jsonAuthentication);
         var entity = new AuthenticationInfo { 

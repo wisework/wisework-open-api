@@ -40,7 +40,7 @@ public class ConsentPageSettingController : ApiControllerBase
     [AuthorizationFilter]
     public async Task<ActionResult<ConsentTheme>> Update(int id, UpdateConsentThemeCommand command)
     {
-        if (id != command.ThemeId)
+        if (id != command.themeId)
         {
             return BadRequest();
         }

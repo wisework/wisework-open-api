@@ -13,18 +13,18 @@ namespace WW.Application.ConsentPageSetting.Commands.CreateConsentTheme;
 
 public record CreateConsentThemeCommand : IRequest<ConsentTheme>
 {
-    public string ThemeTitle { get; init; }
-    public string HeaderTextColor { get; init; }
-    public string HeaderBackgroundColor { get; init; }
-    public string BodyBackgroudColor { get; init; }
-    public string TopDescriptionTextColor { get; init; }
-    public string BottomDescriptionTextColor { get; init; }
-    public string AcceptionButtonColor { get; init; }
-    public string AcceptionConsentTextColor { get; init; }
-    public string CancelButtonColor { get; init; }
-    public string CancelTextButtonColor { get; init; }
-    public string LinkToPolicyTextColor { get; init; }
-    public string PolicyUrlTextColor { get; init; }
+    public string themeTitle { get; init; }
+    public string headerTextColor { get; init; }
+    public string headerBackgroundColor { get; init; }
+    public string bodyBackgroudColor { get; init; }
+    public string topDescriptionTextColor { get; init; }
+    public string bottomDescriptionTextColor { get; init; }
+    public string acceptionButtonColor { get; init; }
+    public string acceptionConsentTextColor { get; init; }
+    public string cancelButtonColor { get; init; }
+    public string cancelTextButtonColor { get; init; }
+    public string linkToPolicyTextColor { get; init; }
+    public string policyUrlTextColor { get; init; }
 }
 
 public class CreateConsentThemeCommandHandler : IRequestHandler<CreateConsentThemeCommand, ConsentTheme>
@@ -40,18 +40,18 @@ public class CreateConsentThemeCommandHandler : IRequestHandler<CreateConsentThe
     {
         var entity = new Consent_ConsentTheme();
         
-        entity.ThemeTitle = request.ThemeTitle;
-        entity.HeaderTextColor = request.HeaderTextColor;
-        entity.HeaderBackgroundColor = request.HeaderBackgroundColor;
-        entity.BodyBackgroudColor = request.BodyBackgroudColor;
-        entity.TopDescriptionTextColor = request.TopDescriptionTextColor;
-        entity.BottomDescriptionTextColor = request.BottomDescriptionTextColor;
-        entity.AcceptionButtonColor = request.AcceptionButtonColor;
-        entity.AcceptionConsentTextColor = request.AcceptionConsentTextColor;
-        entity.CancelButtonColor = request.CancelButtonColor;
-        entity.CancelTextButtonColor = request.CancelTextButtonColor;
-        entity.LinkToPolicyTextColor = request.LinkToPolicyTextColor;
-        entity.PolicyUrlTextColor = request.PolicyUrlTextColor;
+        entity.ThemeTitle = request.themeTitle;
+        entity.HeaderTextColor = request.headerTextColor;
+        entity.HeaderBackgroundColor = request.headerBackgroundColor;
+        entity.BodyBackgroudColor = request.bodyBackgroudColor;
+        entity.TopDescriptionTextColor = request.topDescriptionTextColor;
+        entity.BottomDescriptionTextColor = request.bottomDescriptionTextColor;
+        entity.AcceptionButtonColor = request.acceptionButtonColor;
+        entity.AcceptionConsentTextColor = request.acceptionConsentTextColor;
+        entity.CancelButtonColor = request.cancelButtonColor;
+        entity.CancelTextButtonColor = request.cancelTextButtonColor;
+        entity.LinkToPolicyTextColor = request.linkToPolicyTextColor;
+        entity.PolicyUrlTextColor = request.policyUrlTextColor;
 
         entity.CreateBy = 1;
         entity.UpdateBy = 1;
