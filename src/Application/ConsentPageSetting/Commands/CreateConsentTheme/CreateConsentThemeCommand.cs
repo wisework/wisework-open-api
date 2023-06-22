@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using MediatR;
 using Wisework.ConsentManagementSystem.Api;
+using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
+using WW.Application.Common.Models;
 using WW.Domain.Entities;
 using WW.Domain.Enums;
 
@@ -25,6 +28,8 @@ public record CreateConsentThemeCommand : IRequest<ConsentTheme>
     public string cancelTextButtonColor { get; init; }
     public string linkToPolicyTextColor { get; init; }
     public string policyUrlTextColor { get; init; }
+    [JsonIgnore]
+    public AuthenticationModel? authentication { get; set; }
 }
 
 public class CreateConsentThemeCommandHandler : IRequestHandler<CreateConsentThemeCommand, ConsentTheme>
@@ -38,52 +43,65 @@ public class CreateConsentThemeCommandHandler : IRequestHandler<CreateConsentThe
 
     public async Task<ConsentTheme> Handle(CreateConsentThemeCommand request, CancellationToken cancellationToken)
     {
-        var entity = new Consent_ConsentTheme();
-        
-        entity.ThemeTitle = request.themeTitle;
-        entity.HeaderTextColor = request.headerTextColor;
-        entity.HeaderBackgroundColor = request.headerBackgroundColor;
-        entity.BodyBackgroudColor = request.bodyBackgroudColor;
-        entity.TopDescriptionTextColor = request.topDescriptionTextColor;
-        entity.BottomDescriptionTextColor = request.bottomDescriptionTextColor;
-        entity.AcceptionButtonColor = request.acceptionButtonColor;
-        entity.AcceptionConsentTextColor = request.acceptionConsentTextColor;
-        entity.CancelButtonColor = request.cancelButtonColor;
-        entity.CancelTextButtonColor = request.cancelTextButtonColor;
-        entity.LinkToPolicyTextColor = request.linkToPolicyTextColor;
-        entity.PolicyUrlTextColor = request.policyUrlTextColor;
+        if (request.authentication == null)
+        {
+            throw new UnauthorizedAccessException();
+        }
 
-        entity.CreateBy = 1;
-        entity.UpdateBy = 1;
-        entity.CreateDate = DateTime.Now;
-        entity.UpdateDate = DateTime.Now;
+        try
+        {
+            var entity = new Consent_ConsentTheme();
 
-        entity.Status = Status.Active.ToString();
-        entity.Version = 1;
-        entity.CompanyId = 1;
+            entity.ThemeTitle = request.themeTitle;
+            entity.HeaderTextColor = request.headerTextColor;
+            entity.HeaderBackgroundColor = request.headerBackgroundColor;
+            entity.BodyBackgroudColor = request.bodyBackgroudColor;
+            entity.TopDescriptionTextColor = request.topDescriptionTextColor;
+            entity.BottomDescriptionTextColor = request.bottomDescriptionTextColor;
+            entity.AcceptionButtonColor = request.acceptionButtonColor;
+            entity.AcceptionConsentTextColor = request.acceptionConsentTextColor;
+            entity.CancelButtonColor = request.cancelButtonColor;
+            entity.CancelTextButtonColor = request.cancelTextButtonColor;
+            entity.LinkToPolicyTextColor = request.linkToPolicyTextColor;
+            entity.PolicyUrlTextColor = request.policyUrlTextColor;
 
-        _context.DbSetConsentTheme.Add(entity);
+            entity.CreateBy = request.authentication.UserID;
+            entity.UpdateBy = request.authentication.UserID;
+            entity.CreateDate = DateTime.Now;
+            entity.UpdateDate = DateTime.Now;
 
-        await _context.SaveChangesAsync(cancellationToken);
+            entity.Status = Status.Active.ToString();
+            entity.Version = 1;
+            entity.CompanyId = request.authentication.CompanyID;
 
-        var consentThemeInfo = new ConsentTheme{
-            ThemeId = entity.ThemeId,
-            ThemeTitle = entity.ThemeTitle,
-            HerderTextColor = entity.HeaderTextColor,
-            HeaderBackgroundColor = entity.HeaderBackgroundColor,
-            BodyBackgroudColor = entity.BodyBackgroudColor,
-            TopDescriptionTextColor = entity.TopDescriptionTextColor,
-            BottomDescriptionTextColor = entity.BottomDescriptionTextColor,
-            AcceptionButtonColor = entity.AcceptionButtonColor,
-            AcceptionConsentTextColor = entity.AcceptionConsentTextColor,
-            CancelButtonColor = entity.CancelButtonColor,
-            CancelTextButtonColor = entity.CancelTextButtonColor,
-            LinkToPolicyTextColor = entity.LinkToPolicyTextColor,
-            PolicyUrlTextColor = entity.PolicyUrlTextColor,
-            Status = entity.Status,
-            CompanyId = entity.CompanyId,
-        };
+            _context.DbSetConsentTheme.Add(entity);
 
-        return consentThemeInfo;
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var consentThemeInfo = new ConsentTheme
+            {
+                ThemeId = entity.ThemeId,
+                ThemeTitle = entity.ThemeTitle,
+                HerderTextColor = entity.HeaderTextColor,
+                HeaderBackgroundColor = entity.HeaderBackgroundColor,
+                BodyBackgroudColor = entity.BodyBackgroudColor,
+                TopDescriptionTextColor = entity.TopDescriptionTextColor,
+                BottomDescriptionTextColor = entity.BottomDescriptionTextColor,
+                AcceptionButtonColor = entity.AcceptionButtonColor,
+                AcceptionConsentTextColor = entity.AcceptionConsentTextColor,
+                CancelButtonColor = entity.CancelButtonColor,
+                CancelTextButtonColor = entity.CancelTextButtonColor,
+                LinkToPolicyTextColor = entity.LinkToPolicyTextColor,
+                PolicyUrlTextColor = entity.PolicyUrlTextColor,
+                Status = entity.Status,
+                CompanyId = entity.CompanyId,
+            };
+
+            return consentThemeInfo;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalServerException(ex.Message);
+        }
     }
 }

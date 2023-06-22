@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -21,6 +22,7 @@ public record GetConsentThemeQuery : IRequest<PaginatedList<ConsentTheme>>
 {
     public int offset { get; init; } = 1;
     public int limit { get; init; } = 10;
+    [JsonIgnore]
     public AuthenticationModel? authentication { get; set; }
 }
 public class GetConsentThemeHandler : IRequestHandler<GetConsentThemeQuery, PaginatedList<ConsentTheme>>
@@ -39,22 +41,21 @@ public class GetConsentThemeHandler : IRequestHandler<GetConsentThemeQuery, Pagi
             throw new UnauthorizedAccessException();
         }
 
-        if(request.offset < 0 || request.limit < 0)
+        if(request.offset <= 0 || request.limit <= 0)
         {
             List<ValidationFailure> failures = new List<ValidationFailure>{ };
 
-            if (request.offset < 0)
+            if (request.offset <= 0)
             {
                 failures.Add(new ValidationFailure("Offset", "Offset must be greater than 0"));
             }
-            if (request.limit < 0)
+            if (request.limit <= 0)
             {
                 failures.Add(new ValidationFailure("Limit", "Limit must be greater than 0"));
             }
 
             throw new ValidationException(failures);
         }
-
 
         try
         {
@@ -67,15 +68,14 @@ public class GetConsentThemeHandler : IRequestHandler<GetConsentThemeQuery, Pagi
             Mapper mapper = new Mapper(config);
 
             PaginatedList<ConsentTheme> model =
-                await _context.DbSetConsentTheme.Where(p => p.CompanyId == 1 && p.Status == Status.Active.ToString())
+                await _context.DbSetConsentTheme.Where(p => p.CompanyId == request.authentication.CompanyID && p.Status == Status.Active.ToString())
                 .ProjectTo<ConsentTheme>(mapper.ConfigurationProvider).PaginatedListAsync(request.offset, request.limit);
 
             return model;
         }
         catch (Exception ex)
         {
-            throw new Exception("Internal Error");
+            throw new InternalServerException(ex.Message);
         }
-
     }
 }

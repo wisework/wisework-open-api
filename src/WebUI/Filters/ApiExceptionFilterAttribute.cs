@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Amazon.Runtime.Internal.Transform;
+using System;
 
 namespace WW.OpenAPI.Filters;
 
@@ -73,9 +74,13 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         var details = new ProblemDetails()
         {
             Title = "The specified resource was not found.",
-            Status = StatusCodes.Status404NotFound,
-            Detail = exception.Message
+            Status = StatusCodes.Status404NotFound
         };
+
+        if (!string.IsNullOrEmpty(exception.Message))
+        {
+            details.Detail = exception.Message;
+        }
 
         context.Result = new NotFoundObjectResult(details);
 
@@ -107,11 +112,18 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 
     private void HandleForbiddenAccessException(ExceptionContext context)
     {
+        var exception = (ForbiddenAccessException)context.Exception;
+
         var details = new ProblemDetails
         {
             Title = "Forbidden",
             Status = StatusCodes.Status403Forbidden
         };
+
+        if (!string.IsNullOrEmpty(exception.Message))
+        {
+            details.Detail = exception.Message;
+        }
 
         context.Result = new ObjectResult(details)
         {

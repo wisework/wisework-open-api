@@ -10,6 +10,7 @@ using WW.Application.ConsentPageSetting.Queries.GetLogo;
 using WW.Application.ConsentPageSetting.Queries.GetShortUrl;
 using WW.Domain.Entities;
 using WW.OpenAPI.Controllers;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Wiskwork.OpenAPI.Controllers;
 
@@ -24,8 +25,7 @@ public class ConsentPageSettingController : ApiControllerBase
         {
             query.authentication = authentication;
         }
-       
-           
+
         return await Mediator.Send(query);
     }
 
@@ -33,6 +33,12 @@ public class ConsentPageSettingController : ApiControllerBase
     [AuthorizationFilter]
     public async Task<ActionResult<ConsentTheme>> Create(CreateConsentThemeCommand command)
     {
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            command.authentication = authentication;
+        }
+
         return await Mediator.Send(command);
     }
 
@@ -40,9 +46,11 @@ public class ConsentPageSettingController : ApiControllerBase
     [AuthorizationFilter]
     public async Task<ActionResult<ConsentTheme>> Update(int id, UpdateConsentThemeCommand command)
     {
-        if (id != command.themeId)
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
         {
-            return BadRequest();
+            command.themeId = id;
+            command.authentication = authentication;
         }
 
         return await Mediator.Send(command);
@@ -52,20 +60,44 @@ public class ConsentPageSettingController : ApiControllerBase
     [AuthorizationFilter]
     public async Task<ActionResult<ShortUrl>> GetShortUrlQuery(int id)
     {
-        return await Mediator.Send(new GetShortUrlQuery(id));
+        var query = new GetShortUrlQuery(id);
+
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            query.authentication = authentication;
+        }
+
+        return await Mediator.Send(query);
     }
 
     [HttpGet("logo/{count}")]
     [AuthorizationFilter]
     public async Task<ActionResult<List<Image>>> GetLogoQuery(int count)
     {
-        return await Mediator.Send(new GetLogoQuery(count));
+        var query = new GetLogoQuery(count);
+
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            query.authentication = authentication;
+        }
+
+        return await Mediator.Send(query);
     }
 
     [HttpGet("image/{count}")]
     [AuthorizationFilter]
     public async Task<ActionResult<List<Image>>> GetImageQuery(int count)
     {
-        return await Mediator.Send(new GetImageQuery(count));
+        var query = new GetImageQuery(count);
+
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            query.authentication = authentication;
+        }
+
+        return await Mediator.Send(query);
     }
 }
