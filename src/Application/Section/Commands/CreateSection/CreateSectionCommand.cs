@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MediatR;
 using Wisework.ConsentManagementSystem.Api;
+using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
 using WW.Domain.Entities;
 using WW.Domain.Enums;
@@ -28,33 +29,41 @@ public class CreateSectionCommandHandler : IRequestHandler<CreateSectionCommand,
 
     public async Task<SectionActiveList> Handle(CreateSectionCommand request, CancellationToken cancellationToken)
     {
-        var entity = new Consent_SectionInfo();
-
-        entity.Code = request.Code;
-        entity.Description = request.Description;
-
-        entity.CreateBy = 1;
-        entity.UpdateBy = 1;
-        entity.CreateDate = DateTime.Now;
-        entity.UpdateDate = DateTime.Now;
-
-        entity.Status = Status.Active.ToString();
-        entity.Version = 1;
-        entity.CompanyId = 1;
-
-        _context.DbSetConsentSectionInfo.Add(entity);
-        await _context.SaveChangesAsync(cancellationToken);
-
-        var sectionInfo = new SectionActiveList
+        try
         {
-            SectionId = entity.SectionInfoId,
-            Code = entity.Code,
-            Description = entity.Description,
-            Status = entity.Status,
+            var entity = new Consent_SectionInfo();
 
-        };
+            entity.Code = request.Code;
+            entity.Description = request.Description;
+
+            entity.CreateBy = 1;
+            entity.UpdateBy = 1;
+            entity.CreateDate = DateTime.Now;
+            entity.UpdateDate = DateTime.Now;
+
+            entity.Status = Status.Active.ToString();
+            entity.Version = 1;
+            entity.CompanyId = 1;
+
+            _context.DbSetConsentSectionInfo.Add(entity);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var sectionInfo = new SectionActiveList
+            {
+                SectionId = entity.SectionInfoId,
+                Code = entity.Code,
+                Description = entity.Description,
+                Status = entity.Status,
+
+            };
 
 
-        return sectionInfo;
+            return sectionInfo;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalException("An internal server error occurred."); // 500 error
+        }
+       
     }
 }
