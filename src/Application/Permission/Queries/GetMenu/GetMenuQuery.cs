@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Wisework.ConsentManagementSystem.Api;
 using WW.Application.Common.Interfaces;
 using static System.Net.WebRequestMethods;
@@ -32,12 +33,19 @@ public class GetMenuQueryHandler : IRequestHandler<GetMenuQuery, List<Menu>>
         var roles = _context.DbSetRole;
         var roleProgramActions = _context.DbSetRoleProgramAction;
         var userRoles = _context.DbSetUserRole;
+        var userID = _context.DbSetUser;
 
         string baseUrl = "https://test-pdpa.thewiseworks.com/";
         string language = "en-US";
-        List<int> roleIDs = new List<int> { 4, 50168, 50169 };
         int companyId = 1;
+        int userId = 1;
 
+        var roleIds = userRoles
+            .Where(ur => ur.UserID == userId)
+            .Select(ur => ur.RoleID)
+            .ToList();
+
+        List<long> roleIDs = roleIds;
         var menus = (from p1 in programs
                      join pd in programDescriptions.Where(d => d.LanguageCulture == language)
                      on p1.ProgramID equals pd.ProgramID into pdGroup
@@ -53,6 +61,7 @@ public class GetMenuQueryHandler : IRequestHandler<GetMenuQuery, List<Menu>>
                          ).Count() > 0
                      ) || p1.Code == "HOME_MAIN"
                      orderby p1.Priority
+                     let parentId = p1.ProgramID // Store p1.ProgramID in a separate variable
                      select new Menu
                      {
                          Action = baseUrl + p1.Action,
@@ -64,20 +73,54 @@ public class GetMenuQueryHandler : IRequestHandler<GetMenuQuery, List<Menu>>
                          ProgramID = p1.ProgramID,
                          IsExpanded = p1.expanded == null || p1.expanded == 0 ? false : true,
                          Icon = p1.Icon,
-                         Items = new SubMenu(),
-                     }
-                     ).ToList();
+                          Items = (from childProgram in programs
+                                     where childProgram.ParentID == p1.ProgramID
+                                     select new SubMenu
+                                     {
+                                         Action = baseUrl + childProgram.Action,
+                                         Code = childProgram.Code,
+                                         Description = childProgram.Description,
+                                         ParentID = childProgram.ParentID,
+                                         Priority = childProgram.Priority,
+                                         ProgramGroupID = 20, // what?
+                                         ProgramID = childProgram.ProgramID,
+                                         IsExpanded = childProgram.expanded == null || childProgram.expanded == 0 ? false : true,
+                                         Icon = childProgram.Icon
+                                     }).ToList()
+
+                     }).ToList();
+
+         List<SubMenu> GetChildren( int parentID)
+        {
+            return programs
+                    .Where(c => c.ParentID == parentID)
+                    .Select(c => new SubMenu
+                    {
+                        Action = baseUrl + c.Action,
+                        Code = c.Code,
+                        Description = c.Description,
+                        ParentID = c.ParentID,
+                        Priority = c.Priority,
+                        ProgramGroupID = 20, // what?
+                        ProgramID = c.ProgramID,
+                        IsExpanded = c.expanded == null || c.expanded == 0 ? false : true,
+                        Icon = c.Icon,
+                    })
+                    .ToList();
+        }
 
         if (menus == null) return new List<Menu>();
 
         /*
 
         SELECT * FROM [Action];
+        SELECT * FROM [ActionLog];
         SELECT * FROM [Program];
         SELECT * FROM [ProgramAction];
         SELECT * FROM [ProgramDescription];
         SELECT * FROM [Role];
         SELECT * FROM [RoleProgramAction];
+        SELECT * FROM [UserRole];
         
         SELECT 
 	        P1.ProgramId, P1.Code, P1.Description, P1.ParentID, 
