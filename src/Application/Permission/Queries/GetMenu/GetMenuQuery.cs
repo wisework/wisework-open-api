@@ -73,8 +73,8 @@ public class GetMenuQueryHandler : IRequestHandler<GetMenuQuery, List<Menu>>
                          ProgramID = p1.ProgramID,
                          IsExpanded = p1.expanded == null || p1.expanded == 0 ? false : true,
                          Icon = p1.Icon,
-                          Items = (from childProgram in programs
-                                     where childProgram.ParentID == p1.ProgramID
+                         Items = (from childProgram in programs
+                                     //where childProgram.ParentID == p1.ProgramID
                                      select new SubMenu
                                      {
                                          Action = baseUrl + childProgram.Action,
@@ -86,7 +86,7 @@ public class GetMenuQueryHandler : IRequestHandler<GetMenuQuery, List<Menu>>
                                          ProgramID = childProgram.ProgramID,
                                          IsExpanded = childProgram.expanded == null || childProgram.expanded == 0 ? false : true,
                                          Icon = childProgram.Icon
-                                     }).ToList()
+                                     }).ToList().Find(x => x.ProgramID == p1.ProgramID)
 
                      }).ToList();
 
