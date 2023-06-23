@@ -19,6 +19,7 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
                 { typeof(ValidationException), HandleValidationException },
                 { typeof(NotFoundException), HandleNotFoundException },
                 { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
+                { typeof(InternalException), HandleInternalException },
                 { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
                 { typeof(InternalServerException), HandleInternalServerException }
             };
@@ -83,6 +84,25 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         }
 
         context.Result = new NotFoundObjectResult(details);
+
+        context.ExceptionHandled = true;
+    }
+
+    private void HandleInternalException(ExceptionContext context)
+    {
+        var exception = (InternalException)context.Exception;
+
+        var details = new ProblemDetails()
+        {
+            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+            Title = "The specified resource was not found.",
+            Detail = exception.Message
+        };
+
+        context.Result = new ObjectResult(details)
+        {
+            StatusCode = StatusCodes.Status500InternalServerError
+        };
 
         context.ExceptionHandled = true;
     }
