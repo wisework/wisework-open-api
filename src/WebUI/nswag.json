@@ -38,9 +38,7 @@
       "infoVersion": "1.0.0",
       "documentTemplate": null,
       "documentProcessorTypes": [],
-      "operationProcessorTypes": [
-        "NSwag.Generation.Processors.Security.AspNetCoreOperationSecurityScopeProcessor, NSwag.Generation.AspNetCore"
-      ],
+      "operationProcessorTypes": [],
       "typeNameGeneratorType": null,
       "schemaNameGeneratorType": null,
       "contractResolverType": null,
