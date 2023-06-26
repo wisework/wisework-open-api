@@ -40,7 +40,6 @@ jobs:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
 
-
   deploy:
     runs-on: windows-latest
     needs: build
@@ -60,7 +59,7 @@ jobs:
         with:
           app-name: 'dev-wisework-open-api'
           slot-name: 'production'
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_1134e1a19212468c98bfb782e3c6484d }}
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile }}
           package: .
 
           
