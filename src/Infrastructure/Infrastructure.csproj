@@ -9,9 +9,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Identity\IdentityService.cs" />
+      <Compile Remove="Persistence\ApplicationDbContextInitialiser.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="AWSSDK.S3" Version="3.7.104.19" />
         <PackageReference Include="CsvHelper" Version="15.0.10" />
-        <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="6.0.5" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.5" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.5" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.5" />

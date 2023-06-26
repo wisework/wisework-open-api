@@ -11,7 +11,7 @@ public class CreateConsentThemeCommandValidator : AbstractValidator<CreateConsen
 {
     public CreateConsentThemeCommandValidator()
     {
-        RuleFor(v => v.ThemeTitle)
+        RuleFor(v => v.themeTitle)
             .NotNull()
             .WithMessage("Theme title is required")
             .NotEmpty()

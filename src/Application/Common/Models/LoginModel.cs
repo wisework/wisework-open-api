@@ -9,13 +9,13 @@ public class LoginModel
 {
     public int? CompanyId { get; set; }
 
-    public string Email { get; set; }
+    public string? Email { get; set; }
 
-    public string Guid { get; set; }
+    public string? Guid { get; set; }
 
     public int? UserID { get; set; }
 
-    public string Username { get; set; }
+    public string? Username { get; set; }
 
     public int? Version { get; set; }
 }
