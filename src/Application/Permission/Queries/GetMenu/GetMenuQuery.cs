@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Wisework.ConsentManagementSystem.Api;
+using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
 using static System.Net.WebRequestMethods;
 
@@ -46,7 +48,19 @@ public class GetMenuQueryHandler : IRequestHandler<GetMenuQuery, List<Menu>>
             .ToList();
 
         List<long> roleIDs = roleIds;
-        var menus = (from p1 in programs
+
+        try
+        {
+            if (roleIDs == null)
+            {
+                List<ValidationFailure> failures = new List<ValidationFailure> { };
+
+                failures.Add(new ValidationFailure("user", "user not found"));
+
+                throw new ValidationException(failures);
+            }
+
+            var menus = (from p1 in programs
                      join pd in programDescriptions.Where(d => d.LanguageCulture == language)
                      on p1.ProgramID equals pd.ProgramID into pdGroup
                      from pd in pdGroup.DefaultIfEmpty()
@@ -151,5 +165,23 @@ public class GetMenuQueryHandler : IRequestHandler<GetMenuQuery, List<Menu>>
         */
 
         return menus;
+        }
+        catch (NotFoundException)
+        {
+            throw new NotFoundException("User not found"); // 404 Not Found
+        }
+        catch (ValidationException)
+        {
+            List<ValidationFailure> failures = new List<ValidationFailure> { };
+
+            failures.Add(new ValidationFailure("count", "count must be greater than 0"));
+
+            throw new ValidationException(failures);
+        }
+
+        catch (Exception ex)
+        {
+            throw new InternalException("An internal server error occurred."); // 500 error
+        }
     }
 }
