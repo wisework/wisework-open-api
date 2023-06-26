@@ -1537,7 +1537,8 @@
         "additionalProperties": false,
         "properties": {
           "visitorId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -1708,10 +1709,6 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "themeId": {
-            "type": "integer",
-            "format": "int32"
-          },
           "themeTitle": {
             "type": "string"
           },
