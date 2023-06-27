@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using MediatR;
@@ -9,12 +10,15 @@ using Microsoft.AspNetCore.Http;
 using Wisework.ConsentManagementSystem.Api;
 using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
+using WW.Application.Common.Models;
 
 namespace WW.Application.Upload.Commands.CreateUpload;
 
 public record UploadFileCommand : IRequest<Response9>
 {
     public IFormFile fileUpload { get; init; }
+    [JsonIgnore]
+    public AuthenticationModel? authentication { get; set; }
 }
 
 public class UploadFileCommandHandler : IRequestHandler<UploadFileCommand, Response9>
@@ -30,10 +34,13 @@ public class UploadFileCommandHandler : IRequestHandler<UploadFileCommand, Respo
 
     public async Task<Response9> Handle(UploadFileCommand request, CancellationToken cancellationToken)
     {
+        if (request.authentication == null)
+        {
+            throw new UnauthorizedAccessException();
+        }
+
         var file = request.fileUpload;
         var fullFileName = $"{Guid.NewGuid().ToString().ToUpper()}{Path.GetExtension(file.FileName)}";
-
-        // full path to file in temp location
         var filePath = Path.GetTempFileName();
 
         if (file.Length > 0)
@@ -44,39 +51,44 @@ public class UploadFileCommandHandler : IRequestHandler<UploadFileCommand, Respo
             }
         }
 
-        // get file type
         var fileType = _context.DbSetFileType.FirstOrDefault(ft => file.ContentType.ToUpper().Contains(ft.Code));
 
         if (fileType == null)
         {
             List<ValidationFailure> failures = new List<ValidationFailure> { };
 
-            failures.Add(new ValidationFailure("FileType", "Unable to upload this file type"));
+            failures.Add(new ValidationFailure("fileUpload", "Unable to upload this file type"));
 
             throw new ValidationException(failures);
         }
 
-        // create new entity
-        var entity = new Domain.Entities.File();
+        try
+        {
+            var entity = new Domain.Entities.File();
 
-        entity.CompanyId = 1;
-        entity.FileCategoryId = 1;
-        entity.FileTypeId = fileType.FileTypeId;
-        entity.Status = "A";
+            entity.CompanyId = request.authentication.CompanyID;
+            entity.FileCategoryId = 1;
+            entity.FileTypeId = fileType.FileTypeId;
+            entity.Status = "A";
 
-        entity.CreateBy = 1;
-        entity.CreateDate = DateTime.Now;
-        entity.UpdateBy = 1;
-        entity.UpdateDate = DateTime.Now;
+            entity.CreateBy = request.authentication.UserID;
+            entity.CreateDate = DateTime.Now;
+            entity.UpdateBy = request.authentication.UserID;
+            entity.UpdateDate = DateTime.Now;
 
-        entity.FullFileName = fullFileName;
-        entity.ThumbFileName = "";
-        entity.OriginalFileName = file.FileName;
-        entity.FileSize = Convert.ToInt32(file.Length);
+            entity.FullFileName = fullFileName;
+            entity.ThumbFileName = "";
+            entity.OriginalFileName = file.FileName;
+            entity.FileSize = Convert.ToInt32(file.Length);
 
-        _context.DbSetFile.Add(entity);
-        await _context.SaveChangesAsync(cancellationToken);
+            _context.DbSetFile.Add(entity);
+            await _context.SaveChangesAsync(cancellationToken);
 
-        return new Response9 { Id = entity.FileId };
+            return new Response9 { Id = entity.FileId };
+        }
+        catch (Exception ex)
+        {
+            throw new InternalServerException(ex.Message);
+        }
     }
 }
