@@ -25,7 +25,7 @@ public class CustomFieldController : ApiControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult<CollectionPointCustomFieldActiveList>> Update(int id, UpdateCustomFieldCommand command)
     {
-        if(id != command.Id)
+        if(id != command.id)
         {
             return BadRequest();
         }

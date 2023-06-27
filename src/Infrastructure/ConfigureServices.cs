@@ -34,18 +34,8 @@ public static class ConfigureServices
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
-        services.AddScoped<ApplicationDbContextInitialiser>();
+               services.AddTransient<IDateTime, DateTimeService>();
 
-        services
-            .AddDefaultIdentity<ApplicationUser>()
-            .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
-
-        services.AddIdentityServer()
-            .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
-
-        services.AddTransient<IDateTime, DateTimeService>();
-        services.AddTransient<IIdentityService, IdentityService>();
         services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
         UploadFactory.Create(configuration);
         services.AddTransient<IUploadService>(x =>
@@ -53,10 +43,10 @@ public static class ConfigureServices
             return UploadFactory.Create(configuration);
         });
         services.AddTransient<IGenerateURLService, GenerateURLService>();
-        services.AddTransient<ICryptography, CryptographyService>();
+        services.AddTransient<WW.Application.Common.Interfaces.IAuthenticationService, WW.Infrastructure.Services.Authentication.AuthenticationService>();
+        services.AddTransient<ICryptographyService, CryptographyService>();
         services.AddTransient<ISecurityService, SecurityService>();
-        services.AddAuthentication()
-            .AddIdentityServerJwt();
+        services.AddAuthentication();
 
         services.AddAuthorization(options =>
             options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator")));

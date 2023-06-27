@@ -11,13 +11,13 @@ public class LoginCommandValidator : AbstractValidator<LoginCommand>
 {
     public LoginCommandValidator()
     {
-        RuleFor(v => v.Username)
+        RuleFor(v => v.username)
             .NotNull()
             .WithMessage("Username is required")
             .NotEmpty()
             .WithMessage("Username cannot be empty");
 
-        RuleFor(v => v.Password)
+        RuleFor(v => v.password)
             .NotNull()
             .WithMessage("Password is required")
             .NotEmpty()
