@@ -11,7 +11,7 @@ public class LogoutCommandValidator : AbstractValidator<LogoutCommand>
 {
     public LogoutCommandValidator()
     {
-        RuleFor(v => v.VisitorId)
+        RuleFor(v => v.visitorId)
             .NotNull()
             .WithMessage("Visitor ID is required")
             .NotEmpty()

@@ -6,31 +6,31 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/Company/{id}": {
-      "get": {
+    "/api/Authentication/login": {
+      "post": {
         "tags": [
-          "Company"
+          "Authentication"
         ],
-        "operationId": "Company_Get",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          }
-        ],
+        "operationId": "Authentication_Login",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Company"
+                  "$ref": "#/components/schemas/AuthenticationInfo"
                 }
               }
             }
@@ -38,7 +38,63 @@
         }
       }
     },
-    "/api/ConsentPageSetting": {
+    "/api/Authentication/logout": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "Authentication_Logout",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogoutCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Company": {
+      "get": {
+        "tags": [
+          "Company"
+        ],
+        "operationId": "Company_Get",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Company"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ConsentPageSetting/themes": {
       "get": {
         "tags": [
           "ConsentPageSetting"
@@ -76,7 +132,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/ConsentPageSetting/theme": {
       "post": {
         "tags": [
           "ConsentPageSetting"
@@ -108,12 +166,88 @@
         }
       }
     },
-    "/api/ConsentPageSetting/image/{count}": {
+    "/api/ConsentPageSetting/update-theme/{id}": {
+      "put": {
+        "tags": [
+          "ConsentPageSetting"
+        ],
+        "operationId": "ConsentPageSetting_Update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateConsentThemeCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsentTheme"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ConsentPageSetting/short-url/{id}": {
       "get": {
         "tags": [
           "ConsentPageSetting"
         ],
-        "operationId": "ConsentPageSetting_Get",
+        "operationId": "ConsentPageSetting_GetShortUrlQuery",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShortUrl"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ConsentPageSetting/logo/{count}": {
+      "get": {
+        "tags": [
+          "ConsentPageSetting"
+        ],
+        "operationId": "ConsentPageSetting_GetLogoQuery",
         "parameters": [
           {
             "name": "count",
@@ -132,7 +266,45 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Image"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Image"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ConsentPageSetting/image/{count}": {
+      "get": {
+        "tags": [
+          "ConsentPageSetting"
+        ],
+        "operationId": "ConsentPageSetting_GetImageQuery",
+        "parameters": [
+          {
+            "name": "count",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Image"
+                  }
                 }
               }
             }
@@ -527,15 +699,63 @@
         }
       }
     },
-    "/api/Purpose": {
+    "/api/Language/{languageCultureKeys}/{resourceKeys}": {
       "get": {
         "tags": [
-          "Purpose"
+          "Language"
         ],
-        "operationId": "Purpose_GetCollectionPointsQuery",
+        "operationId": "Language_Get",
         "parameters": [
           {
-            "name": "PageNumber",
+            "name": "languageCultureKeys",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "resourceKeys",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PurposeCategory": {
+      "get": {
+        "tags": [
+          "PurposeCategory"
+        ],
+        "operationId": "PurposeCategory_GetPurposeCategoryQuery",
+        "parameters": [
+          {
+            "name": "offset",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -544,7 +764,151 @@
             "x-position": 1
           },
           {
-            "name": "PageSize",
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedListOfPurposeCategoryActiveList"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "PurposeCategory"
+        ],
+        "operationId": "PurposeCategory_Create",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePurposeCategoryCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurposeCategoryActiveList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PurposeCategory/{id}": {
+      "put": {
+        "tags": [
+          "PurposeCategory"
+        ],
+        "operationId": "PurposeCategory_Update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePurposeCategoryCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurposeCategoryActiveList"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "PurposeCategory"
+        ],
+        "operationId": "PurposeCategory_Get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurposeCategoryActiveList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Purpose": {
+      "get": {
+        "tags": [
+          "Purpose"
+        ],
+        "operationId": "Purpose_GetCollectionPointsQuery",
+        "parameters": [
+          {
+            "name": "Offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Limit",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -560,6 +924,110 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PaginatedListOfPurposeActiveList"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Purpose"
+        ],
+        "operationId": "Purpose_Create",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePurposeCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurposeActiveList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Purpose/{id}": {
+      "put": {
+        "tags": [
+          "Purpose"
+        ],
+        "operationId": "Purpose_Update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePurposeCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurposeActiveList"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Purpose"
+        ],
+        "operationId": "Purpose_Get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurposeActiveList"
                 }
               }
             }
@@ -711,6 +1179,38 @@
         }
       }
     },
+    "/api/User/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_Get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Website": {
       "get": {
         "tags": [
@@ -719,7 +1219,7 @@
         "operationId": "Website_GetCollectionPointsQuery",
         "parameters": [
           {
-            "name": "PageNumber",
+            "name": "Offset",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -728,7 +1228,7 @@
             "x-position": 1
           },
           {
-            "name": "PageSize",
+            "name": "Limit",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -744,6 +1244,110 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PaginatedListOfWebsiteActiveList"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Website"
+        ],
+        "operationId": "Website_Create",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWebsiteCommands"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebsiteActiveList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Website/{id}": {
+      "put": {
+        "tags": [
+          "Website"
+        ],
+        "operationId": "Website_Update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWebsiteCommands"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebsiteActiveList"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Website"
+        ],
+        "operationId": "Website_Get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebsiteActiveList"
                 }
               }
             }
@@ -900,6 +1504,44 @@
   },
   "components": {
     "schemas": {
+      "AuthenticationInfo": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
+      "LoginCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "LogoutCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "visitorId": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "Company": {
         "type": "object",
         "additionalProperties": {
@@ -1060,6 +1702,64 @@
           },
           "policyUrlTextColor": {
             "type": "string"
+          }
+        }
+      },
+      "UpdateConsentThemeCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "themeTitle": {
+            "type": "string"
+          },
+          "headerTextColor": {
+            "type": "string"
+          },
+          "headerBackgroundColor": {
+            "type": "string"
+          },
+          "bodyBackgroudColor": {
+            "type": "string"
+          },
+          "topDescriptionTextColor": {
+            "type": "string"
+          },
+          "bottomDescriptionTextColor": {
+            "type": "string"
+          },
+          "acceptionButtonColor": {
+            "type": "string"
+          },
+          "acceptionConsentTextColor": {
+            "type": "string"
+          },
+          "cancelButtonColor": {
+            "type": "string"
+          },
+          "cancelTextButtonColor": {
+            "type": "string"
+          },
+          "linkToPolicyTextColor": {
+            "type": "string"
+          },
+          "policyUrlTextColor": {
+            "type": "string"
+          }
+        }
+      },
+      "ShortUrl": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
           }
         }
       },
@@ -1568,6 +2268,89 @@
           }
         }
       },
+      "PaginatedListOfPurposeCategoryActiveList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurposeCategoryActiveList"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PurposeCategoryActiveList": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
+      "CreatePurposeCategoryCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdatePurposeCategoryCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
       "PaginatedListOfPurposeActiveList": {
         "type": "object",
         "additionalProperties": false,
@@ -1651,6 +2434,77 @@
             "type": "object",
             "nullable": true,
             "additionalProperties": {}
+          }
+        }
+      },
+      "CreatePurposeCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "purposeType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "categoryID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "keepAliveData": {
+            "type": "string"
+          },
+          "linkMoreDetail": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "textMoreDetail": {
+            "type": "string"
+          },
+          "warningDescription": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdatePurposeCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "purposeID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "purposeType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "categoryID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string"
+          },
+          "keepAliveData": {
+            "type": "string"
+          },
+          "linkMoreDetail": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "textMoreDetail": {
+            "type": "string"
+          },
+          "warningDescription": {
+            "type": "string"
           }
         }
       },
@@ -1744,6 +2598,65 @@
           }
         }
       },
+      "UserInfo": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "address": {
+            "type": "string"
+          },
+          "birthDate": {
+            "type": "string"
+          },
+          "citizenId": {
+            "type": "string"
+          },
+          "companyId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "email": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "guid": {
+            "type": "string",
+            "format": "guid"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "positionDescription": {
+            "type": "string"
+          },
+          "profileImage": {
+            "type": "string"
+          },
+          "tel": {
+            "type": "string"
+          },
+          "userID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "username": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
       "PaginatedListOfWebsiteActiveList": {
         "type": "object",
         "additionalProperties": false,
@@ -1797,6 +2710,46 @@
             "type": "object",
             "nullable": true,
             "additionalProperties": {}
+          }
+        }
+      },
+      "CreateWebsiteCommands": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "urlHomePage": {
+            "type": "string"
+          },
+          "urlPolicyPage": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateWebsiteCommands": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "websiteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "urlHomePage": {
+            "type": "string"
+          },
+          "urlPolicyPage": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
           }
         }
       },

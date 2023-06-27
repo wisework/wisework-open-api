@@ -7,7 +7,7 @@ using WW.Application.Common.Interfaces;
 
 namespace WW.Infrastructure.Services.Authentication;
 
-public class CryptographyService : ICryptography
+public class CryptographyService : ICryptographyService
 {
     public bool vaildatePassword(string in1, string in2, string GUID)
     {

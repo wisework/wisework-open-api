@@ -10,7 +10,7 @@ namespace WW.Application.Authentication.Commands.Logout;
 
 public record LogoutCommand : IRequest<int>
 {
-    public string VisitorId { get; init; }
+    public string? visitorId { get; init; }
 }
 
 public class LogoutCommandHandler : IRequestHandler<LogoutCommand, int>
@@ -24,6 +24,8 @@ public class LogoutCommandHandler : IRequestHandler<LogoutCommand, int>
 
     public async Task<int> Handle(LogoutCommand request, CancellationToken cancellationToken)
     {
+        await Task.Delay(100);
+
         return 0;
     }
 }

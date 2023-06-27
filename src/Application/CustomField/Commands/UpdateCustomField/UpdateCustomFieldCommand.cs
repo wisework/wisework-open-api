@@ -13,15 +13,15 @@ namespace WW.Application.CustomField.Commands.UpdateCustomField;
 
 public record UpdateCustomFieldCommand : IRequest<CollectionPointCustomFieldActiveList>
 {
-    public int Id { get; init; }
-    public string Code { get; init; }
-    public string Owner { get; init; }
-    public string InputType { get; init; }
-    public string Title { get; init; }
-    public string Placeholder { get; init; }
-    public int LengthLimit { get; init; }
-    public int MaxLines { get; init; }
-    public int MinLines { get; init; }
+    public int id { get; init; }
+    public string code { get; init; }
+    public string owner { get; init; }
+    public string inputType { get; init; }
+    public string title { get; init; }
+    public string placeholder { get; init; }
+    public int lengthLimit { get; init; }
+    public int maxLines { get; init; }
+    public int minLines { get; init; }
 }
 
 public class UpdateCustomFieldCommandHandler : IRequestHandler<UpdateCustomFieldCommand, CollectionPointCustomFieldActiveList>
@@ -36,7 +36,7 @@ public class UpdateCustomFieldCommandHandler : IRequestHandler<UpdateCustomField
     public async Task<CollectionPointCustomFieldActiveList> Handle(UpdateCustomFieldCommand request, CancellationToken cancellationToken)
     {
         var entity = _context.DbSetConsentCollectionPointCustomFields
-            .Where(cf => cf.CollectionPointCustomFieldId == request.Id && cf.CompanyId == 1 && cf.Status != Status.X.ToString())
+            .Where(cf => cf.CollectionPointCustomFieldId == request.id && cf.CompanyId == 1 && cf.Status != Status.X.ToString())
             .FirstOrDefault();
 
         if (entity == null)
@@ -44,14 +44,14 @@ public class UpdateCustomFieldCommandHandler : IRequestHandler<UpdateCustomField
             return new CollectionPointCustomFieldActiveList();
         }
 
-        entity.Code = request.Code;
-        entity.Owner = request.Owner;
-        entity.Type = request.InputType;
-        entity.Description = request.Title;
-        entity.Placeholder = request.Placeholder;
-        entity.LengthLimit = request.LengthLimit;
-        entity.MaxLines = request.MaxLines;
-        entity.MinLines = request.MinLines;
+        entity.Code = request.code;
+        entity.Owner = request.owner;
+        entity.Type = request.inputType;
+        entity.Description = request.title;
+        entity.Placeholder = request.placeholder;
+        entity.LengthLimit = request.lengthLimit;
+        entity.MaxLines = request.maxLines;
+        entity.MinLines = request.minLines;
 
         entity.UpdateBy = 1;
         entity.UpdateDate = DateTime.Now;
