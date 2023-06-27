@@ -1,5 +1,5 @@
 ﻿namespace WW.Application.Common.Interfaces;
-public interface ICryptography
+public interface ICryptographyService
 {
     bool vaildatePassword(string in1, string in2, string GUID);
     string generatePassword(string password, string GUID);
