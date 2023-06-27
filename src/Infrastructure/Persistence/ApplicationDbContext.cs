@@ -391,6 +391,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             entity.Property(e => e.UrlconsentPage)
                 .HasMaxLength(1000)
                 .HasColumnName("URLConsentPage");
+
+            entity.Property(e => e.ThemeId).HasColumnName("ThemeID");
         });
         builder.Entity<Consent_CollectionPointCustomFieldConfig>(entity =>
         {

@@ -24,7 +24,6 @@ jobs:
       - name: "Add Sources package"
         run: dotnet nuget add source https://nuget.pkg.github.com/WiseWork/index.json  --username ${{ secrets.GH_USER }} --password  ${{ secrets.GH_PASSWORD}} --store-password-in-clear-text
 
-
       - name: Restore NuGet packages
         run: dotnet restore
 
