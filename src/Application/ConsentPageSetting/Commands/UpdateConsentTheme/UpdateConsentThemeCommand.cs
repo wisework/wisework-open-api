@@ -23,7 +23,7 @@ public record UpdateConsentThemeCommand : IRequest<ConsentTheme>
     public string themeTitle { get; init; }
     public string headerTextColor { get; init; }
     public string headerBackgroundColor { get; init; }
-    public string bodyBackgroudColor { get; init; }
+    public string bodyBackgroundColor { get; init; }
     public string topDescriptionTextColor { get; init; }
     public string bottomDescriptionTextColor { get; init; }
     public string acceptionButtonColor { get; init; }
@@ -55,7 +55,7 @@ public class UpdateConsentThemeCommandHandler : IRequestHandler<UpdateConsentThe
         if (request.themeId <= 0)
         {
             List<ValidationFailure> failures = new List<ValidationFailure> { };
-            failures.Add(new ValidationFailure("id", "ID must be greater than 0"));
+            failures.Add(new ValidationFailure("themeId", "Theme ID must be greater than 0"));
 
             throw new ValidationException(failures);
         }
@@ -74,7 +74,7 @@ public class UpdateConsentThemeCommandHandler : IRequestHandler<UpdateConsentThe
             entity.ThemeTitle = request.themeTitle;
             entity.HeaderTextColor = request.headerTextColor;
             entity.HeaderBackgroundColor = request.headerBackgroundColor;
-            entity.BodyBackgroudColor = request.bodyBackgroudColor;
+            entity.BodyBackgroudColor = request.bodyBackgroundColor;
             entity.TopDescriptionTextColor = request.topDescriptionTextColor;
             entity.BottomDescriptionTextColor = request.bottomDescriptionTextColor;
             entity.AcceptionButtonColor = request.acceptionButtonColor;

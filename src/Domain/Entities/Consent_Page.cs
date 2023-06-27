@@ -41,4 +41,5 @@ public class Consent_Page :Base
     public string? LanguageCulture { get; set; }
     public string? ShortDescriptionThankPage { get; set; }
     public string? RedirectUrl { get; set; }
+    public int ThemeId { get; set; }
 }
