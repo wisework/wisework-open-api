@@ -2,6 +2,8 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Amazon.Runtime.Internal.Transform;
+using System;
 
 namespace WW.OpenAPI.Filters;
 
@@ -17,7 +19,9 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
                 { typeof(ValidationException), HandleValidationException },
                 { typeof(NotFoundException), HandleNotFoundException },
                 { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
+                { typeof(InternalException), HandleInternalException },
                 { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
+                { typeof(InternalServerException), HandleInternalServerException }
             };
     }
 
@@ -48,10 +52,7 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     {
         var exception = (ValidationException)context.Exception;
 
-        var details = new ValidationProblemDetails(exception.Errors)
-        {
-            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
-        };
+        var details = new ValidationProblemDetails(exception.Errors);
 
         context.Result = new BadRequestObjectResult(details);
 
@@ -60,10 +61,7 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 
     private void HandleInvalidModelStateException(ExceptionContext context)
     {
-        var details = new ValidationProblemDetails(context.ModelState)
-        {
-            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
-        };
+        var details = new ValidationProblemDetails(context.ModelState);
 
         context.Result = new BadRequestObjectResult(details);
 
@@ -76,24 +74,53 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 
         var details = new ProblemDetails()
         {
-            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
             Title = "The specified resource was not found.",
-            Detail = exception.Message
+            Status = StatusCodes.Status404NotFound
         };
+
+        if (!string.IsNullOrEmpty(exception.Message))
+        {
+            details.Detail = exception.Message;
+        }
 
         context.Result = new NotFoundObjectResult(details);
 
         context.ExceptionHandled = true;
     }
 
+    private void HandleInternalException(ExceptionContext context)
+    {
+        var exception = (InternalException)context.Exception;
+
+        var details = new ProblemDetails()
+        {
+            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+            Title = "The specified resource was not found.",
+            Detail = exception.Message
+        };
+
+        context.Result = new ObjectResult(details)
+        {
+            StatusCode = StatusCodes.Status500InternalServerError
+        };
+
+        context.ExceptionHandled = true;
+    }
+
     private void HandleUnauthorizedAccessException(ExceptionContext context)
     {
+        var exception = (UnauthorizedAccessException)context.Exception;
+        
         var details = new ProblemDetails
         {
-            Status = StatusCodes.Status401Unauthorized,
             Title = "Unauthorized",
-            Type = "https://tools.ietf.org/html/rfc7235#section-3.1"
+            Status = StatusCodes.Status401Unauthorized
         };
+
+        if(!string.IsNullOrEmpty(exception.Message))
+        {
+            details.Detail = exception.Message;
+        }
 
         context.Result = new ObjectResult(details)
         {
@@ -105,16 +132,46 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 
     private void HandleForbiddenAccessException(ExceptionContext context)
     {
+        var exception = (ForbiddenAccessException)context.Exception;
+
         var details = new ProblemDetails
         {
-            Status = StatusCodes.Status403Forbidden,
             Title = "Forbidden",
-            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.3"
+            Status = StatusCodes.Status403Forbidden
         };
+
+        if (!string.IsNullOrEmpty(exception.Message))
+        {
+            details.Detail = exception.Message;
+        }
 
         context.Result = new ObjectResult(details)
         {
             StatusCode = StatusCodes.Status403Forbidden
+        };
+
+        context.ExceptionHandled = true;
+    }
+
+    private void HandleInternalServerException(ExceptionContext context)
+    {
+        var exception = (InternalServerException)context.Exception;
+
+        var details = new ProblemDetails()
+        {
+            Title = "An internal server error occurred.",
+            Status = StatusCodes.Status500InternalServerError,
+            Detail = "An internal server error occurred. Please try again later."
+        };
+
+        if (!string.IsNullOrEmpty(exception.Message))
+        {
+            details.Detail = exception.Message;
+        }
+
+        context.Result = new NotFoundObjectResult(details) 
+        {
+            StatusCode = StatusCodes.Status500InternalServerError,
         };
 
         context.ExceptionHandled = true;

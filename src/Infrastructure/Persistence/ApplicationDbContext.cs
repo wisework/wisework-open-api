@@ -3,9 +3,7 @@ using WW.Application.Common.Interfaces;
 using WW.Domain.Entities;
 using WW.Infrastructure.Identity;
 using WW.Infrastructure.Persistence.Interceptors;
-using Duende.IdentityServer.EntityFramework.Options;
 using MediatR;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using WW.Application.CollectionPoints.Queries.GetCollectionPoints;
@@ -16,17 +14,16 @@ using AutoMapper;
 
 namespace WW.Infrastructure.Persistence;
 
-public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, IApplicationDbContext
+public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
     private readonly IMediator _mediator;
     private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
 
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
-        IOptions<OperationalStoreOptions> operationalStoreOptions,
         IMediator mediator,
         AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor)
-        : base(options, operationalStoreOptions)
+        : base(options)
     {
         _mediator = mediator;
         _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
@@ -35,13 +32,14 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     public DbSet<Consent_CollectionPointCustomField> DbSetConsentCollectionPointCustomFields => Set<Consent_CollectionPointCustomField>();
     public DbSet<Consent_SectionInfo> DbSetConsentSectionInfo => Set<Consent_SectionInfo>();
     public DbSet<Consent_Purpose> DbSetConsentPurpose => Set<Consent_Purpose>();
+    public DbSet<Consent_PurposeCategory> DbSetConsentPurposeCategory => Set<Consent_PurposeCategory>();
     public DbSet<Consent_Page> DbSetConsentPage => Set<Consent_Page>();
     public DbSet<Consent_CollectionPointCustomFieldConfig> DbSetConsent_CollectionPointCustomFieldConfig => Set<Consent_CollectionPointCustomFieldConfig>();
 
     public DbSet<Consent_CollectionPointItem> DbSetConsentCollectionPointItem => Set<Consent_CollectionPointItem>();
     public DbSet<Companies> DbSetCompanies => Set<Companies>();
     public DbSet<ConsentWebsite> DbSetConsentWebsite => Set<ConsentWebsite>();
-    public DbSet<User> DbSetUser => Set<User>();
+    public DbSet<Users> DbSetUser => Set<Users>();
 
     public DbSet<Consent_Consent> DbSetConsent => Set<Consent_Consent>();
     public DbSet<Consent_ConsentItem> DbSetConsentItem => Set<Consent_ConsentItem>();
@@ -49,6 +47,10 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     public DbSet<Domain.Entities.File> DbSetFile => Set<Domain.Entities.File>();
     public DbSet<FileCategory> DbSetFileCategory => Set<FileCategory>();
     public DbSet<FileType> DbSetFileType => Set<FileType>();
+    public DbSet<Position> DbSetPosition => Set<Position>(); 
+    public DbSet<CompanyUser> DbSetCompanyUser => Set<CompanyUser>();
+    public DbSet<LanguageDisplay> DbSetLanguage => Set<LanguageDisplay>();
+    public DbSet<LocalStringResource> DbSetLocalStringResource => Set<LocalStringResource>();
     public virtual DbSet<V_Consent_Latest_Consent> DbSetVConsentLatestConsents => Set<V_Consent_Latest_Consent>();
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -266,6 +268,39 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
             entity.Property(e => e.WarningDescription).HasColumnType("ntext").HasColumnName("WarningDescription");
         });
 
+
+        builder.Entity<Consent_PurposeCategory>(entity =>
+        {
+            entity.HasKey(e => e.ID)
+                .HasName("PK__Consent___3214EC274E856C2F");
+
+            entity.ToTable("Consent_PurposeCategory");
+
+            entity.Property(e => e.PurposeCategoryID).HasColumnName("PurposeCategoryID");
+
+            entity.Property(e => e.CompanyID).HasColumnName("CompanyID");
+
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.Version).HasColumnName("Version");
+
+            entity.Property(e => e.CreateBy).HasPrecision(0);
+
+            entity.Property(e => e.CreateDate).HasPrecision(0);
+
+            entity.Property(e => e.UpdateBy).HasPrecision(0);
+
+            entity.Property(e => e.UpdateDate).HasPrecision(0);
+
+            entity.Property(e => e.Code).HasMaxLength(20);
+
+            entity.Property(e => e.Description).HasMaxLength(1000);
+
+            entity.Property(e => e.Language).HasMaxLength(2);
+
+        });
+
+
         builder.Entity<Consent_Page>(entity =>
         {
             entity.HasKey(e => e.PageId)
@@ -427,6 +462,27 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
             entity.Property(e => e.UpdateDate).HasPrecision(0);
         });
 
+        builder.Entity<Position>(entity =>
+        {
+            entity.ToTable("Position");
+
+            entity.Property(e => e.PositionID).HasColumnName("PositionID");
+
+            entity.Property(e => e.CompanyID).HasColumnName("CompanyID");
+
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.CreateDate).HasPrecision(0);
+
+            entity.Property(e => e.UpdateDate).HasPrecision(0);
+
+            entity.Property(e => e.Code).HasMaxLength(20);
+
+            entity.Property(e => e.Description).HasMaxLength(100);
+
+            entity.Property(e => e.DepartmentID).HasColumnName("DepartmentID");
+        });
+
         builder.Entity<Companies>(entity =>
         {
             entity.ToTable("Company");
@@ -484,6 +540,21 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
                 .HasDefaultValueSql("(sysdatetimeoffset())");
         });
 
+        builder.Entity<CompanyUser>(entity =>
+        {
+            entity.ToTable("CompanyUser");
+
+            entity.Property(e => e.CompanyUserID).HasColumnName("CompanyUserID");
+
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.UserID).HasColumnName("UserID");
+
+            entity.Property(e => e.CompanyID).HasColumnName("CompanyID");
+
+            entity.Property(e => e.DefaultBranch).HasColumnName("DefaultBranch");
+        });
+
         builder.Entity<ConsentWebsite>(entity =>
         {
             entity.HasKey(e => e.WebsiteId)
@@ -514,13 +585,19 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
                 .HasColumnName("URLPolicy");
         });
 
-        builder.Entity<User>(entity =>
+        builder.Entity<Users>(entity =>
         {
+            entity.HasKey(e => e.UserId)
+                .HasName("PK__User___3F146A492FC12559");
+
+
             entity.ToTable("User");
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.Property(e => e.Address).HasMaxLength(1000);
+
+            entity.Property(e => e.CompanyId).HasColumnName("CompanyID");
 
             entity.Property(e => e.BirthDate).HasColumnType("date");
 
@@ -729,6 +806,57 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
             entity.Property(e => e.WebsiteId).HasColumnName("WebsiteID");
         });
+
+        builder.Entity<LanguageDisplay>(entity =>
+        {
+            entity.HasKey(e => e.LanguageID)
+                .HasName("PK__Language___2CDB7A9952057809");
+
+            entity.ToTable("Language");
+
+            entity.Property(e => e.Version).HasColumnName("Version");
+
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.CreateBy).HasPrecision(0);
+
+            entity.Property(e => e.CreateDate).HasPrecision(0);
+
+            entity.Property(e => e.UpdateBy).HasPrecision(0);
+
+            entity.Property(e => e.UpdateDate).HasPrecision(0);
+
+            entity.Property(e => e.Code).HasMaxLength(20);
+
+            entity.Property(e => e.Name).HasColumnName("Name");
+
+            entity.Property(e => e.LanguageCulture).HasColumnName("LanguageCulture");
+
+            entity.Property(e => e.IconUrl).HasColumnName("IconUrl");
+
+            entity.Property(e => e.CompanyID).HasColumnName("CompanyID");
+
+            entity.Property(e => e.DisplayOrder).HasColumnName("DisplayOrder");
+
+            entity.Property(e => e.IsDefault).HasColumnName("IsDefault");
+        });
+
+        builder.Entity<LocalStringResource>(entity =>
+        {
+            entity.HasKey(e => e.LocalStringResourceID)
+                .HasName("PK__LocalStringResource___2CDB7A9952057809");
+
+            entity.ToTable("LocalStringResource");
+
+            entity.Property(e => e.ResourceKey).HasColumnName("ResourceKey");
+
+            entity.Property(e => e.ResourceValue).HasColumnName("ResourceValue");
+
+            entity.Property(e => e.LanguageCulture).HasColumnName("LanguageCulture");
+
+            
+        });
+
         base.OnModelCreating(builder);
     }
 

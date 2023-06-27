@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WW.Application.CollectionPoints.Queries.GetCollectionPoints;
 using System.Data.SqlClient;
 using WW.Application.GeneralConsents.Commands;
+using Wisework.ConsentManagementSystem.Api;
 
 namespace WW.Application.Common.Interfaces;
 
@@ -11,6 +12,7 @@ public interface IApplicationDbContext
     DbSet<Consent_CollectionPoint> DbSetConsentCollectionPoints { get; }
     DbSet<Consent_SectionInfo> DbSetConsentSectionInfo { get; }
     DbSet<Consent_Purpose> DbSetConsentPurpose { get; }
+    DbSet<Consent_PurposeCategory> DbSetConsentPurposeCategory { get; }
     DbSet<Consent_Page> DbSetConsentPage { get; }
     DbSet<Consent_CollectionPointItem> DbSetConsentCollectionPointItem { get; }
     DbSet<Consent_CollectionPointCustomField> DbSetConsentCollectionPointCustomFields { get; }
@@ -18,7 +20,7 @@ public interface IApplicationDbContext
 
     DbSet<Companies> DbSetCompanies { get; }
     DbSet<ConsentWebsite> DbSetConsentWebsite { get; } 
-    DbSet<User> DbSetUser { get; }
+    DbSet<Users> DbSetUser { get; }
     DbSet<Consent_Consent> DbSetConsent { get; }
     DbSet<V_Consent_Latest_Consent> DbSetVConsentLatestConsents {get; }
     DbSet<Consent_ConsentItem> DbSetConsentItem { get; }
@@ -26,6 +28,10 @@ public interface IApplicationDbContext
     DbSet<Domain.Entities.File> DbSetFile { get; }
     DbSet<FileCategory> DbSetFileCategory { get; }
     DbSet<FileType> DbSetFileType { get; }
+    DbSet<Position> DbSetPosition { get; }
+    DbSet<CompanyUser> DbSetCompanyUser { get; }
+    DbSet<LanguageDisplay> DbSetLanguage { get; }
+    DbSet<LocalStringResource> DbSetLocalStringResource { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     Task<int> SubmitConsent(string query
                         /*,int CompanyId

@@ -8,6 +8,7 @@ using WW.Infrastructure.Identity;
 using WW.Infrastructure.Persistence;
 using WW.Infrastructure.Persistence.Interceptors;
 using WW.Infrastructure.Services;
+using WW.Infrastructure.Services.Authentication;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -33,26 +34,19 @@ public static class ConfigureServices
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
-        services.AddScoped<ApplicationDbContextInitialiser>();
+               services.AddTransient<IDateTime, DateTimeService>();
 
-        services
-            .AddDefaultIdentity<ApplicationUser>()
-            .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
-
-        services.AddIdentityServer()
-            .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
-
-        services.AddTransient<IDateTime, DateTimeService>();
-        services.AddTransient<IIdentityService, IdentityService>();
         services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
         UploadFactory.Create(configuration);
         services.AddTransient<IUploadService>(x =>
         {
             return UploadFactory.Create(configuration);
         });
-        services.AddAuthentication()
-            .AddIdentityServerJwt();
+        services.AddTransient<IGenerateURLService, GenerateURLService>();
+        services.AddTransient<WW.Application.Common.Interfaces.IAuthenticationService, WW.Infrastructure.Services.Authentication.AuthenticationService>();
+        services.AddTransient<ICryptographyService, CryptographyService>();
+        services.AddTransient<ISecurityService, SecurityService>();
+        services.AddAuthentication();
 
         services.AddAuthorization(options =>
             options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator")));
