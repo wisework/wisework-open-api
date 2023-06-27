@@ -47,11 +47,11 @@ public class GetConsentThemeHandler : IRequestHandler<GetConsentThemeQuery, Pagi
 
             if (request.offset <= 0)
             {
-                failures.Add(new ValidationFailure("Offset", "Offset must be greater than 0"));
+                failures.Add(new ValidationFailure("offset", "Offset must be greater than 0"));
             }
             if (request.limit <= 0)
             {
-                failures.Add(new ValidationFailure("Limit", "Limit must be greater than 0"));
+                failures.Add(new ValidationFailure("limit", "Limit must be greater than 0"));
             }
 
             throw new ValidationException(failures);

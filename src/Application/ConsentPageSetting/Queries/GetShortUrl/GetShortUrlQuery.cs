@@ -49,11 +49,25 @@ public class GetShortUrlHandler : IRequestHandler<GetShortUrlQuery, ShortUrl>
             throw new ValidationException(failures);
         }
 
-        var consent = _context.DbSetConsentCollectionPoints.Where(
-            cp => cp.CollectionPointId == request.id && cp.CompanyId == request.authentication.CompanyID && cp.Status == Status.Active.ToString()
-        ).FirstOrDefault();
+        var completelyConsentForm = (from cs in _context.DbSetConsentCollectionPoints
+                                     join c in _context.DbSetCompanies on cs.CompanyId equals Convert.ToInt32(c.CompanyId)
+                                     join cp in _context.DbSetConsentPage on cs.CollectionPointId equals cp.CollectionPointId
+                                     join ct in _context.DbSetConsentTheme on cp.ThemeId equals ct.ThemeId
+                                     where Convert.ToInt32(c.CompanyId) == request.authentication.CompanyID && c.Status == ('A').ToString() &&
+                                        cs.CompanyId == request.authentication.CompanyID && cs.Status == Status.Active.ToString() && 
+                                        cp.CompanyId == request.authentication.CompanyID && cp.Status == Status.Active.ToString() &&
+                                        ct.CompanyId == request.authentication.CompanyID && ct.Status == Status.Active.ToString() &&
+                                        cs.CollectionPointId == request.id
+                                     select new
+                                     {
+                                         ConsentId = cs.CollectionPointId,
+                                         ConsentTitle = cs.CollectionPoint,
+                                         CompanyId = c.CompanyId,
+                                         ConsentPageId = cp.PageId,
+                                         ConsentThemeId = ct.ThemeId,
+                                     }).FirstOrDefault();
 
-        if (consent == null)
+        if (completelyConsentForm == null)
         {
             throw new NotFoundException();
         }
