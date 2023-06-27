@@ -47,7 +47,7 @@ public class GetImageHandler : IRequestHandler<GetImageQuery, List<Image>>
         if (request.count < 0)
         {
             List<ValidationFailure> failures = new List<ValidationFailure> { };
-            failures.Add(new ValidationFailure("Count", "Count must be greater than or equal to 0"));
+            failures.Add(new ValidationFailure("count", "Count must be greater than or equal to 0"));
 
             throw new ValidationException(failures);
         }
