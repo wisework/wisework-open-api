@@ -41,7 +41,7 @@ public class GetPurposeInfoQueryHandler : IRequestHandler<GetPurposeInfoQuery, P
                                    PurposeID = cf.PurposeId,
                                    GUID =new Guid(cf.Guid),
                                    PurposeType = cf.PurposeType,
-                                   CategoryID = cf.CategoryID,
+                                   CategoryID = cf.PurposeCategoryId,
                                    Code = cf.Code,
                                    Description = cf.Description,
                                    KeepAliveData = cf.KeepAliveData,

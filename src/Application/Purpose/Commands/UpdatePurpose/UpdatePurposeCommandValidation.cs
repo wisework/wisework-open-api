@@ -15,7 +15,7 @@ internal class UpdatePurposeCommandValidation : AbstractValidator<UpdatePurposeC
           .NotEmpty()
           .NotNull();
 
-        RuleFor(v => v.CategoryID)
+        RuleFor(v => v.PurposeCategoryId)
            .NotEmpty()
            .NotNull();
 

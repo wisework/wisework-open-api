@@ -266,6 +266,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             entity.Property(e => e.UpdateDate).HasPrecision(0);
 
             entity.Property(e => e.WarningDescription).HasColumnType("ntext").HasColumnName("WarningDescription");
+            entity.Property(e => e.ExpiredDateTime).HasColumnType("KeepAliveData");
+
         });
 
 
@@ -538,6 +540,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             entity.Property(e => e.UpdateDate)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetimeoffset())");
+            entity.Property(e => e.LogoImage).HasColumnName("LogoImage");
         });
 
         builder.Entity<CompanyUser>(entity =>

@@ -1,8 +1,11 @@
 ﻿
 
+using System.Text.Json.Serialization;
 using AutoMapper;
 using MediatR;
+using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
+using WW.Application.Common.Models;
 using WW.Domain.Enums;
 
 namespace WW.Application.GeneralConsents.Queries;
@@ -13,7 +16,8 @@ public record GetLatestIdRequestQuery : IRequest<int>
     public string? Email { get; set; }
     public string? PhoneNumber { get; set; }
     public string CollectionPointGuid { get; set; }
-
+    [JsonIgnore]
+    public AuthenticationModel? authentication { get; set; }
 }
 
 
@@ -30,15 +34,12 @@ public class GetLatestIdRequestQueryHandler : IRequestHandler<GetLatestIdRequest
 
     public Task<int> Handle(GetLatestIdRequestQuery request, CancellationToken cancellationToken)
     {
-        //var query = (from c in _context.DbSetConsent
-        //             join cp in _context.DbSetConsentCollectionPoints on c.CollectionPointId equals cp.CollectionPointId
-        //             where cp.Guid == request.CollectionPointGuid && c.CompanyId == 1
-        //             && c.FullName == request.FullName
-        //             || c.Email == request.Email
-        //             || c.PhoneNumber == request.PhoneNumber
-        //             || c.CardNumber == request.IdCardNumber
-        //             select c.ConsentId).ToList().FirstOrDefault();
-
+        if (request.authentication == null)
+        {
+            throw new UnauthorizedAccessException();
+        }
+        try
+        {
         var latestId = (from c in _context.DbSetConsent
                         join cp in _context.DbSetConsentCollectionPoints on c.CollectionPointId equals cp.CollectionPointId
                         where cp.Guid == request.CollectionPointGuid
@@ -53,6 +54,12 @@ public class GetLatestIdRequestQueryHandler : IRequestHandler<GetLatestIdRequest
 
 
         return Task.FromResult(latestId);
+        }
+        catch (Exception ex)
+        {
+            throw new InternalServerException(ex.Message);
+
+        }
     }
 }
 
