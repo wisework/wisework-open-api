@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using MediatR;
 using Wisework.ConsentManagementSystem.Api;
 using WW.Application.Common.Interfaces;
+using WW.Application.Common.Models;
 using WW.Domain.Entities;
 using WW.Domain.Enums;
 using WW.Domain.Exceptions;
@@ -23,7 +25,8 @@ public record UpdateCollectionPointCommand : IRequest<int>
     public List<CollectionPointPurpose> PurposesList { get; init; }
     public int WebsiteId { get; init; }
     public int Version { get; init; }
-
+    [JsonIgnore]
+    public AuthenticationModel? authentication { get; set; }
 }
 public class UpdateCollectionPointCommandHandler : IRequestHandler<UpdateCollectionPointCommand, int>
 {

@@ -6,24 +6,47 @@ using WW.Application.Common.Models;
 using Wisework.ConsentManagementSystem.Api;
 using WW.Application.CollectionPoints.Commands.CreateCollectionPoint;
 using WW.Application.CollectionPoints.Commands.UpdateCollectionPoint;
+using Wiskwork.OpenAPI.Filters;
+using WW.Application.ConsentPageSetting.Queries.GetShortUrl;
 
 namespace WW.OpenAPI.Controllers;
 //[Authorize]
 public class CollectionPointsController : ApiControllerBase
 {
     [HttpGet]
+    [AuthorizationFilter]
+
     public async Task<ActionResult<PaginatedList<CollectionPointInfo>>> GetCollectionPointsQuery([FromQuery] GetCollectionPointsQuery query)
     {
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            query.authentication = authentication;
+        }
         return await Mediator.Send(query);
     }
     [HttpPost]
+    [AuthorizationFilter]
+
     public async Task<ActionResult<int>> Create(CreateCollectionPointCommand command)
     {
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            command.authentication = authentication;
+        }
         return await Mediator.Send(command);
     }
     [HttpPut("{id}")]
+    [AuthorizationFilter]
+
     public async Task<ActionResult> Update(int id, UpdateCollectionPointCommand command)
     {
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            command.authentication = authentication;
+        }
         if (id != command.Id)
         {
             return BadRequest();
@@ -35,9 +58,18 @@ public class CollectionPointsController : ApiControllerBase
     }
   
     [HttpGet("{id}")]
-    public async Task<CollectionPointInfo> Get(int id)
+    [AuthorizationFilter]
+
+    public async Task<CollectionPointInfo> GetInfo(int id)
     {
-        return (CollectionPointInfo)await Mediator.Send(new GetCollectionPointsInfoQuery(id));
+        var query = new GetCollectionPointsInfoQuery(id);
+
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            query.authentication = authentication;
+        }
+        return await Mediator.Send(query);
 
     }
 }
