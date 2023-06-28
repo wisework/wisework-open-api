@@ -124,7 +124,7 @@ public class GetCollectionPointsInfoQueryHandler : IRequestHandler<GetCollection
                                select
                                new CollectionPointPageDetail
                                {
-
+                                   ThemeId = cp.ThemeId,
                                    AcceptCheckBoxText = cp.LabelCheckBoxAccept,
                                    BackgroundImageId = cp.BodyBgimage,
                                    BodyBottomDescriptionText = cp.BodyBottomDescription,

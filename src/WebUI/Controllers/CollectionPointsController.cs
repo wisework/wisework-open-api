@@ -28,7 +28,7 @@ public class CollectionPointsController : ApiControllerBase
     [HttpPost]
     [AuthorizationFilter]
 
-    public async Task<ActionResult<int>> Create(CreateCollectionPointCommand command)
+    public async Task<ActionResult<CollectionPointObject>> Create(CreateCollectionPointCommand command)
     {
         HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
         if (authenticationObj is AuthenticationModel authentication)

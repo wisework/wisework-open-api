@@ -14,7 +14,7 @@ using WW.Domain.Enums;
 
 namespace WW.Application.CollectionPoints.Commands.CreateCollectionPoint;
 
-public record CreateCollectionPointCommand : IRequest<int>
+public record CreateCollectionPointCommand : IRequest<CollectionPointObject>
 {
     public string CollectionPointName { get; init; }
     public List<CollectionPointConsentKeyIdentifier> ConsentKeyIdentifier { get; init; }
@@ -28,7 +28,7 @@ public record CreateCollectionPointCommand : IRequest<int>
     public AuthenticationModel? authentication { get; set; }
 }
 
-public class CreateTodoListCommandHandler : IRequestHandler<CreateCollectionPointCommand, int>
+public class CreateTodoListCommandHandler : IRequestHandler<CreateCollectionPointCommand, CollectionPointObject>
 {
     private readonly IApplicationDbContext _context;
 
@@ -37,8 +37,9 @@ public class CreateTodoListCommandHandler : IRequestHandler<CreateCollectionPoin
         _context = context;
     }
 
-    public async Task<int> Handle(CreateCollectionPointCommand request, CancellationToken cancellationToken)
+    public async Task<CollectionPointObject> Handle(CreateCollectionPointCommand request, CancellationToken cancellationToken)
     {
+        var entity = new Consent_CollectionPoint();
         if (request.authentication == null)
         {
             throw new UnauthorizedAccessException();
@@ -47,16 +48,19 @@ public class CreateTodoListCommandHandler : IRequestHandler<CreateCollectionPoin
         {
             #region add collection point and PrimaryKey
 
-            var entity = new Consent_CollectionPoint();
+            
             entity.CollectionPoint = request.CollectionPointName;
             entity.WebsiteId = request.WebsiteId;
             entity.KeepAliveData = request.ExpirationPeriod;
             entity.Language = request.Language;
-        //todo: change affter identity server
+            //todo: change affter identity server
+            entity.CompanyId = request.authentication.CompanyID;
+            entity.Description = "";
+            entity.Script = "";
             entity.CreateBy = 1;
             entity.UpdateBy = 1;
             entity.UpdateDate = DateTime.Now;
-            entity.CreateDate = DateTime.Now;          
+            entity.CreateDate = DateTime.Now;
 
             entity.Status = Status.Active.ToString();
             entity.Version = 1;
@@ -91,6 +95,7 @@ public class CreateTodoListCommandHandler : IRequestHandler<CreateCollectionPoin
 
             _context.DbSetConsentCollectionPoints.Add(entity);
             #endregion
+
             #region add purpose
             foreach (var purpose in request.PurposesList)
             {
@@ -127,52 +132,75 @@ public class CreateTodoListCommandHandler : IRequestHandler<CreateCollectionPoin
 
             #region add consent page
             var pageDetail = new Consent_Page();
-            // id collecion point
+            pageDetail.ThemeId = request.PageDetail.ThemeId;
             pageDetail.CollectionPointId = entity.CollectionPointId;
             pageDetail.LabelCheckBoxAccept = request.PageDetail.AcceptCheckBoxText;
-            //pageDetail.LabelCheckBoxAcceptFontColor = request.PageDetail.AcceptCheckBoxLabelFontColor;
-            //pageDetail.BodyBgcolor = request.PageDetail.BodyBackgroundColor;
             pageDetail.BodyBgimage = request.PageDetail.BackgroundImageId;
             pageDetail.BodyBottomDescription = request.PageDetail.BodyBottomDescriptionText;
-            //pageDetail.BodyBottomDescriptionFontColor = request.PageDetail.BodyBottomDescriptionFontColor;
             pageDetail.BodyTopDescription = request.PageDetail.BodyTopDescriptionText;
-            //pageDetail.BodyTopDerscriptionFontColor = request.PageDetail.BodyTopDerscriptionFontColor;
-            //pageDetail.CancelButtonBgcolor = request.PageDetail.CancelButtonBackgroundColor;
-            //pageDetail.CancelButtonFontColor = request.PageDetail.CancelButtonFontColor;
             pageDetail.LabelActionCancel = request.PageDetail.CancelButtonText;
             pageDetail.LabelActionOk = request.PageDetail.ConfirmButtonText;
-            //pageDetail.HeaderBgcolor = request.PageDetail.HeaderBackgroundColor;
             pageDetail.HeaderBgimage = request.PageDetail.HeaderBackgroundImageId;
-            //pageDetail.HeaderFontColor = request.PageDetail.HeaderFontColor;
             pageDetail.HeaderLabel = request.PageDetail.HeaderText;
             pageDetail.HeaderLogo = request.PageDetail.LogoImageId;
-            //pageDetail.OkbuttonBgcolor = request.PageDetail.OkButtonBackgroundColor;
-            //pageDetail.OkbuttonFontColor = request.PageDetail.OkButtonFontColor;
             pageDetail.LabelLinkToPolicyUrl = request.PageDetail.PolicyUrl;
             pageDetail.LabelLinkToPolicy = request.PageDetail.PolicyUrlText;
-            //pageDetail.LabelPurposeActionAgree = request.PageDetail.PurposeAcceptLabel;
-            //pageDetail.LabelLinkToPolicyFontColor = request.PageDetail.PolicyUrlLabelFontColor;
-            //pageDetail.LabelPurposeActionNotAgree = request.PageDetail.PurposeRejectLabel;
+            pageDetail.UrlconsentPage = "https://demo-pdpa.thewiseworks.com/CMSConsent/ConsentPage?code=P9hXBHMlcE6VxMr9yfTDU%2FkPePtS7S%2FYT4wpimQ1CqYNHdtHZHtnyaFbXHCGJNFb85UJKuzTKJvKOtYsL%2BNOsbGjwJMWYe%2BuvDDzj5YStofWtLAXhxsRjWhFaOs3zPQBDVdTf%2Bo7MpkARrY7QnkIstfxWTkL6a3l1lTkQ0ZFX6og4w72Ht7bbVnYOdNtlU7KDh3au%2Fxuiag8mlN%2FRNqRGlOiFaT7%2FOUSuWUsyZYtldtADgAr3Prf2XjciZ2Jh%2BAMiFs7mPM75rSuBZJFNeYibDwBpyPFHon5L599uKlAK7TeuDkTReB2TwcvWgWsLnUDLTZ1Vfis%2FgfKOYQwf7SwHqDIHioyPnoVQv%2B74IRVr1q7oie7B1gn%2FM3cQ9SAHDCa";
             pageDetail.RedirectUrl = request.PageDetail.RedirectUrl;
             pageDetail.HeaderLabelThankPage = request.PageDetail.SuccessHeaderText;
             pageDetail.ShortDescriptionThankPage = request.PageDetail.SuccessDescriptionText;
             pageDetail.ButtonThankpage = request.PageDetail.SuccessButtonText;
+            pageDetail.LabelPurposeActionAgree = "";
+            pageDetail.LabelPurposeActionNotAgree = "";
 
             //todo:change affter identity server
-            /*pageDetail.CreateBy = 1;
-            pageDetail.UpdateBy = 1;
+            pageDetail.LanguageCulture = request.Language;
+            pageDetail.Status = Status.Active.ToString();
+            pageDetail.Version = 1;
+            pageDetail.CompanyId = request.authentication.CompanyID;
+            pageDetail.CreateBy = request.authentication.UserID;
+            pageDetail.UpdateBy = request.authentication.UserID;
             pageDetail.UpdateDate = DateTime.Now;
             pageDetail.CreateDate = DateTime.Now;
-            //test check error
-            pageDetail.CreatedBy = "1";*/
+
 
             _context.DbSetConsentPage.Add(pageDetail);
 
             #endregion
 
+            #region website
+            var websiteList = (from cp in _context.DbSetConsentCollectionPoints
+                               join w in _context.DbSetConsentWebsite on cp.WebsiteId equals w.WebsiteId
+                               where cp.CollectionPointId == request.WebsiteId
+                               select
+                                   new CollectionPointInfoWebsiteObject
+                                   {
+                                       Id = w.WebsiteId,
+                                       Description = w.Description,
+                                       UrlHomePage = w.Url,
+                                       UrlPolicyPage = w.Urlpolicy,
+                                   }).FirstOrDefault();
+
+
+            #endregion
+
             await _context.SaveChangesAsync(cancellationToken);
 
-            return entity.CollectionPointId;
+            var collectionpointInfo = new CollectionPointObject
+            {
+                Id = entity.CollectionPointId,
+                Name = entity.CollectionPoint,
+                ConsentKeyIdentifier = request.ConsentKeyIdentifier,
+                CustomFieldsList = request.CustomFieldsList,
+                ExpirationPeriod = request.ExpirationPeriod,
+                Language = request.Language,
+                PageDetail = request.PageDetail,
+                PurposeList = request.PurposesList,
+                //Website = websiteList,
+
+            };
+
+            return collectionpointInfo;
         }
         catch (Exception ex)
         {
