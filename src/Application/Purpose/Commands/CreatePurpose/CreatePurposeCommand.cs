@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using MediatR;
 using Wisework.ConsentManagementSystem.Api;
+using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
+using WW.Application.Common.Models;
 using WW.Application.CustomField.Commands.CreateCustomField;
 using WW.Domain.Entities;
 using WW.Domain.Enums;
@@ -23,6 +26,9 @@ public record CreatePurposeCommand : IRequest<PurposeActiveList>
     public string TextMoreDetail { get; init; }
     public string WarningDescription { get; init; }
 
+    [JsonIgnore]
+    public AuthenticationModel? authentication { get; set; }
+
 }
 
 public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand, PurposeActiveList>
@@ -36,62 +42,76 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
 
     public async Task<PurposeActiveList> Handle(CreatePurposeCommand request, CancellationToken cancellationToken)
     {
-        var entity = new Consent_Purpose();
-        var guid = Guid.NewGuid();
-        (string letters, string numbers,DateTime expiredDateTime) = SeparateNumbersAndLetters(request.KeepAliveData);
-        entity.Guid = guid.ToString();
-
-        entity.PurposeType = request.PurposeType;
-        entity.CategoryID = request.CategoryID;
-        entity.Code = request.Code;
-        entity.Description = request.Description;
-        
-        entity.KeepAliveData = request.KeepAliveData;
-        entity.LinkMoreDetail = request.LinkMoreDetail; 
-        
-             
-        entity.TextMoreDetail = request.TextMoreDetail; 
-        entity.WarningDescription = request.WarningDescription;
-
-        entity.CreateBy = 1;
-        entity.UpdateBy = 1;
-        entity.CreateDate = DateTime.Now;
-        entity.UpdateDate = DateTime.Now;
-
-        entity.Status = Status.Active.ToString();
-        entity.Version = 1;
-        entity.CompanyId = 1;
-        entity.Language = "en";
-        entity.ExpiredDateTime = $"{expiredDateTime}";
-
-
-        
-
-
-
-        _context.DbSetConsentPurpose.Add(entity);
-
-        await _context.SaveChangesAsync(cancellationToken);
-
-        var PurposeInfo = new PurposeActiveList
+        if (request.authentication == null)
         {
-            GUID = guid,
-            PurposeID = entity.PurposeId,
-            PurposeType = entity.PurposeType,
-            CategoryID = entity.CategoryID,
-            Code = entity.Code,
-            Description = entity.Description,
-            KeepAliveData = entity.KeepAliveData,
-            LinkMoreDetail = entity.LinkMoreDetail,
-            Status = entity.Status,
-            TextMoreDetail = entity.TextMoreDetail,
-            WarningDescription = entity.WarningDescription,
-            Language = entity.Language,
-            ExpiredDateTime = entity.ExpiredDateTime,
+            throw new UnauthorizedAccessException();
+        }
 
-        };
+        try
+        {
+            var entity = new Consent_Purpose();
+            var guid = Guid.NewGuid();
+            (string letters, string numbers, DateTime expiredDateTime) = SeparateNumbersAndLetters(request.KeepAliveData);
+            entity.Guid = guid.ToString();
 
-        return PurposeInfo;
+            entity.PurposeType = request.PurposeType;
+            entity.CategoryID = request.CategoryID;
+            entity.Code = request.Code;
+            entity.Description = request.Description;
+
+            entity.KeepAliveData = request.KeepAliveData;
+            entity.LinkMoreDetail = request.LinkMoreDetail;
+
+
+            entity.TextMoreDetail = request.TextMoreDetail;
+            entity.WarningDescription = request.WarningDescription;
+
+            entity.CreateBy = 1;
+            entity.UpdateBy = 1;
+            entity.CreateDate = DateTime.Now;
+            entity.UpdateDate = DateTime.Now;
+
+            entity.Status = Status.Active.ToString();
+            entity.Version = 1;
+            entity.CompanyId = 1;
+            entity.Language = "en";
+            entity.ExpiredDateTime = $"{expiredDateTime}";
+
+
+
+
+
+
+            _context.DbSetConsentPurpose.Add(entity);
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var PurposeInfo = new PurposeActiveList
+            {
+                GUID = guid,
+                PurposeID = entity.PurposeId,
+                PurposeType = entity.PurposeType,
+                CategoryID = entity.CategoryID,
+                Code = entity.Code,
+                Description = entity.Description,
+                KeepAliveData = entity.KeepAliveData,
+                LinkMoreDetail = entity.LinkMoreDetail,
+                Status = entity.Status,
+                TextMoreDetail = entity.TextMoreDetail,
+                WarningDescription = entity.WarningDescription,
+                Language = entity.Language,
+                ExpiredDateTime = entity.ExpiredDateTime,
+
+            };
+
+            return PurposeInfo;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalServerException(ex.Message);
+        }
+
+      
     }
 
     public static (string letters, string numbers,DateTime expiredDateTime) SeparateNumbersAndLetters(string input)

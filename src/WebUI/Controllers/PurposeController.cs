@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Wisework.ConsentManagementSystem.Api;
+using Wiskwork.OpenAPI.Filters;
 using WW.Application.Common.Models;
+using WW.Application.ConsentPageSetting.Queries.GetShortUrl;
 using WW.Application.Purpose.Commands.CreatePurpose;
 using WW.Application.Purpose.Commands.UpdatePurpose;
 using WW.Application.Purpose.Queries.GetPurpose;
@@ -10,32 +12,61 @@ namespace Wiskwork.OpenAPI.Controllers;
 
 public class PurposeController : ApiControllerBase
 {
-    [HttpGet]
+    [HttpGet("purpose")]
+    [AuthorizationFilter]
     public async Task<ActionResult<PaginatedList<PurposeActiveList>>> GetCollectionPointsQuery([FromQuery] GetPurposeQuery query)
     {
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            query.authentication = authentication;
+        }
+
         return await Mediator.Send(query);
     }
 
-    [HttpPost]
+    
+    
+    [HttpPost("purpose")]
+    [AuthorizationFilter]
+
     public async Task<ActionResult<PurposeActiveList>> Create(CreatePurposeCommand command)
     {
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            command.authentication = authentication;
+        }
         return await Mediator.Send(command);
     }
 
     [HttpPut("{id}")]
+    [AuthorizationFilter]
     public async Task<ActionResult<PurposeActiveList>> Update(int id, UpdatePurposeCommand command)
     {
-        if (id != command.PurposeID)
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
         {
-            return BadRequest();
+            command.PurposeID = id;
+            command.authentication = authentication;
         }
 
         return await Mediator.Send(command);
     }
 
-    [HttpGet("{id}")]
+    
+    [HttpGet("purpose-info/{id}")]
+    [AuthorizationFilter]
     public async Task<PurposeActiveList> Get(int id)
     {
-        return await Mediator.Send(new GetPurposeInfoQuery(id));
+        var query = new GetPurposeInfoQuery(id);
+
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            query.authentication = authentication;
+        }
+
+        return await Mediator.Send(query);
     }
 }
