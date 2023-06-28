@@ -19,7 +19,7 @@ public record CreateConsentThemeCommand : IRequest<ConsentTheme>
     public string themeTitle { get; init; }
     public string headerTextColor { get; init; }
     public string headerBackgroundColor { get; init; }
-    public string bodyBackgroudColor { get; init; }
+    public string bodyBackgroundColor { get; init; }
     public string topDescriptionTextColor { get; init; }
     public string bottomDescriptionTextColor { get; init; }
     public string acceptionButtonColor { get; init; }
@@ -55,7 +55,7 @@ public class CreateConsentThemeCommandHandler : IRequestHandler<CreateConsentThe
             entity.ThemeTitle = request.themeTitle;
             entity.HeaderTextColor = request.headerTextColor;
             entity.HeaderBackgroundColor = request.headerBackgroundColor;
-            entity.BodyBackgroudColor = request.bodyBackgroudColor;
+            entity.BodyBackgroudColor = request.bodyBackgroundColor;
             entity.TopDescriptionTextColor = request.topDescriptionTextColor;
             entity.BottomDescriptionTextColor = request.bottomDescriptionTextColor;
             entity.AcceptionButtonColor = request.acceptionButtonColor;
