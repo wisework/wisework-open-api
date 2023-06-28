@@ -180,7 +180,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
             entity.Property(e => e.HeaderBackgroundColor).HasMaxLength(20);
 
-            entity.Property(e => e.BodyBackgroudColor).HasMaxLength(20);
+            entity.Property(e => e.BodyBackgroundColor).HasMaxLength(20);
 
             entity.Property(e => e.TopDescriptionTextColor).HasMaxLength(20);
 
