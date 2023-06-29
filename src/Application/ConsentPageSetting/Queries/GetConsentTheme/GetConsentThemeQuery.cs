@@ -62,7 +62,8 @@ public class GetConsentThemeHandler : IRequestHandler<GetConsentThemeQuery, Pagi
             MapperConfiguration config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Consent_ConsentTheme, ConsentTheme>()
-                .ForMember(d => d.HerderTextColor, a => a.MapFrom(s => s.HeaderTextColor));
+                .ForMember(d => d.HerderTextColor, a => a.MapFrom(s => s.HeaderTextColor))
+                .ForMember(d => d.BodyBackgroudColor, a => a.MapFrom(s => s.BodyBackgroundColor));
             });
 
             Mapper mapper = new Mapper(config);

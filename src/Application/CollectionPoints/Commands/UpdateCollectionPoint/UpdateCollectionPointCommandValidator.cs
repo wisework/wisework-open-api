@@ -7,7 +7,7 @@ public class UpdateCollectionPointCommandValidator : AbstractValidator<UpdateCol
 {
     public UpdateCollectionPointCommandValidator()
     {
-        RuleFor(v => v.Code)
+        RuleFor(v => v.CollectionPointName)
             .MaximumLength(1000)
             .NotEmpty()
             .NotNull();
