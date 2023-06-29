@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentValidation.Results;
 using MediatR;
 using Wisework.ConsentManagementSystem.Api;
+using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
 using WW.Application.Common.Models;
 using WW.Domain.Entities;
@@ -13,7 +16,11 @@ using WW.Domain.Enums;
 
 namespace WW.Application.CustomField.Queries.GetCustomField;
 
-public record GetCustomFieldInfoQuery(int id) : IRequest<CollectionPointCustomFieldActiveList>;
+public record GetCustomFieldInfoQuery(int id) : IRequest<CollectionPointCustomFieldActiveList>
+{
+    [JsonIgnore]
+    public AuthenticationModel? authentication { get; set; }
+}
 
 public class GetCustomFieldInfoHandler : IRequestHandler<GetCustomFieldInfoQuery, CollectionPointCustomFieldActiveList>
 {
@@ -28,6 +35,19 @@ public class GetCustomFieldInfoHandler : IRequestHandler<GetCustomFieldInfoQuery
 
     public async Task<CollectionPointCustomFieldActiveList> Handle(GetCustomFieldInfoQuery request, CancellationToken cancellationToken)
     {
+        if (request.authentication == null)
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        if (request.id <= 0)
+        {
+            List<ValidationFailure> failures = new List<ValidationFailure> { };
+            failures.Add(new ValidationFailure("id", "Custom field ID must be greater than 0"));
+
+            throw new ValidationException(failures);
+        }
+
         MapperConfiguration config = new MapperConfiguration(cfg => 
         {
             cfg.CreateMap<Consent_CollectionPointCustomField, CollectionPointCustomFieldActiveList>();
@@ -36,7 +56,7 @@ public class GetCustomFieldInfoHandler : IRequestHandler<GetCustomFieldInfoQuery
         Mapper mapper = new Mapper(config);
 
         var customFieldInfo = (from cf in _context.DbSetConsentCollectionPointCustomFields
-                               where cf.CollectionPointCustomFieldId == request.id && cf.CompanyId == 1 && cf.Status != Status.X.ToString()
+                               where cf.CollectionPointCustomFieldId == request.id && cf.CompanyId == request.authentication.CompanyID && cf.Status != Status.X.ToString()
                                select new CollectionPointCustomFieldActiveList
                                {
                                    Id = cf.CollectionPointCustomFieldId,
@@ -52,7 +72,7 @@ public class GetCustomFieldInfoHandler : IRequestHandler<GetCustomFieldInfoQuery
 
         if (customFieldInfo == null)
         {
-            return new CollectionPointCustomFieldActiveList();
+            throw new NotFoundException();
         }
         return customFieldInfo;
     }
