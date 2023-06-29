@@ -55,7 +55,7 @@ public class CreateConsentThemeCommandHandler : IRequestHandler<CreateConsentThe
             entity.ThemeTitle = request.themeTitle;
             entity.HeaderTextColor = request.headerTextColor;
             entity.HeaderBackgroundColor = request.headerBackgroundColor;
-            entity.BodyBackgroudColor = request.bodyBackgroundColor;
+            entity.BodyBackgroundColor = request.bodyBackgroundColor;
             entity.TopDescriptionTextColor = request.topDescriptionTextColor;
             entity.BottomDescriptionTextColor = request.bottomDescriptionTextColor;
             entity.AcceptionButtonColor = request.acceptionButtonColor;
@@ -84,7 +84,7 @@ public class CreateConsentThemeCommandHandler : IRequestHandler<CreateConsentThe
                 ThemeTitle = entity.ThemeTitle,
                 HerderTextColor = entity.HeaderTextColor,
                 HeaderBackgroundColor = entity.HeaderBackgroundColor,
-                BodyBackgroudColor = entity.BodyBackgroudColor,
+                BodyBackgroudColor = entity.BodyBackgroundColor,
                 TopDescriptionTextColor = entity.TopDescriptionTextColor,
                 BottomDescriptionTextColor = entity.BottomDescriptionTextColor,
                 AcceptionButtonColor = entity.AcceptionButtonColor,
