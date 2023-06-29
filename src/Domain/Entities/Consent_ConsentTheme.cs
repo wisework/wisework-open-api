@@ -11,7 +11,7 @@ public  class Consent_ConsentTheme: Base
     public string? ThemeTitle { get; set; }
     public string? HeaderTextColor { get; set; }
     public string? HeaderBackgroundColor { get; set; }
-    public string? BodyBackgroudColor { get; set; }
+    public string? BodyBackgroundColor { get; set; }
     public string? TopDescriptionTextColor { get; set; }
     public string? BottomDescriptionTextColor { get; set; }
     public string? AcceptionButtonColor { get; set; }

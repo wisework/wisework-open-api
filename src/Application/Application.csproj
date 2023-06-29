@@ -12,6 +12,7 @@
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.3.4" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.5" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="NSwag.Annotations" Version="13.19.0" />
@@ -23,6 +24,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Reference Include="IXBI.Net.Helper">
+        <HintPath>..\..\dll\IXBI.Net.Helper.dll</HintPath>
+      </Reference>
       <Reference Include="Wisework.ConsentManagementSystem.Api">
         <HintPath>..\..\dll\v1.0.17.0\Wisework.ConsentManagementSystem.Api.dll</HintPath>
       </Reference>

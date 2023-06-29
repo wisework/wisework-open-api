@@ -13,13 +13,17 @@ using WW.Domain.Entities;
 using Wisework.ConsentManagementSystem.Api;
 using WW.Domain.Enums;
 using WW.Domain.Common;
+using System.Text.Json.Serialization;
+using WW.Application.Common.Exceptions;
 
 namespace WW.Application.CollectionPoints.Queries.GetCollectionPoints;
 
 public record GetCollectionPointsQuery : IRequest<PaginatedList<CollectionPointInfo>>
 {
-    public int PageNumber { get; init; } = 1;
-    public int PageSize { get; init; } = 10;
+    public int Offset { get; init; } = 1;
+    public int Limit { get; init; } = 10;
+    [JsonIgnore]
+    public AuthenticationModel? authentication { get; set; }
 
 }
 
@@ -37,175 +41,185 @@ public class GetCollectionPointsQueryHandler : IRequestHandler<GetCollectionPoin
 
     public async Task<PaginatedList<CollectionPointInfo>> Handle(GetCollectionPointsQuery request, CancellationToken cancellationToken)
     {
-
-        MapperConfiguration config = new MapperConfiguration(cfg =>
+        if (request.authentication == null)
         {
-            cfg.CreateMap<Consent_CollectionPoint, CollectionPointInfo>();
-            cfg.CreateMap<Consent_CollectionPointItem, GeneralConsentPurpose>();
-            cfg.CreateMap<Companies, CollectionPointInfo>();
-        });
-
-        Mapper mapper = new Mapper(config);
-
-        //todo:edit conpanyid หลังมีการทำ identity server
-        PaginatedList<CollectionPointInfo> model = 
-            await _context.DbSetConsentCollectionPoints
-            .Where(collectionPoint => collectionPoint.CompanyId == 1)
-            .ProjectTo<CollectionPointInfo>(mapper.ConfigurationProvider).PaginatedListAsync(request.PageNumber, request.PageSize);
-
-        
-        var collectionPointIds = model.Items.Select(c => c.CollectionPointId);
-        var collectionPointGuids = model.Items.Select(c => c.Guid);
-
-        #region purpose list
-        var purposeList = (from cp in _context.DbSetConsentCollectionPointItem 
-                            join p in _context.DbSetConsentPurpose on cp.PurposeId equals p.PurposeId
-                            where cp.Status == Status.Active.ToString() 
-                            && p.Status == Status.Active.ToString() 
-                            && collectionPointIds.Contains(cp.CollectionPointId)
-                            select new KeyValuePair<int, GeneralConsentPurpose>(cp.CollectionPointId,
-                                new GeneralConsentPurpose
-                                {
-                                    PurposeId = p.PurposeId,
-                                    //PurposeType = p.PurposeType == 1 ? PurposeType.Consent.ToString() : PurposeType.Cookie.ToString(),
-                                    Code = p.Code,
-                                    Description = p.Description,
-                                    WarningDescription = p.WarningDescription,
-                                    PurposeCategoryId = p.PurposeCategoryId,
-                                    ExpiredDateTime = Calulate.ExpiredDateTime(p.KeepAliveData,p.CreateDate),
-                                    //Guid = p.Guid,
-                                    Version = p.Version,
-                                    Priority = cp.Priority,
-                                    Status = p.Status,
-                                    /*CreateBy = p.CreateBy,
-                                    CreateDate = p.CreateDate.ToLocalTime(),
-                                    UpdateBy = p.UpdateBy*/
-                                })).ToList();
-
-        var purposeLookup = purposeList.ToLookup(item => item.Key, item => item.Value);
-        #endregion
-
-        #region custom fields
-
-        var customFieldsList = (from cf in _context.DbSetConsent_CollectionPointCustomFieldConfig
-                               
-                            //where collectionPointGuids.Contains(cf.CollectionPointGuid)
-                            select new KeyValuePair<string, CollectionPointCustomFields>(cf.CollectionPointGuid,
-                                new CollectionPointCustomFields
-                                {
-                                    Id = cf.CollectionPointCustomFieldId.Value,
-                                    IsRequired = cf.Required.Value,
-                                    Sequence = cf.Sequence.Value,
-                                })).ToList();
-
-        var customFieldsLookup = customFieldsList.ToLookup(item => item.Key, item => item.Value);
-        #endregion
-
-        #region page details
-        var pageDetails = (from cp in _context.DbSetConsentPage
-                           join p in _context.DbSetConsentCollectionPoints on cp.CollectionPointId equals p.CollectionPointId
-                           where cp.Status == Status.Active.ToString() && collectionPointIds.Contains(cp.CollectionPointId)
-
-                           select new KeyValuePair<int, CollectionPointPageDetail>(cp.CollectionPointId,
-                           new CollectionPointPageDetail
-                           {
-                               /*AcceptCheckBoxLabel = cp.LabelCheckBoxAccept,
-                               AcceptCheckBoxLabelFontColor = cp.LabelCheckBoxAcceptFontColor,
-                               BodyBackgroundColor = cp.BodyBgcolor,*/
-                               // BodyBackgroundId 
-                               /*BodyBackground = cp.BodyBgcolor,
-                               BodyBottomDescription = cp.BodyBottomDescription,
-                               BodyBottomDescriptionFontColor = cp.BodyBottomDescriptionFontColor,
-                               BodyTopDescription = cp.BodyTopDescription,
-                               BodyTopDerscriptionFontColor = cp.BodyTopDerscriptionFontColor,
-                               CancelButtonBackgroundColor = cp.CancelButtonBgcolor,
-                               CancelButtonFontColor = cp.CancelButtonFontColor,
-                               CancelButtonLabel = cp.LabelActionCancel,*/
-                               //ConfirmButtonLabel 
-                               //HeaderBackgroundColor = cp.HeaderBgcolor,
-                               //HeaderBackgroundId 
-                               // HeaderBackground
-                               /*HeaderFontColor = cp.HeaderFontColor,
-                               HeaderLabel = cp.HeaderLabel,*/
-                               //Logo,
-                               //LogoId,
-                               /*OkButtonBackgroundColor = cp.OkbuttonBgcolor,
-                               OkButtonFontColor = cp.OkbuttonFontColor,*/
-                               PolicyUrl = cp.LabelLinkToPolicyUrl,
-                               /*PolicyUrlLabel = cp.LabelLinkToPolicyUrl,
-                               PurposeAcceptLabel = cp.LabelPurposeActionAgree,
-                               PolicyUrlLabelFontColor = cp.LabelLinkToPolicyFontColor,
-                               PurposeRejectLabel = cp.LabelPurposeActionNotAgree,*/
-                               RedirectUrl = cp.RedirectUrl,
-                               /*SuccessHeaderLabel = cp.HeaderLabelThankPage,
-                               SuccessDescription = cp.ShortDescriptionThankPage,
-                               SuccessButtonLabel = cp.ButtonThankpage*/
-                           })).ToList();
-
-        #endregion
-
-        #region get info collection point
-        var collectionpointInfo = (from cp in _context.DbSetConsentCollectionPoints
-                                   join uCreate in _context.DbSetUser on cp.CreateBy equals uCreate.CreateBy
-                                   join uUpdate in _context.DbSetUser on cp.CreateBy equals uUpdate.UpdateBy
-                                   join c in _context.DbSetCompanies on cp.CompanyId equals (int)(long)c.CompanyId
-                                   join w in _context.DbSetConsentWebsite on (int)(long)c.CompanyId equals w.CompanyId
-                                   where collectionPointIds.Contains(cp.CollectionPointId) && cp.CompanyId == 1 && cp.Status != Status.X.ToString()
-                                   select new KeyValuePair<int, CollectionPointInfo>(cp.CollectionPointId,
-                                   new CollectionPointInfo
-                                   {
-                                       CollectionPointId = cp.CollectionPointId,
-                                       /*CollectionPoint = cp.CollectionPoint,
-                                       WebsiteId = cp.WebsiteId,
-                                       AccessToken = c.AccessToken,
-                                       Guid = cp.Guid,
-                                       WebsiteDescription = w.Description,
-                                       WebsiteUrl = w.Url,
-                                       WebsitePolicy = w.Urlpolicy,
-                                       Description = cp.Description,
-                                       Script = cp.Script,*/
-                                       CompanyId = (int)(long)c.CompanyId,
-                                       Version = c.Version,
-                                       Status = c.Status,
-                                       /*StatusDisplay = c.Status == "Active" ? Status.Active.ToString() : Status.Inactive.ToString(),
-                                       CreateBy = c.CreateBy,
-                                       CreateByDisplay = String.Format("{0} {1}", uCreate.FirstName, uCreate.LastName),
-                                       CreateDate = c.CreateDate.ToLocalTime(),
-                                       CreateDateDisplay = c.CreateDate.LocalDateTime.ToShortDateString(),
-                                       UpdateBy = c.UpdateBy,
-                                       UpdateByDisplay = String.Format("{0} {1}", uUpdate.FirstName, uUpdate.LastName),
-                                       IsStatus = c.Status == "Active" ? true : false*/
-                                   })).ToList();
-      
-
-        #endregion
-
-        foreach (var item in model.Items)
-        {
-            item.PurposeList = purposeLookup[item.CollectionPointId.Value].ToList();
-            //item.CustomFieldsList = customFieldsLookup[item.Guid].ToList();
-            item.PageDetail = pageDetails.Where(pd => pd.Key == item.CollectionPointId.Value).Select(x=>x.Value).FirstOrDefault();
-            /*item.AccessToken = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.AccessToken).FirstOrDefault();
-            item.WebsiteId = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.WebsiteId).FirstOrDefault();
-            item.WebsiteUrl = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.WebsiteUrl).FirstOrDefault();
-            item.WebsiteDescription = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.WebsiteDescription).FirstOrDefault();
-            item.WebsitePolicy = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.WebsitePolicy).FirstOrDefault();
-            item.Description = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Description).FirstOrDefault();
-            item.Script = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Script).FirstOrDefault();*/
-            item.CompanyId = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CompanyId).FirstOrDefault();
-            item.Version = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Version).FirstOrDefault();
-            item.Status = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Status).FirstOrDefault();
-            /*item.StatusDisplay = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.StatusDisplay).FirstOrDefault();
-            item.CreateBy = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateBy).FirstOrDefault();
-            item.CreateByDisplay = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateByDisplay).FirstOrDefault();
-            item.CreateDate = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateDate).FirstOrDefault();
-            item.CreateDateDisplay = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CreateDateDisplay).FirstOrDefault();
-            item.UpdateBy = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.UpdateBy).FirstOrDefault();
-            item.UpdateByDisplay = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.UpdateByDisplay).FirstOrDefault();
-            item.IsStatus = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.IsStatus).FirstOrDefault();*/
+            throw new UnauthorizedAccessException();
         }
+        try
+        {
+            MapperConfiguration config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Consent_CollectionPoint, CollectionPointInfo>()
+                .ForMember(d => d.CollectionPointId, a => a.MapFrom(s => s.CollectionPointId));
+                cfg.CreateMap<string, Guid?>().ConvertUsing(s => String.IsNullOrWhiteSpace(s)
+                ? (Guid?)null : Guid.Parse(s));
+            });
 
-        return model;
+            Mapper mapper = new Mapper(config);
+
+            //todo:edit conpanyid หลังมีการทำ identity server
+            PaginatedList<CollectionPointInfo> model =
+              await _context.DbSetConsentCollectionPoints
+              .Where(collectionPoint => collectionPoint.CompanyId == 1 && collectionPoint.Status == Status.Active.ToString())
+              .ProjectTo<CollectionPointInfo>(mapper.ConfigurationProvider).PaginatedListAsync(request.Offset, request.Limit);
+
+            var completelyConsentForm = (from c in _context.DbSetConsentCollectionPoints
+                                         join p in _context.DbSetConsentPage on c.CollectionPointId equals p.CollectionPointId
+                                         where c.CompanyId == 1 && c.Status == Status.Active.ToString() &&
+                                            p.CompanyId == 1 && p.Status == Status.Active.ToString()
+                                         select new
+                                         {
+                                             ConsentId = c.CollectionPointId,
+                                             ConsentTitle = c.CollectionPoint,
+                                             CompanyId = c.CompanyId,
+                                             ConsentPageId = p.PageId,
+                                         }).ToList();
+
+            var collectionPointIds = model.Items.Select(c => c.CollectionPointId);
+            var collectionPointGuids = model.Items.Select(c => c.Guid);
+
+            #region get info collection point
+            var collectionpointInfo = (from cp in _context.DbSetConsentCollectionPoints
+                                       where collectionPointIds.Contains(cp.CollectionPointId) && cp.CompanyId == 1 && cp.Status != Status.X.ToString()
+                                       select new KeyValuePair<int, CollectionPointInfo>(cp.CollectionPointId,
+                                       new CollectionPointInfo
+                                       {
+                                           CollectionPointId = cp.CollectionPointId,
+                                           CollectionPointName = cp.CollectionPoint,
+                                           Guid = new Guid(cp.Guid),
+                                           ExpiredDateTime = cp.KeepAliveData,
+                                           CompanyId = (int)(long)cp.CompanyId,
+                                           Version = cp.Version,
+                                           Status = cp.Status,
+                                       })).ToList();
+            #endregion
+
+            #region website
+            var websiteList = (from cp in _context.DbSetConsentCollectionPoints
+                               join w in _context.DbSetConsentWebsite on cp.WebsiteId equals w.WebsiteId
+                               where collectionPointIds.Contains(cp.CollectionPointId)
+                               select new KeyValuePair<int, CollectionPointInfoWebsiteObject>(cp.CollectionPointId,
+                                   new CollectionPointInfoWebsiteObject
+                                   {
+                                       Id = w.WebsiteId,
+                                       Description = w.Description,
+                                       UrlHomePage = w.Url,
+                                       UrlPolicyPage = w.Urlpolicy,
+                                   })).ToList();
+
+            var websiteLookup = websiteList.ToLookup(item => item.Key, item => item.Value);
+            #endregion
+
+            #region purpose list
+            var purposeList = (from cp in _context.DbSetConsentCollectionPointItem
+                               join p in _context.DbSetConsentPurpose on cp.PurposeId equals p.PurposeId
+                               where cp.Status == Status.Active.ToString()
+                               && p.Status == Status.Active.ToString()
+                               && collectionPointIds.Contains(cp.CollectionPointId)
+                               select new KeyValuePair<int, GeneralConsentPurpose>(cp.CollectionPointId,
+                                   new GeneralConsentPurpose
+                                   {
+                                       PurposeId = p.PurposeId,
+                                       CompanyId = p.CompanyId,
+                                       Code = p.Code,
+                                       Description = p.Description,
+                                       WarningDescription = p.WarningDescription,
+                                       PurposeCategoryId = p.PurposeCategoryId,
+                                       ExpiredDateTime = Calulate.ExpiredDateTime(p.KeepAliveData, p.CreateDate),
+                                       Guid = new Guid(p.Guid),
+                                       Version = p.Version,
+                                       Priority = cp.Priority,
+                                       Status = p.Status
+                                   })).ToList();
+
+            var purposeLookup = purposeList.ToLookup(item => item.Key, item => item.Value);
+            #endregion
+
+            #region custom fields
+
+            var customFieldInfo = (from cp in _context.DbSetConsentCollectionPoints
+                                   join cff in _context.DbSetConsent_CollectionPointCustomFieldConfig on cp.Guid equals cff.CollectionPointGuid into cffJoin
+                                   from cff in cffJoin.DefaultIfEmpty()
+                                   join cpc in _context.DbSetConsentCollectionPointCustomFields on cff.CollectionPointCustomFieldId equals cpc.CollectionPointCustomFieldId into cpcJoin
+                                   from cpc in cpcJoin.DefaultIfEmpty()
+                                   where collectionPointIds.Contains(cp.CollectionPointId) && cp.Status == "Active" && cp.CompanyId == 1 && cpc.Status == "Active"
+                                   select new KeyValuePair<int, CustomFields>(cp.CollectionPointId,
+                                   new CustomFields
+                                   {
+                                       Id = cpc.CollectionPointCustomFieldId,
+                                       IsRequired = cff.Required.Value,
+                                       Sequence = cff.Sequence.Value,
+                                       InputType = cpc.Type,
+                                       Title = cpc.Description,
+                                       Placeholder = cpc.Placeholder,
+                                       LengthLimit = cpc.LengthLimit,
+                                       MaxLines = cpc.MaxLines,
+                                       MinLines = cpc.MinLines,
+                                   })).ToList();
+
+            var customFieldsLookup = customFieldInfo.ToLookup(item => item.Key, item => item.Value);
+            #endregion
+
+            #region page details
+            var pageDetails = (from cp in _context.DbSetConsentCollectionPoints
+                               join p in _context.DbSetConsentPage
+                               on cp.CollectionPointId equals p.CollectionPointId
+                               where cp.Status == Status.Active.ToString()
+                               && collectionPointIds.Contains(cp.CollectionPointId)
+                               && cp.CompanyId == 1 && cp.Status != Status.X.ToString()
+                               && p.Status != Status.X.ToString()
+
+                               select new KeyValuePair<int, CollectionPointPageDetail>(cp.CollectionPointId,
+                               new CollectionPointPageDetail
+                               {
+                                   AcceptCheckBoxText = p.LabelCheckBoxAccept,
+                                   BackgroundImageId = p.BodyBgimage,
+                                   BodyBottomDescriptionText = p.BodyBottomDescription,
+                                   BodyTopDescriptionText = p.BodyTopDescription,
+                                   CancelButtonText = p.CancelButtonBgcolor,
+                                   ConfirmButtonText = p.OkbuttonBgcolor,
+                                   HeaderBackgroundImageId = p.HeaderBgimage,
+                                   HeaderText = p.HeaderLabel,
+                                   LogoImageId = p.HeaderLogo,
+                                   PolicyUrlText = p.LabelLinkToPolicy,
+                                   PolicyUrl = p.LabelLinkToPolicyUrl,
+                                   RedirectUrl = p.RedirectUrl,
+                                   SuccessHeaderText = p.HeaderLabelThankPage,
+                                   SuccessDescriptionText = p.BodyBottomDescription,
+                                   SuccessButtonText = p.ButtonThankpage,
+
+                               })).ToList();
+
+            var pageDetailsLookup = pageDetails.ToLookup(item => item.Key, item => item.Value);
+            #endregion
+
+
+
+            foreach (var item in model.Items)
+            {
+                item.CollectionPointId = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CollectionPointId).FirstOrDefault();
+                item.CollectionPointName = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CollectionPointName).FirstOrDefault();
+                item.Guid = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Guid).FirstOrDefault();
+                item.CollectionPointInfoWebsiteObject = websiteLookup[item.CollectionPointId.Value].FirstOrDefault();  //JSON
+                item.PurposeList = purposeLookup[item.CollectionPointId.Value].ToList();
+                item.CustomFieldsList = customFieldsLookup[item.CollectionPointId.Value].ToList();
+                item.ExpiredDateTime = model.Items.Select(c => c.ExpiredDateTime).ToString();
+                item.CompanyId = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.CompanyId).FirstOrDefault();
+                item.Version = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Version).FirstOrDefault();
+                item.Status = collectionpointInfo.Where(x => x.Key == item.CollectionPointId.Value).Select(selector: c => c.Value.Status).FirstOrDefault();
+                item.PageDetail = pageDetailsLookup[item.CollectionPointId.Value].FirstOrDefault();
+
+            }
+
+            return model;
+        }
+        catch
+        (Exception ex)
+        {
+            throw new InternalServerException(ex.Message);
+        }
+    
     }
 
 }
+

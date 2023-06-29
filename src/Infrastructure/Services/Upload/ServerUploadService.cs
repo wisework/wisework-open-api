@@ -1,6 +1,6 @@
 ﻿using IXBI.Net.Helper;
+using WW.Application.Common.Models;
 using WW.Infrastructure.Services.Upload.Constants;
-using WW.Infrastructure.Services.Upload.Models;
 
 namespace WW.Application.Common.Interfaces;
 public class ServerUploadService : IUploadService
@@ -16,8 +16,8 @@ public class ServerUploadService : IUploadService
         return TypeUpload.SERVER.ToString();
     }
 
-    public List<FileUpload> UploadStorageBlob(UploadModel input)
-    {
-        throw new NotImplementedException();
-    }
+    //public List<FileUpload> UploadStorageBlob(UploadModel input)
+    //{
+    //    throw new NotImplementedException();
+    //}
 }
