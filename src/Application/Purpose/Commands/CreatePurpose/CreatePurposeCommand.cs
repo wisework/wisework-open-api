@@ -12,6 +12,7 @@ using WW.Application.Common.Models;
 using WW.Application.CustomField.Commands.CreateCustomField;
 using WW.Domain.Entities;
 using WW.Domain.Enums;
+using WW.Domain.Common;
 
 namespace WW.Application.Purpose.Commands.CreatePurpose;
 public record CreatePurposeCommand : IRequest<PurposeActiveList>
@@ -51,11 +52,14 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
         {
             var entity = new Consent_Purpose();
             var guid = Guid.NewGuid();
-            (string letters, string numbers, DateTime expiredDateTime) = SeparateNumbersAndLetters(request.KeepAliveData);
+          
+
+            string expiredDateTime = Calulate.ExpiredDateTime(request.KeepAliveData, DateTime.Now);
+
             entity.Guid = guid.ToString();
 
             entity.PurposeType = request.PurposeType;
-            entity.CategoryID = request.CategoryID;
+            entity.PurposeCategoryId = request.CategoryID;
             entity.Code = request.Code;
             entity.Description = request.Description;
 
@@ -77,11 +81,6 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
             entity.Language = "en";
             entity.ExpiredDateTime = $"{expiredDateTime}";
 
-
-
-
-
-
             _context.DbSetConsentPurpose.Add(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
@@ -91,7 +90,7 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
                 GUID = guid,
                 PurposeID = entity.PurposeId,
                 PurposeType = entity.PurposeType,
-                CategoryID = entity.CategoryID,
+                CategoryID = entity.PurposeCategoryId,
                 Code = entity.Code,
                 Description = entity.Description,
                 KeepAliveData = entity.KeepAliveData,
@@ -112,46 +111,5 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
         }
 
       
-    }
-
-    public static (string letters, string numbers,DateTime expiredDateTime) SeparateNumbersAndLetters(string input)
-    {
-        string letters = "";
-        string numbers = "";
-        DateTime expiredDateTime = DateTime.Now;
-        
-
-        foreach (char c in input)
-        {
-            if (Char.IsLetter(c))
-            {
-                letters += c;
-            }
-            else if (Char.IsNumber(c))
-            {
-                numbers += c;
-            }
-        }
-
-        
-
-        switch (letters.ToLower()) // Change this value to specify the unit of time to add (days, months, or years)
-        {
-            case "d":
-                expiredDateTime = expiredDateTime.AddDays(Int32.Parse(numbers));
-                break;
-            case "m":
-                expiredDateTime = expiredDateTime.AddMonths(Int32.Parse(numbers));
-                break;
-            case "y":
-                expiredDateTime = expiredDateTime.AddYears(Int32.Parse(numbers));
-                break;
-            default:
-                Console.WriteLine("Invalid time unit specified.");
-                break;
-        }
-
-
-        return (letters, numbers, expiredDateTime);
     }
 }

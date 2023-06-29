@@ -12,7 +12,7 @@ namespace Wiskwork.OpenAPI.Controllers;
 
 public class PurposeController : ApiControllerBase
 {
-    [HttpGet("purpose")]
+    [HttpGet]
     [AuthorizationFilter]
     public async Task<ActionResult<PaginatedList<PurposeActiveList>>> GetCollectionPointsQuery([FromQuery] GetPurposeQuery query)
     {
@@ -27,7 +27,7 @@ public class PurposeController : ApiControllerBase
 
     
     
-    [HttpPost("purpose")]
+    [HttpPost]
     [AuthorizationFilter]
 
     public async Task<ActionResult<PurposeActiveList>> Create(CreatePurposeCommand command)
@@ -44,13 +44,13 @@ public class PurposeController : ApiControllerBase
     [AuthorizationFilter]
     public async Task<ActionResult<PurposeActiveList>> Update(int id, UpdatePurposeCommand command)
     {
+
         HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
         if (authenticationObj is AuthenticationModel authentication)
         {
             command.PurposeID = id;
             command.authentication = authentication;
         }
-
         return await Mediator.Send(command);
     }
 
