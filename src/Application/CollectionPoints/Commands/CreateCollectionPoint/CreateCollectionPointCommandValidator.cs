@@ -6,7 +6,7 @@ public class CreateCollectionPointCommandValidator : AbstractValidator<CreateCol
 {
     public CreateCollectionPointCommandValidator()
     {
-        RuleFor(v => v.Code)
+        RuleFor(v => v.CollectionPointName)
             .MaximumLength(1000)
             .NotEmpty()
             .NotNull();

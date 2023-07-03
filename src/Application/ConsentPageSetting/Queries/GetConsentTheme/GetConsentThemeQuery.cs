@@ -47,11 +47,11 @@ public class GetConsentThemeHandler : IRequestHandler<GetConsentThemeQuery, Pagi
 
             if (request.offset <= 0)
             {
-                failures.Add(new ValidationFailure("Offset", "Offset must be greater than 0"));
+                failures.Add(new ValidationFailure("offset", "Offset must be greater than 0"));
             }
             if (request.limit <= 0)
             {
-                failures.Add(new ValidationFailure("Limit", "Limit must be greater than 0"));
+                failures.Add(new ValidationFailure("limit", "Limit must be greater than 0"));
             }
 
             throw new ValidationException(failures);
@@ -62,7 +62,8 @@ public class GetConsentThemeHandler : IRequestHandler<GetConsentThemeQuery, Pagi
             MapperConfiguration config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Consent_ConsentTheme, ConsentTheme>()
-                .ForMember(d => d.HerderTextColor, a => a.MapFrom(s => s.HeaderTextColor));
+                .ForMember(d => d.HerderTextColor, a => a.MapFrom(s => s.HeaderTextColor))
+                .ForMember(d => d.BodyBackgroudColor, a => a.MapFrom(s => s.BodyBackgroundColor));
             });
 
             Mapper mapper = new Mapper(config);

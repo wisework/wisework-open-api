@@ -32,6 +32,13 @@ public interface IApplicationDbContext
     DbSet<CompanyUser> DbSetCompanyUser { get; }
     DbSet<LanguageDisplay> DbSetLanguage { get; }
     DbSet<LocalStringResource> DbSetLocalStringResource { get; }
+    DbSet<Domain.Entities.Action> DbSetAction { get; }
+    DbSet<Program> DbSetProgram { get; }
+    DbSet<ProgramAction> DbSetProgramAction { get; }
+    DbSet<ProgramDescription> DbSetProgramDescription { get; }
+    DbSet<Role> DbSetRole { get; }
+    DbSet<RoleProgramAction> DbSetRoleProgramAction { get; }
+    DbSet<UserRole> DbSetUserRole { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     Task<int> SubmitConsent(string query
                         /*,int CompanyId
