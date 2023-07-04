@@ -11,7 +11,7 @@ public class AuthorizationFilter : ActionFilterAttribute
     public override void OnActionExecuting(ActionExecutingContext context)
     {
         var token = context.HttpContext.Request.Headers["Authorization"].ToString()?.Replace("Bearer ", "");
-        if (token == null || !_authenticationService.VerifyToken(token))
+        if (string.IsNullOrEmpty(token) || !_authenticationService.VerifyToken(token))
         {
             throw new UnauthorizedAccessException();
         }
