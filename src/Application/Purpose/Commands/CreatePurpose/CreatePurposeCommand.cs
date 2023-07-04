@@ -70,15 +70,15 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
             entity.TextMoreDetail = request.TextMoreDetail;
             entity.WarningDescription = request.WarningDescription;
 
-            entity.CreateBy = 1;
-            entity.UpdateBy = 1;
+            entity.CreateBy = request.authentication.UserID;
+            entity.UpdateBy = request.authentication.UserID;
             entity.CreateDate = DateTime.Now;
             entity.UpdateDate = DateTime.Now;
 
             entity.Status = Status.Active.ToString();
             entity.Version = 1;
-            entity.CompanyId = 1;
-            entity.Language = "en";
+            entity.CompanyId = request.authentication.CompanyID;
+            entity.Language = "en-US";
             entity.ExpiredDateTime = $"{expiredDateTime}";
 
             _context.DbSetConsentPurpose.Add(entity);

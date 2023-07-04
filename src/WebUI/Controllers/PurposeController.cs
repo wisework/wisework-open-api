@@ -29,7 +29,6 @@ public class PurposeController : ApiControllerBase
     
     [HttpPost]
     [AuthorizationFilter]
-
     public async Task<ActionResult<PurposeActiveList>> Create(CreatePurposeCommand command)
     {
         HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
