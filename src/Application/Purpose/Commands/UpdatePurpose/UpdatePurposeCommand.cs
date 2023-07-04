@@ -17,6 +17,7 @@ using WW.Domain.Enums;
 namespace WW.Application.Purpose.Commands.UpdatePurpose;
 public record UpdatePurposeCommand : IRequest<PurposeActiveList>
 {
+    [JsonIgnore]
     public int PurposeID { get; set; }
     public int PurposeType { get; init; }
     public int CategoryID { get; init; }

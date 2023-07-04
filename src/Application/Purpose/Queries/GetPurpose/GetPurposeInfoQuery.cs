@@ -54,42 +54,42 @@ public class GetPurposeInfoQueryHandler : IRequestHandler<GetPurposeInfoQuery, P
             throw new ValidationException(failures);
         }
 
-        try
+        MapperConfiguration config = new MapperConfiguration(cfg =>
         {
-            MapperConfiguration config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<Consent_Purpose, PurposeActiveList>();
-                cfg.CreateMap<string, Guid?>().ConvertUsing(s => String.IsNullOrWhiteSpace(s) ? (Guid?)null : Guid.Parse(s));
-            });
+            cfg.CreateMap<Consent_Purpose, PurposeActiveList>();
+            cfg.CreateMap<string, Guid?>().ConvertUsing(s => String.IsNullOrWhiteSpace(s) ? (Guid?)null : Guid.Parse(s));
+        });
 
-            Mapper mapper = new Mapper(config);
+        Mapper mapper = new Mapper(config);
 
-            var purposeInfo = (from cf in _context.DbSetConsentPurpose
-                               where cf.PurposeId == request.id && cf.CompanyId == 1 && cf.Status != Status.X.ToString()
-                               select new PurposeActiveList
-                               {
-                                   PurposeID = cf.PurposeId,
-                                   GUID = new Guid(cf.Guid),
-                                   PurposeType = cf.PurposeType,
-                                   CategoryID = cf.PurposeCategoryId,
-                                   Code = cf.Code,
-                                   Description = cf.Description,
-                                   KeepAliveData = cf.KeepAliveData,
-                                   LinkMoreDetail = cf.LinkMoreDetail,
-                                   Status = cf.Status,
-                                   TextMoreDetail = cf.TextMoreDetail,
-                                   WarningDescription = cf.WarningDescription,
-                                   ExpiredDateTime = cf.ExpiredDateTime,
-                                   Language = cf.Language,
+        var purposeInfo = (from cf in _context.DbSetConsentPurpose
+                           where cf.PurposeId == request.id && cf.CompanyId == 1 && cf.Status != Status.X.ToString()
+                           select new PurposeActiveList
+                           {
+                               PurposeID = cf.PurposeId,
+                               GUID = new Guid(cf.Guid),
+                               PurposeType = cf.PurposeType,
+                               CategoryID = cf.PurposeCategoryId,
+                               Code = cf.Code,
+                               Description = cf.Description,
+                               KeepAliveData = cf.KeepAliveData,
+                               LinkMoreDetail = cf.LinkMoreDetail,
+                               Status = cf.Status,
+                               TextMoreDetail = cf.TextMoreDetail,
+                               WarningDescription = cf.WarningDescription,
+                               ExpiredDateTime = cf.ExpiredDateTime,
+                               Language = cf.Language,
+                           }).FirstOrDefault();
 
+        if (purposeInfo == null)
+        {
+            throw new NotFoundException();
+        }
 
-                               }).FirstOrDefault();
-
-            if (purposeInfo == null)
-            {
-                return new PurposeActiveList();
-            }
+        try
+        {            
             return purposeInfo;
+
         }
         catch (Exception ex)
         {
