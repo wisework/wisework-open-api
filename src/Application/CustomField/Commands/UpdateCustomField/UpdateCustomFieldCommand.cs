@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using FluentValidation.Results;
 using MediatR;
 using Wisework.ConsentManagementSystem.Api;
+using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
+using WW.Application.Common.Models;
 using WW.Domain.Entities;
 using WW.Domain.Enums;
 
@@ -13,7 +17,8 @@ namespace WW.Application.CustomField.Commands.UpdateCustomField;
 
 public record UpdateCustomFieldCommand : IRequest<CollectionPointCustomFieldActiveList>
 {
-    public int id { get; init; }
+    [JsonIgnore]
+    public int id { get; set; }
     public string code { get; init; }
     public string owner { get; init; }
     public string inputType { get; init; }
@@ -22,6 +27,8 @@ public record UpdateCustomFieldCommand : IRequest<CollectionPointCustomFieldActi
     public int lengthLimit { get; init; }
     public int maxLines { get; init; }
     public int minLines { get; init; }
+    [JsonIgnore]
+    public AuthenticationModel? authentication { get; set; }
 }
 
 public class UpdateCustomFieldCommandHandler : IRequestHandler<UpdateCustomFieldCommand, CollectionPointCustomFieldActiveList>
@@ -35,45 +42,65 @@ public class UpdateCustomFieldCommandHandler : IRequestHandler<UpdateCustomField
 
     public async Task<CollectionPointCustomFieldActiveList> Handle(UpdateCustomFieldCommand request, CancellationToken cancellationToken)
     {
+        if (request.authentication == null)
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        if (request.id <= 0)
+        {
+            List<ValidationFailure> failures = new List<ValidationFailure> { };
+            failures.Add(new ValidationFailure("id", "Custom field ID must be greater than 0"));
+
+            throw new ValidationException(failures);
+        }
+
         var entity = _context.DbSetConsentCollectionPointCustomFields
-            .Where(cf => cf.CollectionPointCustomFieldId == request.id && cf.CompanyId == 1 && cf.Status != Status.X.ToString())
+            .Where(cf => cf.CollectionPointCustomFieldId == request.id && cf.CompanyId == request.authentication.CompanyID && cf.Status != Status.X.ToString())
             .FirstOrDefault();
 
         if (entity == null)
         {
-            return new CollectionPointCustomFieldActiveList();
+            throw new NotFoundException();
         }
 
-        entity.Code = request.code;
-        entity.Owner = request.owner;
-        entity.Type = request.inputType;
-        entity.Description = request.title;
-        entity.Placeholder = request.placeholder;
-        entity.LengthLimit = request.lengthLimit;
-        entity.MaxLines = request.maxLines;
-        entity.MinLines = request.minLines;
-
-        entity.UpdateBy = 1;
-        entity.UpdateDate = DateTime.Now;
-        entity.Version += 1;
-
-        _context.DbSetConsentCollectionPointCustomFields.Update(entity);
-
-        await _context.SaveChangesAsync(cancellationToken);
-
-        var customFieldInfo = new CollectionPointCustomFieldActiveList
+        try
         {
-            Id = entity.CollectionPointCustomFieldId,
-            Code = entity.Code,
-            Owner = entity.Owner,
-            InputType = entity.Type,
-            Title = entity.Description,
-            Placeholder = entity.Placeholder,
-            LengthLimit = entity.LengthLimit,
-            MaxLines = entity.MaxLines,
-            MinLines = entity.MinLines,
-        };
+            entity.Code = request.code;
+            entity.Owner = request.owner;
+            entity.Type = request.inputType;
+            entity.Description = request.title;
+            entity.Placeholder = request.placeholder;
+            entity.LengthLimit = request.lengthLimit;
+            entity.MaxLines = request.maxLines;
+            entity.MinLines = request.minLines;
 
-        return customFieldInfo;
+            entity.UpdateBy = request.authentication.UserID;
+            entity.UpdateDate = DateTime.Now;
+            entity.Version += 1;
+
+            _context.DbSetConsentCollectionPointCustomFields.Update(entity);
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var customFieldInfo = new CollectionPointCustomFieldActiveList
+            {
+                Id = entity.CollectionPointCustomFieldId,
+                Code = entity.Code,
+                Owner = entity.Owner,
+                InputType = entity.Type,
+                Title = entity.Description,
+                Placeholder = entity.Placeholder,
+                LengthLimit = entity.LengthLimit,
+                MaxLines = entity.MaxLines,
+                MinLines = entity.MinLines,
+            };
+
+            return customFieldInfo;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalServerException(ex.Message);
+        }
     }
 }

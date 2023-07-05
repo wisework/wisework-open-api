@@ -52,7 +52,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<CompanyUser> DbSetCompanyUser => Set<CompanyUser>();
     public DbSet<LanguageDisplay> DbSetLanguage => Set<LanguageDisplay>();
     public DbSet<LocalStringResource> DbSetLocalStringResource => Set<LocalStringResource>();
-    public DbSet<TotalRow> DbSetTotalRow => Set<TotalRow>();
     public virtual DbSet<V_Consent_Latest_Consent> DbSetVConsentLatestConsents => Set<V_Consent_Latest_Consent>();
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -715,26 +714,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             entity.HasKey(e => e.TotalRowId)
                 .HasName("PK__TotalRow__803CA0038B8A4C2D");
 
-            entity.ToTable("TotalRow");
-
-            entity.Property(e => e.CompanyId).HasColumnName("CompanyId");
-            entity.Property(e => e.TableName).HasColumnName("TableName");
-            entity.Property(e => e.TotalCountRow).HasColumnName("TotalCountRow");
-            entity.Property(e => e.TotalCountGroup).HasColumnName("TotalCountGroup");
-        });
-        builder.Entity<Consent_ConsentCustomField>(entity =>
-        {
-            entity.HasKey(e => e.ConsentCustomFieldId)
-                .HasName("PK_Consent_ConsentCustomField");
-
-            entity.ToTable("Consent_ConsentCustomField");
-
-            entity.Property(e => e.ConsentCustomFieldId).HasColumnName("Consent_ConsentCustomFieldID");
-            entity.Property(e => e.CollectionPointCustomFieldConfigID).HasColumnName("CollectionPointCustomFieldConfigID");
-            entity.Property(e => e.Value).HasColumnName("Value");
-            entity.Property(e => e.ConsentId).HasColumnName("ConsentId");
-     
-        });
         /*modelBuilder.Entity<ConsentConsentCookie>(entity =>
         {
             entity.HasKey(e => e.ConsentCookieId)

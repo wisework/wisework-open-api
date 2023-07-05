@@ -44,7 +44,7 @@ public class AuthenticationService : IAuthenticationService
         catch (JsonReaderException)
         {
             return null;
-        }
+        }catch { throw new UnauthorizedAccessException(); }
     }
 
     public bool IsTokenExpired(DateTime tokenDate)

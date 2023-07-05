@@ -34,6 +34,14 @@ public interface IApplicationDbContext
     DbSet<LocalStringResource> DbSetLocalStringResource { get; }
     DbSet<TotalRow> DbSetTotalRow { get; }
     DbSet<Consent_ConsentCustomField> DbSetConsentCustomField { get; }
+
+    DbSet<Domain.Entities.Action> DbSetAction { get; }
+    DbSet<Program> DbSetProgram { get; }
+    DbSet<ProgramAction> DbSetProgramAction { get; }
+    DbSet<ProgramDescription> DbSetProgramDescription { get; }
+    DbSet<Role> DbSetRole { get; }
+    DbSet<RoleProgramAction> DbSetRoleProgramAction { get; }
+    DbSet<UserRole> DbSetUserRole { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     //Task<int> SubmitConsent(string query
     //                    /*,int CompanyId
