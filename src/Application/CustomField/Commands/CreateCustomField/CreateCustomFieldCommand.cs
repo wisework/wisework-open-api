@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using MediatR;
 using Wisework.ConsentManagementSystem.Api;
+using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
+using WW.Application.Common.Models;
 using WW.Domain.Entities;
 using WW.Domain.Enums;
 
@@ -21,6 +24,8 @@ public record CreateCustomFieldCommand : IRequest<CollectionPointCustomFieldActi
     public int lengthLimit { get; init; }
     public int maxLines { get; init; }
     public int minLines { get; init; }
+    [JsonIgnore]
+    public AuthenticationModel? authentication { get; set; }
 }
 
 public class CreateCustomFieldCommandHandler : IRequestHandler<CreateCustomFieldCommand, CollectionPointCustomFieldActiveList>
@@ -34,42 +39,55 @@ public class CreateCustomFieldCommandHandler : IRequestHandler<CreateCustomField
 
     public async Task<CollectionPointCustomFieldActiveList> Handle(CreateCustomFieldCommand request, CancellationToken cancellationToken)
     {
-        var entity = new Consent_CollectionPointCustomField();
-        
-        entity.Code = request.code;
-        entity.Owner = request.owner;
-        entity.Type = request.inputType;
-        entity.Description = request.title;
-        entity.Placeholder = request.placeholder;
-        entity.LengthLimit = request.lengthLimit;
-        entity.MaxLines = request.maxLines;
-        entity.MinLines = request.minLines;
+        if (request.authentication == null)
+        {
+            throw new UnauthorizedAccessException();
+        }
 
-        entity.CreateBy = 1;
-        entity.UpdateBy = 1;
-        entity.CreateDate = DateTime.Now;
-        entity.UpdateDate = DateTime.Now;
+        try
+        {
+            var entity = new Consent_CollectionPointCustomField();
 
-        entity.Status = Status.Active.ToString();
-        entity.Version = 1;
-        entity.CompanyId = 1;
+            entity.Code = request.code;
+            entity.Owner = request.owner;
+            entity.Type = request.inputType;
+            entity.Description = request.title;
+            entity.Placeholder = request.placeholder;
+            entity.LengthLimit = request.lengthLimit;
+            entity.MaxLines = request.maxLines;
+            entity.MinLines = request.minLines;
 
-        _context.DbSetConsentCollectionPointCustomFields.Add(entity);
+            entity.CreateBy = request.authentication.UserID;
+            entity.UpdateBy = request.authentication.UserID;
+            entity.CreateDate = DateTime.Now;
+            entity.UpdateDate = DateTime.Now;
 
-        await _context.SaveChangesAsync(cancellationToken);
+            entity.Status = Status.Active.ToString();
+            entity.Version = 1;
+            entity.CompanyId = request.authentication.CompanyID;
 
-        var customFieldInfo = new CollectionPointCustomFieldActiveList{
-            Id = entity.CollectionPointCustomFieldId,
-            Code = entity.Code,
-            Owner = entity.Owner,
-            InputType = entity.Type,
-            Title = entity.Description,
-            Placeholder = entity.Placeholder,
-            LengthLimit = entity.LengthLimit,
-            MaxLines = entity.MaxLines,
-            MinLines = entity.MinLines,
-        };
+            _context.DbSetConsentCollectionPointCustomFields.Add(entity);
 
-        return customFieldInfo;
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var customFieldInfo = new CollectionPointCustomFieldActiveList
+            {
+                Id = entity.CollectionPointCustomFieldId,
+                Code = entity.Code,
+                Owner = entity.Owner,
+                InputType = entity.Type,
+                Title = entity.Description,
+                Placeholder = entity.Placeholder,
+                LengthLimit = entity.LengthLimit,
+                MaxLines = entity.MaxLines,
+                MinLines = entity.MinLines,
+            };
+
+            return customFieldInfo;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalServerException(ex.Message);
+        }
     }
 }
