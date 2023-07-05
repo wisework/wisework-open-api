@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using FluentValidation.Results;
 using MediatR;
 using Wisework.ConsentManagementSystem.Api;
 using WW.Application.Common.Exceptions;
@@ -44,6 +45,22 @@ public class GeneralConsentQueryHandler : IRequestHandler<GeneralConsentQuery, P
         {
             throw new UnauthorizedAccessException();
         }
+        if (request.Offset <= 0 || request.Limit <= 0)
+        {
+            List<ValidationFailure> failures = new List<ValidationFailure> { };
+
+            if (request.Offset <= 0)
+            {
+                failures.Add(new ValidationFailure("offset", "Offset must be greater than 0"));
+            }
+            if (request.Limit <= 0)
+            {
+                failures.Add(new ValidationFailure("limit", "Limit must be greater than 0"));
+            }
+
+            throw new ValidationException(failures);
+        }
+
         try
         {
             // Configure AutoMapper mappings
