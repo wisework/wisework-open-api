@@ -33,6 +33,7 @@ public interface IApplicationDbContext
     DbSet<LanguageDisplay> DbSetLanguage { get; }
     DbSet<LocalStringResource> DbSetLocalStringResource { get; }
     DbSet<TotalRow> DbSetTotalRow { get; }
+    DbSet<Consent_ConsentCustomField> DbSetConsentCustomField { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     //Task<int> SubmitConsent(string query
     //                    /*,int CompanyId

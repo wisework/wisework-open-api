@@ -42,6 +42,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Users> DbSetUser => Set<Users>();
 
     public DbSet<Consent_Consent> DbSetConsent => Set<Consent_Consent>();
+    public DbSet<Consent_ConsentCustomField> DbSetConsentCustomField => Set<Consent_ConsentCustomField>();
     public DbSet<Consent_ConsentItem> DbSetConsentItem => Set<Consent_ConsentItem>();
     public DbSet<Consent_ConsentTheme> DbSetConsentTheme => Set<Consent_ConsentTheme>();
     public DbSet<Domain.Entities.File> DbSetFile => Set<Domain.Entities.File>();
@@ -720,6 +721,19 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             entity.Property(e => e.TableName).HasColumnName("TableName");
             entity.Property(e => e.TotalCountRow).HasColumnName("TotalCountRow");
             entity.Property(e => e.TotalCountGroup).HasColumnName("TotalCountGroup");
+        });
+        builder.Entity<Consent_ConsentCustomField>(entity =>
+        {
+            entity.HasKey(e => e.ConsentCustomFieldId)
+                .HasName("PK_Consent_ConsentCustomField");
+
+            entity.ToTable("Consent_ConsentCustomField");
+
+            entity.Property(e => e.ConsentCustomFieldId).HasColumnName("Consent_ConsentCustomFieldID");
+            entity.Property(e => e.CollectionPointCustomFieldConfigID).HasColumnName("CollectionPointCustomFieldConfigID");
+            entity.Property(e => e.Value).HasColumnName("Value");
+            entity.Property(e => e.ConsentId).HasColumnName("ConsentId");
+     
         });
         /*modelBuilder.Entity<ConsentConsentCookie>(entity =>
         {

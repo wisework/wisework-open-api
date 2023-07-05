@@ -14,6 +14,9 @@ using System.Diagnostics.Tracing;
 using System.Security.Cryptography;
 using WW.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
+using WW.Application.Common.Models;
+
 
 namespace WW.Application.GeneralConsents.Commands;
 public record SubmitConsentCommand : IRequest<SubmitGeneralConsentResponse>
@@ -29,69 +32,51 @@ public record SubmitConsentCommand : IRequest<SubmitGeneralConsentResponse>
     public string? IdCardNumber { get; init; }
     public List<SubmitConsentPurpose> Purpose { get; set; }
     public List<SubmitCollectionPointCustomField>? CollectionPointCustomField { get; set; }
+    public AuthenticationModel? authentication { get; set; }
 
 }
 public class SubmitConsentCommandHandler : IRequestHandler<SubmitConsentCommand, SubmitGeneralConsentResponse>
 {
     private readonly IApplicationDbContext _context;
-
+  
     public SubmitConsentCommandHandler(IApplicationDbContext context)
     {
         _context = context;
+      
     }
 
     public async Task<SubmitGeneralConsentResponse> Handle(SubmitConsentCommand request, CancellationToken cancellationToken)
     {
-        
-        
-        //var result = _context.SubmitConsent(@"[SP_CONSENT_SIGN] 
-        //                 @CompanyID
-        //                ,@CollectionPointGUID
-        //                ,@WebsiteID
-        //                ,@NameSurname
-        //                ,@Email
-        //                ,@Tel
-        //                ,@FromBrowser
-        //                ,@FromWebsite
-        //                ,@VerifyType
-        //                ,@ConsentSignature
-        //                ,@CardNumber
-        //                ,@CreateBy
-        //                ,@Expired
-        //                ,@EventCode
-        //                ,@UID
-        //                ,@AgeRange
-        //                ,@OutputID OUTPUT"
-        //                /*,request.CompanyId
-        //                ,request.CollectionPointGuid
-        //                ,request.WebSiteId
-        //                ,request.FullName
-        //                ,request.Email
-        //                ,request.PhoneNumber
-        //                ,request.FromBrowser
-        //                ,request.FromWebsite
-        //                ,request.VerifyType
-        //                ,request.ConsentSignature
-        //                ,request.IdCardNumber
-        //                ,1 // create by
-        //                ,request.ExpiredDateTime
-        //                ,request.EventCode
-        //                ,request.Uid
-        //                ,request.AgeRangeCode*/
-        //                ,request);
 
+        var consentID = 2359;
+        var newCon = new Consent_Consent();
+        var CollectionPointID = 0;
+        var purposeEntity = new SubmitConsentPurpose();
+        var customfieldEntity = new SubmitCollectionPointCustomField();
 
-        //var re = new SubmitGeneralConsentResponse();
-
-            // Retrieve CollectionPointID and ActiveConsent settings
-
-            var collectionPoint = _context.DbSetConsentCollectionPoints.Where
+        var collectionPoint = _context.DbSetConsentCollectionPoints.Where
                 (c => c.Guid == request.CollectionPointGuid 
                 && c.CompanyId == request.CompanyId && c.Status == "Active").FirstOrDefault();
 
-            if (collectionPoint != null)
+        #region fetch purpose
+        foreach (var purpose in request.Purpose)
+        {
+            purposeEntity.PurposeGuid = purpose.PurposeGuid;
+            purposeEntity.Active = purpose.Active;
+
+        }
+        #endregion
+        #region fetch Customfield
+        foreach (var customfield in request.CollectionPointCustomField)
+        {
+            customfieldEntity.CollectionPointCustomFieldConfigId = customfield.CollectionPointCustomFieldConfigId;
+            customfieldEntity.Value = customfield.Value;
+
+        }
+        #endregion
+        if (collectionPoint != null)
             {
-                int CollectionPointID = collectionPoint.CollectionPointId;
+                CollectionPointID = collectionPoint.CollectionPointId;
                 bool? ActiveConsentCardNumberPK = collectionPoint.ActiveConsentCardNumberPk;
                 bool? ActiveConsentNamePK = collectionPoint.ActiveConsentNamePk;
                 bool? ActiveConsentEmailPK = collectionPoint.ActiveConsentEmailPk;
@@ -137,7 +122,7 @@ public class SubmitConsentCommandHandler : IRequestHandler<SubmitConsentCommand,
                     if ((bool)ActiveConsentTelPK)
                         updateQuery = updateQuery.Where(c => c.PhoneNumber == request.PhoneNumber);
 
-                    if ((bool)ActiveConsentUIDPK)
+                    if (ActiveConsentUIDPK ?? true)
                         updateQuery = updateQuery.Where(c => c.Uid == request.Uid);
 
                     //updateQuery.Update(c => new Consent_Consent { New = false });
@@ -162,10 +147,12 @@ public class SubmitConsentCommandHandler : IRequestHandler<SubmitConsentCommand,
 
                 }
             }
+           
 
             // Insert new consent record
-            var newConsent = new Consent_Consent
+            newCon = new Consent_Consent
             {
+                
                 CompanyId = request.CompanyId,
                 CollectionPointId = CollectionPointID,
                 ConsentDatetime = DateTimeOffset.Now,
@@ -188,30 +175,88 @@ public class SubmitConsentCommandHandler : IRequestHandler<SubmitConsentCommand,
                 PhoneNumber = request.PhoneNumber,
                 IdCardNumber = request.IdCardNumber,
 
-                CreateBy = 1,
+                CreateBy = request.authentication.UserID,
                 CreateDate = DateTimeOffset.Now,
-                UpdateBy = 1,
+                UpdateBy = request.authentication.UserID,
                 UpdateDate = DateTimeOffset.Now,
                 };
 
-                _context.DbSetConsent.Add(newConsent);
+                _context.DbSetConsent.Add(newCon);
+
             await _context.SaveChangesAsync(cancellationToken);
 
 
-            var consentID = newConsent.ConsentId;
-                Console.WriteLine(consentID); // Output the generated ConsentID value
-            }
+        }
+        var consentIDTemp = newCon.ConsentId;
 
-        var responseResult = new SubmitGeneralConsentResponse();
-        responseResult.CollectionPointName = "";
-        responseResult.SubmitGeneralConsentWebsiteObject = new SubmitGeneralConsentWebsiteObject();
-        responseResult.PurposeGuid = new Guid("");
-        responseResult.PurposeCode = "";
-        responseResult.PurposeDescript = "";
-        responseResult.Email = "";
-        responseResult.ConsentActive =  "";
+        consentID = consentIDTemp;
 
-        return responseResult;
+        Console.WriteLine(consentID); // Output the generated ConsentID value
+
+        var collectionPointItemID = _context.DbSetConsentCollectionPointItem
+               .Join(_context.DbSetConsentPurpose,
+               cpi => cpi.PurposeId,
+               cp => cp.PurposeId,
+               (cpi, cp) => new { CollectionPointItem = cpi, Purpose = cp })
+               .Where(c => c.CollectionPointItem.CollectionPointId == CollectionPointID && c.Purpose.Guid == purposeEntity.PurposeGuid.ToString())
+               .Select(c => c.CollectionPointItem.CollectionPointItemId).FirstOrDefault();
+               
+
+        Consent_ConsentItem consentItem = new Consent_ConsentItem
+        {
+            CompanyId = request.CompanyId,
+            ConsentId = consentID,
+            CollectionPointItemId = collectionPointItemID,
+            ConsentActive = 1,
+            Expired = newCon.Expired,
+        };
+
+        _context.DbSetConsentItem.Add(consentItem);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        int consentItemID = consentItem.ConsentItemId;
+
+        Consent_ConsentCustomField consentCustomField = new Consent_ConsentCustomField
+        {
+            CollectionPointCustomFieldConfigID = customfieldEntity.CollectionPointCustomFieldConfigId, 
+            Value = customfieldEntity.Value,
+            ConsentId = consentID
+        };
+
+        _context.DbSetConsentCustomField.Add(consentCustomField);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        var websiteList = (from cc in _context.DbSetConsent
+                           join w in _context.DbSetConsentWebsite on cc.WebsiteId equals w.WebsiteId
+                           where cc.ConsentId == consentID
+                           select
+                               new SubmitGeneralConsentWebsiteObject
+                               {
+                                   Id = w.WebsiteId,
+                                   Description = w.Description,
+                                   UrlHomePage = w.Url,
+                                   UrlPolicyPage = w.Urlpolicy,
+                               }).FirstOrDefault();
+
+        var result = (from cc in _context.DbSetConsent
+                      join cw in _context.DbSetConsentWebsite on cc.WebsiteId equals cw.WebsiteId
+                      join cct in _context.DbSetConsentItem on cc.ConsentId equals cct.ConsentId
+                      join ccp in _context.DbSetConsentCollectionPoints on CollectionPointID equals ccp.CollectionPointId
+                      join cp in _context.DbSetConsentPurpose on purposeEntity.PurposeGuid.ToString() equals cp.Guid
+                      where cc.ConsentId == consentID && cc.Status == "Active" && cc.CompanyId == request.CompanyId
+                      select new SubmitGeneralConsentResponse
+                      {
+                          CollectionPointName = ccp.CollectionPoint,
+                          SubmitGeneralConsentWebsiteObject = new SubmitGeneralConsentWebsiteObject { Id = cw.WebsiteId, Description = cw.Description, UrlHomePage = cw.Url, UrlPolicyPage = cw.Urlpolicy },
+                          PurposeGuid = new Guid(cp.Guid),
+                          PurposeCode = cp.Code,
+                          PurposeDescript = cp.Description,
+                          Email = cc.Email,
+                          ConsentActive = cct.ConsentActive.ToString(),
+                      }).FirstOrDefault();
+      
+
+        return result;
     }
 }
 
