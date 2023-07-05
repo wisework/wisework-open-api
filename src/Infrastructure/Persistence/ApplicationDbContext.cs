@@ -52,6 +52,17 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<CompanyUser> DbSetCompanyUser => Set<CompanyUser>();
     public DbSet<LanguageDisplay> DbSetLanguage => Set<LanguageDisplay>();
     public DbSet<LocalStringResource> DbSetLocalStringResource => Set<LocalStringResource>();
+
+    public DbSet<TotalRow> DbSetTotalRow => Set<TotalRow>();
+
+    public DbSet<Domain.Entities.Action> DbSetAction => Set<Domain.Entities.Action>();
+    public DbSet<Program> DbSetProgram => Set<Program>();
+    public DbSet<ProgramAction> DbSetProgramAction => Set<ProgramAction>();
+    public DbSet<ProgramDescription> DbSetProgramDescription => Set<ProgramDescription>();
+    public DbSet<Role> DbSetRole => Set<Role>();
+    public DbSet<RoleProgramAction> DbSetRoleProgramAction => Set<RoleProgramAction>();
+    public DbSet<UserRole> DbSetUserRole => Set<UserRole>();
+
     public virtual DbSet<V_Consent_Latest_Consent> DbSetVConsentLatestConsents => Set<V_Consent_Latest_Consent>();
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -713,6 +724,166 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         {
             entity.HasKey(e => e.TotalRowId)
                 .HasName("PK__TotalRow__803CA0038B8A4C2D");
+
+
+            entity.ToTable("TotalRow");
+
+            entity.Property(e => e.CompanyId).HasColumnName("CompanyId");
+            entity.Property(e => e.TableName).HasColumnName("TableName");
+            entity.Property(e => e.TotalCountRow).HasColumnName("TotalCountRow");
+            entity.Property(e => e.TotalCountGroup).HasColumnName("TotalCountGroup");
+        });
+        builder.Entity<Consent_ConsentCustomField>(entity =>
+        {
+            entity.HasKey(e => e.ConsentCustomFieldId)
+                .HasName("PK_Consent_ConsentCustomField");
+
+            entity.ToTable("Consent_ConsentCustomField");
+
+            entity.Property(e => e.ConsentCustomFieldId).HasColumnName("Consent_ConsentCustomFieldID");
+            entity.Property(e => e.CollectionPointCustomFieldConfigID).HasColumnName("CollectionPointCustomFieldConfigID");
+            entity.Property(e => e.Value).HasColumnName("Value");
+            entity.Property(e => e.ConsentId).HasColumnName("ConsentId");
+     
+        });
+        builder.Entity<Domain.Entities.Action>(entity =>
+        {
+            entity.HasKey(e => e.ActionID).HasName("PK__Action__FFE3F4B936D0F612");
+
+            entity.ToTable("Action");
+
+            entity.Property(e => e.ActionID).HasColumnName("ActionID");
+
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.Code).HasMaxLength(20);
+
+            entity.Property(e => e.Description).HasMaxLength(100);
+
+            entity.Property(e => e.CreateDate).HasPrecision(0);
+
+            entity.Property(e => e.UpdateDate).HasPrecision(0);
+        });
+
+        builder.Entity<Program>(entity =>
+        {
+            entity.HasKey(e => e.ProgramID).HasName("PK__Program__7525603840AF8234");
+
+            entity.ToTable("Program");
+
+            entity.Property(e => e.ProgramID).HasColumnName("ProgramID");
+
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.Code).HasMaxLength(50);
+
+            entity.Property(e => e.Description).HasMaxLength(100);
+
+            entity.Property(e => e.ParentID).HasColumnName("ParentID");
+
+            entity.Property(e => e.Action).HasMaxLength(500);
+
+            entity.Property(e => e.Icon).HasMaxLength(500);
+
+            entity.Property(e => e.Badge).HasColumnName("Badge");
+
+            entity.Property(e => e.expanded).HasColumnName("expanded");
+
+            entity.Property(e => e.Priority).HasColumnName("Priority");
+
+            entity.Property(e => e.CreateDate).HasPrecision(0);
+
+            entity.Property(e => e.UpdateDate).HasPrecision(0);
+        });
+
+        builder.Entity<ProgramAction>(entity =>
+        {
+            entity.HasKey(e => e.ProgramActionID).HasName("PK_ProgramAction");
+
+            entity.ToTable("ProgramAction");
+
+            entity.Property(e => e.ProgramActionID).HasColumnName("ProgramActionID");
+
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.ProgramID).HasColumnName("ProgramID");
+
+            entity.Property(e => e.ActionID).HasColumnName("ActionID");
+
+            entity.Property(e => e.CreateDate).HasPrecision(0);
+
+            entity.Property(e => e.UpdateDate).HasPrecision(0);
+        });
+
+        builder.Entity<ProgramDescription>(entity =>
+        {
+            entity.HasKey(e => e.ProgramDescriptionID).HasName("PK_ProgramDescription");
+
+            entity.ToTable("ProgramDescription");
+
+            entity.Property(e => e.ProgramDescriptionID).HasColumnName("ProgramDescriptionID");
+
+            entity.Property(e => e.ProgramID).HasColumnName("ProgramID");
+
+            entity.Property(e => e.Description).HasMaxLength(100);
+
+            entity.Property(e => e.LanguageCulture).HasMaxLength(10);
+        });
+
+        builder.Entity<Role>(entity =>
+        {
+            entity.HasKey(e => e.RoleID).HasName("PK__Role__8AFACE3A7816E557");
+
+            entity.ToTable("Role");
+
+            entity.Property(e => e.RoleID).HasColumnName("RoleID");
+
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.CompanyID).HasColumnName("CompanyID");
+
+            entity.Property(e => e.Code).HasMaxLength(20);
+
+            entity.Property(e => e.Description).HasMaxLength(100);
+
+            entity.Property(e => e.CreateDate).HasPrecision(0);
+
+            entity.Property(e => e.UpdateDate).HasPrecision(0);
+        });
+
+        builder.Entity<RoleProgramAction>(entity =>
+        {
+            entity.HasKey(e => e.RoleProgramActionID).HasName("PK__RoleProg__46F87EF81A713C42");
+
+            entity.ToTable("RoleProgramAction");
+
+            entity.Property(e => e.RoleProgramActionID).HasColumnName("RoleProgramActionID");
+
+            entity.Property(e => e.RoleID).HasColumnName("RoleID");
+
+            entity.Property(e => e.ProgramActionID).HasColumnName("ProgramActionID");
+        });
+
+        builder.Entity<UserRole>(entity =>
+        {
+            entity.HasKey(e => e.UserRoleID).HasName("PK__UserRole__3D978A5565ED7DB2");
+
+            entity.ToTable("UserRole");
+
+            entity.Property(e => e.UserRoleID).HasColumnName("UserRoleID");
+
+            entity.Property(e => e.CompanyID).HasColumnName("CompanyID");
+
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.RoleID).HasColumnName("RoleID");
+
+            entity.Property(e => e.UserID).HasColumnName("UserID");
+
+            entity.Property(e => e.CreateDate).HasPrecision(0);
+
+            entity.Property(e => e.UpdateDate).HasPrecision(0);
+        });
 
         /*modelBuilder.Entity<ConsentConsentCookie>(entity =>
         {
