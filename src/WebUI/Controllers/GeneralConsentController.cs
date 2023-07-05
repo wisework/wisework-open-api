@@ -44,13 +44,13 @@ public class GeneralConsentController : ApiControllerBase
     [Route("submit", Name = "Submitconsent")]
     [AuthorizationFilter]
 
-    public async Task<ActionResult<int>> Create(SubmitConsentCommand command)
+    public async Task<ActionResult<SubmitGeneralConsentResponse>> Create(SubmitConsentCommand command)
     {
-        //HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
-        //if (authenticationObj is AuthenticationModel authentication)
-        //{
-        //    command.authentication = authentication;
-        //}
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            command.authentication = authentication;
+        }
         return await Mediator.Send(command);
     }
 
