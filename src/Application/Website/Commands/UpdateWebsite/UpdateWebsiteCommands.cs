@@ -56,7 +56,7 @@ public class UpdateWebsiteCommandsHandler : IRequestHandler<UpdateWebsiteCommand
         }
 
         var entity = _context.DbSetConsentWebsite
-             .Where(cf => cf.WebsiteId == request.WebsiteId && cf.CompanyId == 1 && cf.Status != Status.X.ToString())
+             .Where(cf => cf.WebsiteId == request.WebsiteId && cf.CompanyId == request.authentication.CompanyID && cf.Status != Status.X.ToString())
              .FirstOrDefault();
 
         if (entity == null)
@@ -71,7 +71,7 @@ public class UpdateWebsiteCommandsHandler : IRequestHandler<UpdateWebsiteCommand
             entity.Urlpolicy = request.UrlPolicyPage;
             entity.Status = Status.Active.ToString();
 
-            entity.UpdateBy = 1;
+            entity.UpdateBy = request.authentication.UserID;
             entity.UpdateDate = DateTime.Now;
 
 

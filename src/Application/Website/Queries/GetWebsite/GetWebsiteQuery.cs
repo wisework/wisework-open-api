@@ -72,7 +72,7 @@ public class GetWebsiteQueryHandler : IRequestHandler<GetWebsiteQuery, Paginated
 
             //todo:edit conpanyid หลังมีการทำ identity server
             PaginatedList<WebsiteActiveList> model =
-                await _context.DbSetConsentWebsite.Where(w => w.CompanyId == 1 && w.Status == Status.Active.ToString()).ProjectTo<WebsiteActiveList>(mapper.ConfigurationProvider).PaginatedListAsync(request.offset, request.limit);
+                await _context.DbSetConsentWebsite.Where(w => w.CompanyId == request.authentication.CompanyID && w.Status == Status.Active.ToString()).ProjectTo<WebsiteActiveList>(mapper.ConfigurationProvider).PaginatedListAsync(request.offset, request.limit);
 
             return model;
         }

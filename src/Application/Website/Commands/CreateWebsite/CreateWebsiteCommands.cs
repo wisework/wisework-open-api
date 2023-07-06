@@ -53,14 +53,14 @@ public class CreateWebsiteCommandsHandler : IRequestHandler<CreateWebsiteCommand
             entity.Url = request.UrlHomePage;
             entity.Urlpolicy = request.UrlPolicyPage;
 
-            entity.CreateBy = 1;
-            entity.UpdateBy = 1;
+            entity.CreateBy = request.authentication.UserID;
+            entity.UpdateBy = request.authentication.UserID;
             entity.CreateDate = DateTime.Now;
             entity.UpdateDate = DateTime.Now;
 
             entity.Status = Status.Active.ToString();
             entity.Version = 1;
-            entity.CompanyId = 1;
+            entity.CompanyId = request.authentication.CompanyID;
 
             _context.DbSetConsentWebsite.Add(entity);
 
