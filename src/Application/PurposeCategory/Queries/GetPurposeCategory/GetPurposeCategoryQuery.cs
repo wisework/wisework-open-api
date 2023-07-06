@@ -70,7 +70,7 @@ public class GetPurposeCategoryQueryHandler : IRequestHandler<GetPurposeCategory
 
             //todo:edit conpanyid หลังมีการทำ identity server
             PaginatedList<PurposeCategoryActiveList> model =
-                await _context.DbSetConsentPurposeCategory.Where(p => p.Status == Status.Active.ToString() && p.CompanyID == 1)
+                await _context.DbSetConsentPurposeCategory.Where(p => p.Status == Status.Active.ToString() && p.CompanyID == request.authentication.CompanyID)
                 .ProjectTo<PurposeCategoryActiveList>(mapper.ConfigurationProvider).PaginatedListAsync(request.offset, request.limit);
 
             return model;
