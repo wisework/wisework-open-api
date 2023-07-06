@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using MediatR;
 using Wisework.ConsentManagementSystem.Api;
+using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
+using WW.Application.Common.Models;
 using WW.Domain.Entities;
 using WW.Domain.Enums;
 
@@ -14,6 +17,8 @@ public record CreatePurposeCategoryCommand : IRequest<PurposeCategoryActiveList>
 {
     public string Code { get; init; }
     public string Description { get; init; }
+    [JsonIgnore]
+    public AuthenticationModel? authentication { get; set; }
 }
 
 public class CreatePurposeCategoryCommandHandler : IRequestHandler<CreatePurposeCategoryCommand, PurposeCategoryActiveList>
@@ -27,32 +32,45 @@ public class CreatePurposeCategoryCommandHandler : IRequestHandler<CreatePurpose
 
     public async Task<PurposeCategoryActiveList> Handle(CreatePurposeCategoryCommand request, CancellationToken cancellationToken)
     {
-        var entity = new Consent_PurposeCategory();
-        entity.PurposeCategoryID = 1;
-        entity.Code = request.Code;
-        entity.Description = request.Description;
-        entity.CreateBy = 1;
-        entity.UpdateBy = 1;
-        entity.UpdateDate = DateTime.Now;
-        entity.CreateDate = DateTime.Now;
-        entity.Status = Status.Active.ToString();
-        entity.Version = 1;
-        entity.CompanyID = 1;
-        entity.Language = "en";
-
-        _context.DbSetConsentPurposeCategory.Add(entity);
-        await _context.SaveChangesAsync(cancellationToken);
-
-        var purposeInfo = new PurposeCategoryActiveList
+        if (request.authentication == null)
         {
-            Code = entity.Code,
-            Description = entity.Description,
-            Language = entity.Language,
-            Status = entity.Status,
+            throw new UnauthorizedAccessException();
+        }
+        try
+        {
+            var entity = new Consent_PurposeCategory();
+            entity.PurposeCategoryID = entity.ID;
+            entity.Code = request.Code;
+            entity.Description = request.Description;
+            entity.CreateBy = request.authentication.UserID;
+            entity.UpdateBy = request.authentication.UserID;
+            entity.UpdateDate = DateTime.Now;
+            entity.CreateDate = DateTime.Now;
+            entity.Status = Status.Active.ToString();
+            entity.Version = 1;
+            entity.CompanyID = request.authentication.CompanyID;
+            entity.Language = "en";
 
-        };
+            _context.DbSetConsentPurposeCategory.Add(entity);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var purposeInfo = new PurposeCategoryActiveList
+            {
+                Code = entity.Code,
+                Description = entity.Description,
+                Language = entity.Language,
+                Status = entity.Status,
+
+            };
 
 
-        return purposeInfo;
+            return purposeInfo;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalServerException(ex.Message);
+
+        }
+
     }
 }
