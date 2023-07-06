@@ -53,7 +53,7 @@ public class SubmitConsentCommandHandler : IRequestHandler<SubmitConsentCommand,
         }
         try
         {
-            var consentID = 2359;
+            var consentID = 0;
             var newCon = new Consent_Consent();
             var CollectionPointID = 0;
             var purposeEntity = new SubmitConsentPurpose();
@@ -195,8 +195,6 @@ public class SubmitConsentCommandHandler : IRequestHandler<SubmitConsentCommand,
             var consentIDTemp = newCon.ConsentId;
 
             consentID = consentIDTemp;
-
-            Console.WriteLine(consentID); // Output the generated ConsentID value
 
             var collectionPointItemID = _context.DbSetConsentCollectionPointItem
                    .Join(_context.DbSetConsentPurpose,

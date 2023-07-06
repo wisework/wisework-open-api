@@ -22,7 +22,7 @@ public class SubmitConsentCommandValidator : AbstractValidator<SubmitConsentComm
             .WithMessage("CollectionPointGuid is required")
             .NotEmpty()
             .WithMessage("CollectionPointGuid cannot be empty")
-            .MaximumLength(20);
+            .MaximumLength(36);
         RuleFor(v => v.CompanyId)
             .NotEmpty()
             .WithMessage("CompanyId limit cannot be empty")
