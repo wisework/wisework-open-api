@@ -15,7 +15,7 @@ internal class CreatePurposeCommandValidator : AbstractValidator<CreatePurposeCo
            .NotEmpty()
            .NotNull();
 
-        RuleFor(v => v.CategoryID)
+        RuleFor(v => v.PurposeCategoryId)
            .NotEmpty()
            .NotNull();
 

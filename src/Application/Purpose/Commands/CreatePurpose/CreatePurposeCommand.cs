@@ -14,7 +14,7 @@ namespace WW.Application.Purpose.Commands.CreatePurpose;
 public record CreatePurposeCommand : IRequest<PurposeActiveList>
 {
     public int PurposeType { get; init; }
-    public int CategoryID { get; init; }
+    public int PurposeCategoryId { get; init; }
     public string Code { get; init; }
     public string Description { get; init; }
     public string KeepAliveData { get; init; }
@@ -42,7 +42,7 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
         entity.Guid = guid.ToString();
 
         entity.PurposeType = request.PurposeType;
-        entity.CategoryID = request.CategoryID;
+        entity.PurposeCategoryId = request.PurposeCategoryId;
         entity.Code = request.Code;
         entity.Description = request.Description;
         
@@ -78,7 +78,7 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
             GUID = guid,
             PurposeID = entity.PurposeId,
             PurposeType = entity.PurposeType,
-            CategoryID = entity.CategoryID,
+            CategoryID = entity.PurposeCategoryId,
             Code = entity.Code,
             Description = entity.Description,
             KeepAliveData = entity.KeepAliveData,
