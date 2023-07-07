@@ -25,10 +25,14 @@ public class PermissionController : ApiControllerBase
         return await Mediator.Send(query);
     }
 
-    [HttpGet("fevorite-menu/{count}")]
+    [HttpGet("favorite-menu/{count}")]
     [AuthorizationFilter]
     public async Task<ActionResult<List<FrequentlyUsedMenu>>> GetFrequentluUsedMenuQuery(int count)
     {
+        if (count < 0)
+        {
+            return BadRequest();
+        }
         HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
         var query = new GetFrequentluUsedMenuQuery(count);
         if (authenticationObj is AuthenticationModel authentication)

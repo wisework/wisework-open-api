@@ -115,25 +115,6 @@ public class GetMenuQueryHandler : IRequestHandler<GetMenuQuery, List<Menu>>
 
                          }).ToList();
 
-         List<SubMenu> GetChildren( int parentID)
-        {
-            return programs
-                    .Where(c => c.ParentID == parentID)
-                    .Select(c => new SubMenu
-                    {
-                        Action = baseUrl + c.Action,
-                        Code = c.Code,
-                        Description = c.Description,
-                        ParentID = c.ParentID,
-                        Priority = c.Priority,
-                        ProgramGroupID = 20, // what?
-                        ProgramID = c.ProgramID,
-                        IsExpanded = c.expanded == null || c.expanded == 0 ? false : true,
-                        Icon = c.Icon,
-                    })
-                    .ToList();
-        }
-
         if (menus == null) return new List<Menu>();
 
         return menus;

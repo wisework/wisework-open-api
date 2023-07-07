@@ -60,13 +60,15 @@ public class GetCollectionPointsQueryHandler : IRequestHandler<GetCollectionPoin
             //todo:edit conpanyid หลังมีการทำ identity server
             PaginatedList<CollectionPointInfo> model =
               await _context.DbSetConsentCollectionPoints
-              .Where(collectionPoint => collectionPoint.CompanyId == 1 && collectionPoint.Status == Status.Active.ToString())
+              .Where(collectionPoint => collectionPoint.CompanyId == request.authentication.CompanyID && collectionPoint.Status == Status.Active.ToString())
               .ProjectTo<CollectionPointInfo>(mapper.ConfigurationProvider).PaginatedListAsync(request.Offset, request.Limit);
 
             var completelyConsentForm = (from c in _context.DbSetConsentCollectionPoints
                                          join p in _context.DbSetConsentPage on c.CollectionPointId equals p.CollectionPointId
-                                         where c.CompanyId == 1 && c.Status == Status.Active.ToString() &&
-                                            p.CompanyId == 1 && p.Status == Status.Active.ToString()
+                                         where c.CompanyId == request.authentication.CompanyID 
+                                         && c.Status == Status.Active.ToString() 
+                                         && p.CompanyId == request.authentication.CompanyID 
+                                         && p.Status == Status.Active.ToString()
                                          select new
                                          {
                                              ConsentId = c.CollectionPointId,
@@ -80,7 +82,9 @@ public class GetCollectionPointsQueryHandler : IRequestHandler<GetCollectionPoin
 
             #region get info collection point
             var collectionpointInfo = (from cp in _context.DbSetConsentCollectionPoints
-                                       where collectionPointIds.Contains(cp.CollectionPointId) && cp.CompanyId == 1 && cp.Status != Status.X.ToString()
+                                       where collectionPointIds.Contains(cp.CollectionPointId) 
+                                       && cp.CompanyId == request.authentication.CompanyID 
+                                       && cp.Status != Status.X.ToString()
                                        select new KeyValuePair<int, CollectionPointInfo>(cp.CollectionPointId,
                                        new CollectionPointInfo
                                        {
@@ -142,7 +146,11 @@ public class GetCollectionPointsQueryHandler : IRequestHandler<GetCollectionPoin
                                    from cff in cffJoin.DefaultIfEmpty()
                                    join cpc in _context.DbSetConsentCollectionPointCustomFields on cff.CollectionPointCustomFieldId equals cpc.CollectionPointCustomFieldId into cpcJoin
                                    from cpc in cpcJoin.DefaultIfEmpty()
-                                   where collectionPointIds.Contains(cp.CollectionPointId) && cp.Status == "Active" && cp.CompanyId == 1 && cpc.Status == "Active"
+                                   where collectionPointIds.Contains(cp.CollectionPointId) 
+                                   && cp.Status == "Active" 
+                                   && cp.CompanyId == request.authentication.CompanyID 
+                                   && cpc.Status == "Active"
+                                   && cpc.CompanyId == request.authentication.CompanyID
                                    select new KeyValuePair<int, CustomFields>(cp.CollectionPointId,
                                    new CustomFields
                                    {
@@ -166,8 +174,10 @@ public class GetCollectionPointsQueryHandler : IRequestHandler<GetCollectionPoin
                                on cp.CollectionPointId equals p.CollectionPointId
                                where cp.Status == Status.Active.ToString()
                                && collectionPointIds.Contains(cp.CollectionPointId)
-                               && cp.CompanyId == 1 && cp.Status != Status.X.ToString()
+                               && cp.CompanyId == request.authentication.CompanyID 
+                               && cp.Status != Status.X.ToString()
                                && p.Status != Status.X.ToString()
+                               && p.CompanyId == request.authentication.CompanyID
 
                                select new KeyValuePair<int, CollectionPointPageDetail>(cp.CollectionPointId,
                                new CollectionPointPageDetail

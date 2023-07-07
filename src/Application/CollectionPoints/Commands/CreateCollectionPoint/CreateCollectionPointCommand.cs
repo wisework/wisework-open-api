@@ -57,8 +57,8 @@ public class CreateTodoListCommandHandler : IRequestHandler<CreateCollectionPoin
             entity.CompanyId = request.authentication.CompanyID;
             entity.Description = "";
             entity.Script = "";
-            entity.CreateBy = 1;
-            entity.UpdateBy = 1;
+            entity.CreateBy = request.authentication.UserID;
+            entity.UpdateBy = request.authentication.UserID;
             entity.UpdateDate = DateTime.Now;
             entity.CreateDate = DateTime.Now;
 
@@ -106,8 +106,8 @@ public class CreateTodoListCommandHandler : IRequestHandler<CreateCollectionPoin
                 purposeEntity.SectionInfoId = purpose.SectionId;
 
                 //todo:change affter identity server
-                purposeEntity.CreateBy = 1;
-                purposeEntity.UpdateBy = 1;
+                purposeEntity.CreateBy = request.authentication.UserID;
+                purposeEntity.UpdateBy = request.authentication.UserID;
                 purposeEntity.UpdateDate = DateTime.Now;
                 purposeEntity.CreateDate = DateTime.Now;
                 purposeEntity.Status = Status.Active.ToString();

@@ -56,9 +56,10 @@ public class UpdateCollectionPointCommandHandler : IRequestHandler<UpdateCollect
             entity.Description = "";
             entity.Script = "";
             //todo:change affter identity server
-            entity.UpdateBy = 1;
+            entity.CreateBy = request.authentication.UserID;
+            entity.UpdateBy = request.authentication.UserID;
             entity.UpdateDate = DateTime.Now;
-            //entity.CreateDate = DateTime.Now;
+            entity.CreateDate = DateTime.Now;
 
             entity.Status = Status.Active.ToString();
             entity.Version = 1;
@@ -71,7 +72,7 @@ public class UpdateCollectionPointCommandHandler : IRequestHandler<UpdateCollect
             //(รายการเก่า update status เป็น x แล้ว insert รายการใหม่)
 
             var queryListCollectionPointItem = from collectionPoint in _context.DbSetConsentCollectionPointItem
-                                               where collectionPoint.CollectionPointId == request.Id && collectionPoint.Version == request.Version && collectionPoint.CompanyId == 1
+                                               where collectionPoint.CollectionPointId == request.Id && collectionPoint.Version == request.Version && collectionPoint.CompanyId == request.authentication.CompanyID
                                                select collectionPoint;
 
             if (queryListCollectionPointItem == null)
@@ -92,8 +93,8 @@ public class UpdateCollectionPointCommandHandler : IRequestHandler<UpdateCollect
                 purposeEntity.SectionInfoId = purpose.SectionId;
 
                 //todo:change affter identity server
-                purposeEntity.CreateBy = 1;
-                purposeEntity.UpdateBy = 1;
+                purposeEntity.CreateBy = request.authentication.UserID;
+                purposeEntity.UpdateBy = request.authentication.UserID;
                 purposeEntity.UpdateDate = DateTime.Now;
                 purposeEntity.CreateDate = DateTime.Now;
                 purposeEntity.Status = Status.Active.ToString();
