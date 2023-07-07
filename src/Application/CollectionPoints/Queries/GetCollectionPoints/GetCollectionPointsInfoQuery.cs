@@ -45,7 +45,7 @@ public class GetCollectionPointsInfoQueryHandler : IRequestHandler<GetCollection
             //todo:edit conpanyid หลังมีการทำ identity server
             var collectionpointInfo = (from cp in _context.DbSetConsentCollectionPoints
 
-                                       where cp.CollectionPointId == request.Id && cp.CompanyId == 1 && cp.Status != Status.X.ToString()
+                                       where cp.CollectionPointId == request.Id && cp.CompanyId == request.authentication.CompanyID && cp.Status != Status.X.ToString()
                                        select new CollectionPointInfo
                                        {
                                            CollectionPointId = cp.CollectionPointId,
@@ -61,7 +61,7 @@ public class GetCollectionPointsInfoQueryHandler : IRequestHandler<GetCollection
             #region website
             var websiteList = (from cp in _context.DbSetConsentCollectionPoints
                                join w in _context.DbSetConsentWebsite on cp.WebsiteId equals w.WebsiteId
-                               where cp.CollectionPointId == request.Id
+                               where cp.CollectionPointId == request.Id && w.WebsiteId == cp.WebsiteId
                                select
                                    new CollectionPointInfoWebsiteObject
                                    {
@@ -80,6 +80,8 @@ public class GetCollectionPointsInfoQueryHandler : IRequestHandler<GetCollection
                                where cp.Status == Status.Active.ToString()
                                && p.Status == Status.Active.ToString()
                                && cp.CollectionPointId == request.Id
+                               && p.CompanyId == request.authentication.CompanyID
+                               && p.PurposeId == cp.PurposeId
                                select
                                    new GeneralConsentPurpose
                                    {
@@ -101,7 +103,10 @@ public class GetCollectionPointsInfoQueryHandler : IRequestHandler<GetCollection
             #region custom fields
             var customFieldInfo = (from cf in _context.DbSetConsentCollectionPointCustomFields
                                    join cpf in _context.DbSetConsent_CollectionPointCustomFieldConfig on cf.CollectionPointCustomFieldId equals cpf.CollectionPointCustomFieldId
-                                   where collectionpointInfo.Guid.ToString() == cpf.CollectionPointGuid && cf.CompanyId == 1 && cf.Status != Status.X.ToString()
+                                   where collectionpointInfo.Guid.ToString() == cpf.CollectionPointGuid 
+                                   && cf.CompanyId == request.authentication.CompanyID 
+                                   && cf.Status != Status.X.ToString()
+                                   
                                    select new CustomFields
                                    {
                                        Id = cf.CollectionPointCustomFieldId,
@@ -119,7 +124,11 @@ public class GetCollectionPointsInfoQueryHandler : IRequestHandler<GetCollection
             #region page details
             var pageDetails = (from cp in _context.DbSetConsentPage
                                join p in _context.DbSetConsentCollectionPoints on cp.CollectionPointId equals p.CollectionPointId
-                               where cp.Status == Status.Active.ToString() && cp.CollectionPointId == request.Id && cp.CompanyId == 1 && cp.Status != Status.X.ToString()
+                               where cp.Status == Status.Active.ToString() 
+                               && cp.CollectionPointId == request.Id 
+                               && cp.CompanyId == request.authentication.CompanyID
+                               && cp.Status != Status.X.ToString()
+                               
 
                                select
                                new CollectionPointPageDetail

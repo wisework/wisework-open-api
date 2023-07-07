@@ -48,7 +48,6 @@ public class GetFrequentluUsedMenuQueryHandler : IRequestHandler<GetFrequentluUs
 
         string baseUrl = "https://test-pdpa.thewiseworks.com/";
         string language = "en-US";
-        List<int> roleIDs = new List<int> { 4, 50168, 50169 };
         int companyId = request.authentication.CompanyID;
         int userId = request.authentication.UserID;
 

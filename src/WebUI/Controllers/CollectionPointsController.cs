@@ -13,7 +13,7 @@ namespace WW.OpenAPI.Controllers;
 //[Authorize]
 public class CollectionPointsController : ApiControllerBase
 {
-    [HttpGet]
+    [HttpGet("list")]
     [AuthorizationFilter]
 
     public async Task<ActionResult<PaginatedList<CollectionPointInfo>>> GetCollectionPointsQuery([FromQuery] GetCollectionPointsQuery query)
@@ -25,7 +25,7 @@ public class CollectionPointsController : ApiControllerBase
         }
         return await Mediator.Send(query);
     }
-    [HttpPost]
+    [HttpPost("add")]
     [AuthorizationFilter]
 
     public async Task<ActionResult<CollectionPointObject>> Create(CreateCollectionPointCommand command)
@@ -37,7 +37,7 @@ public class CollectionPointsController : ApiControllerBase
         }
         return await Mediator.Send(command);
     }
-    [HttpPut("{id}")]
+    [HttpPut("update/{id}")]
     [AuthorizationFilter]
 
     public async Task<ActionResult> Update(int id, UpdateCollectionPointCommand command)
