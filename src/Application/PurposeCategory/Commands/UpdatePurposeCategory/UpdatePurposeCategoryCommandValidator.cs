@@ -11,6 +11,12 @@ public class UpdatePurposeCategoryCommandValidator : AbstractValidator<UpdatePur
 {
     public UpdatePurposeCategoryCommandValidator()
     {
+        RuleFor(v => v.ID)
+           .NotNull()
+           .WithMessage("ID is required")
+           .NotEmpty()
+           .WithMessage("ID cannot be empty");
+
         RuleFor(v => v.Description)
            .MaximumLength(1000)
             .WithMessage("Description must be no more than 1000 characters long")

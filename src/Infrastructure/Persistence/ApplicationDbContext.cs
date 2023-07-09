@@ -42,6 +42,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Users> DbSetUser => Set<Users>();
 
     public DbSet<Consent_Consent> DbSetConsent => Set<Consent_Consent>();
+    public DbSet<Consent_ConsentCustomField> DbSetConsentCustomField => Set<Consent_ConsentCustomField>();
     public DbSet<Consent_ConsentItem> DbSetConsentItem => Set<Consent_ConsentItem>();
     public DbSet<Consent_ConsentTheme> DbSetConsentTheme => Set<Consent_ConsentTheme>();
     public DbSet<Domain.Entities.File> DbSetFile => Set<Domain.Entities.File>();
@@ -51,6 +52,17 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<CompanyUser> DbSetCompanyUser => Set<CompanyUser>();
     public DbSet<LanguageDisplay> DbSetLanguage => Set<LanguageDisplay>();
     public DbSet<LocalStringResource> DbSetLocalStringResource => Set<LocalStringResource>();
+
+    public DbSet<TotalRow> DbSetTotalRow => Set<TotalRow>();
+
+    public DbSet<Domain.Entities.Action> DbSetAction => Set<Domain.Entities.Action>();
+    public DbSet<Program> DbSetProgram => Set<Program>();
+    public DbSet<ProgramAction> DbSetProgramAction => Set<ProgramAction>();
+    public DbSet<ProgramDescription> DbSetProgramDescription => Set<ProgramDescription>();
+    public DbSet<Role> DbSetRole => Set<Role>();
+    public DbSet<RoleProgramAction> DbSetRoleProgramAction => Set<RoleProgramAction>();
+    public DbSet<UserRole> DbSetUserRole => Set<UserRole>();
+
     public virtual DbSet<V_Consent_Latest_Consent> DbSetVConsentLatestConsents => Set<V_Consent_Latest_Consent>();
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -180,7 +192,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
             entity.Property(e => e.HeaderBackgroundColor).HasMaxLength(20);
 
-            entity.Property(e => e.BodyBackgroudColor).HasMaxLength(20);
+            entity.Property(e => e.BodyBackgroundColor).HasMaxLength(20);
 
             entity.Property(e => e.TopDescriptionTextColor).HasMaxLength(20);
 
@@ -265,7 +277,9 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
             entity.Property(e => e.UpdateDate).HasPrecision(0);
 
-            entity.Property(e => e.WarningDescription).HasColumnType("ntext");
+            entity.Property(e => e.WarningDescription).HasColumnType("ntext").HasColumnName("WarningDescription");
+            entity.Property(e => e.ExpiredDateTime).HasColumnType("KeepAliveData");
+
         });
 
 
@@ -515,7 +529,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
             entity.Property(e => e.Fax).HasMaxLength(100);
 
-            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.Name).HasMaxLength(100).HasColumnName("Name");
 
             entity.Property(e => e.Phone).HasMaxLength(100);
 
@@ -540,6 +554,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             entity.Property(e => e.UpdateDate)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetimeoffset())");
+            entity.Property(e => e.LogoImage).HasColumnName("LogoImage");
         });
 
         builder.Entity<CompanyUser>(entity =>
@@ -665,7 +680,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
             entity.Property(e => e.AgeRange).HasMaxLength(20);
 
-            entity.Property(e => e.CardNumber).HasMaxLength(13);
+            entity.Property(e => e.IdCardNumber).HasMaxLength(13).HasColumnName("CardNumber");
 
             entity.Property(e => e.CollectionPointId).HasColumnName("CollectionPointID");
 
@@ -675,33 +690,199 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
             entity.Property(e => e.ConsentSignature).HasColumnType("ntext");
 
-            entity.Property(e => e.CreateDate).HasPrecision(0);
+            entity.Property(e => e.CreateDate).HasPrecision(0).HasColumnName("CreateDate");
 
-            entity.Property(e => e.Email).HasMaxLength(100);
+            entity.Property(e => e.CreateBy).HasColumnName("Createby");
 
-            entity.Property(e => e.EventCode).HasMaxLength(1000);
+            entity.Property(e => e.Email).HasMaxLength(100).HasColumnName("Email");
 
-            entity.Property(e => e.FromBrowser).HasMaxLength(1000);
+            entity.Property(e => e.EventCode).HasMaxLength(1000).HasColumnName("EventCode");
 
-            entity.Property(e => e.FromWebsite).HasMaxLength(1000);
+            entity.Property(e => e.FromBrowser).HasMaxLength(1000).HasColumnName("FromBrowser");
+
+            entity.Property(e => e.FromWebsite).HasMaxLength(1000).HasColumnName("FromWebsite");
 
             entity.Property(e => e.HasNotificationRenew).HasDefaultValueSql("((0))");
 
-            entity.Property(e => e.NameSurname).HasMaxLength(1000);
+            entity.Property(e => e.FullName).HasMaxLength(1000).HasColumnName("NameSurname");
 
-            entity.Property(e => e.Remark).HasMaxLength(1000);
+            entity.Property(e => e.Remark).HasMaxLength(1000).HasColumnName("Remark");
 
-            entity.Property(e => e.Status).HasMaxLength(10);
+            entity.Property(e => e.Status).HasMaxLength(10).HasColumnName("Status");
 
-            entity.Property(e => e.Tel).HasMaxLength(100);
+            entity.Property(e => e.PhoneNumber).HasMaxLength(100).HasColumnName("Tel");
 
             entity.Property(e => e.Uid).HasColumnName("UID");
 
-            entity.Property(e => e.UpdateDate).HasPrecision(0);
+            entity.Property(e => e.UpdateDate).HasPrecision(0).HasColumnName("UpdateDate");
 
-            entity.Property(e => e.VerifyType).HasMaxLength(100);
+            entity.Property(e => e.VerifyType).HasMaxLength(100).HasColumnName("VerifyType");
 
             entity.Property(e => e.WebsiteId).HasColumnName("WebsiteID");
+        });
+        builder.Entity<TotalRow>(entity =>
+        {
+            entity.HasKey(e => e.TotalRowId)
+                .HasName("PK__TotalRow__803CA0038B8A4C2D");
+
+
+            entity.ToTable("TotalRow");
+
+            entity.Property(e => e.CompanyId).HasColumnName("CompanyId");
+            entity.Property(e => e.TableName).HasColumnName("TableName");
+            entity.Property(e => e.TotalCountRow).HasColumnName("TotalCountRow");
+            entity.Property(e => e.TotalCountGroup).HasColumnName("TotalCountGroup");
+        });
+        builder.Entity<Consent_ConsentCustomField>(entity =>
+        {
+            entity.HasKey(e => e.ConsentCustomFieldId)
+                .HasName("PK_Consent_ConsentCustomField");
+
+            entity.ToTable("Consent_ConsentCustomField");
+
+            entity.Property(e => e.ConsentCustomFieldId).HasColumnName("Consent_ConsentCustomFieldID");
+            entity.Property(e => e.CollectionPointCustomFieldConfigID).HasColumnName("CollectionPointCustomFieldConfigID");
+            entity.Property(e => e.Value).HasColumnName("Value");
+            entity.Property(e => e.ConsentId).HasColumnName("ConsentId");
+     
+        });
+        builder.Entity<Domain.Entities.Action>(entity =>
+        {
+            entity.HasKey(e => e.ActionID).HasName("PK__Action__FFE3F4B936D0F612");
+
+            entity.ToTable("Action");
+
+            entity.Property(e => e.ActionID).HasColumnName("ActionID");
+
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.Code).HasMaxLength(20);
+
+            entity.Property(e => e.Description).HasMaxLength(100);
+
+            entity.Property(e => e.CreateDate).HasPrecision(0);
+
+            entity.Property(e => e.UpdateDate).HasPrecision(0);
+        });
+
+        builder.Entity<Program>(entity =>
+        {
+            entity.HasKey(e => e.ProgramID).HasName("PK__Program__7525603840AF8234");
+
+            entity.ToTable("Program");
+
+            entity.Property(e => e.ProgramID).HasColumnName("ProgramID");
+
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.Code).HasMaxLength(50);
+
+            entity.Property(e => e.Description).HasMaxLength(100);
+
+            entity.Property(e => e.ParentID).HasColumnName("ParentID");
+
+            entity.Property(e => e.Action).HasMaxLength(500);
+
+            entity.Property(e => e.Icon).HasMaxLength(500);
+
+            entity.Property(e => e.Badge).HasColumnName("Badge");
+
+            entity.Property(e => e.expanded).HasColumnName("expanded");
+
+            entity.Property(e => e.Priority).HasColumnName("Priority");
+
+            entity.Property(e => e.CreateDate).HasPrecision(0);
+
+            entity.Property(e => e.UpdateDate).HasPrecision(0);
+        });
+
+        builder.Entity<ProgramAction>(entity =>
+        {
+            entity.HasKey(e => e.ProgramActionID).HasName("PK_ProgramAction");
+
+            entity.ToTable("ProgramAction");
+
+            entity.Property(e => e.ProgramActionID).HasColumnName("ProgramActionID");
+
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.ProgramID).HasColumnName("ProgramID");
+
+            entity.Property(e => e.ActionID).HasColumnName("ActionID");
+
+            entity.Property(e => e.CreateDate).HasPrecision(0);
+
+            entity.Property(e => e.UpdateDate).HasPrecision(0);
+        });
+
+        builder.Entity<ProgramDescription>(entity =>
+        {
+            entity.HasKey(e => e.ProgramDescriptionID).HasName("PK_ProgramDescription");
+
+            entity.ToTable("ProgramDescription");
+
+            entity.Property(e => e.ProgramDescriptionID).HasColumnName("ProgramDescriptionID");
+
+            entity.Property(e => e.ProgramID).HasColumnName("ProgramID");
+
+            entity.Property(e => e.Description).HasMaxLength(100);
+
+            entity.Property(e => e.LanguageCulture).HasMaxLength(10);
+        });
+
+        builder.Entity<Role>(entity =>
+        {
+            entity.HasKey(e => e.RoleID).HasName("PK__Role__8AFACE3A7816E557");
+
+            entity.ToTable("Role");
+
+            entity.Property(e => e.RoleID).HasColumnName("RoleID");
+
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.CompanyID).HasColumnName("CompanyID");
+
+            entity.Property(e => e.Code).HasMaxLength(20);
+
+            entity.Property(e => e.Description).HasMaxLength(100);
+
+            entity.Property(e => e.CreateDate).HasPrecision(0);
+
+            entity.Property(e => e.UpdateDate).HasPrecision(0);
+        });
+
+        builder.Entity<RoleProgramAction>(entity =>
+        {
+            entity.HasKey(e => e.RoleProgramActionID).HasName("PK__RoleProg__46F87EF81A713C42");
+
+            entity.ToTable("RoleProgramAction");
+
+            entity.Property(e => e.RoleProgramActionID).HasColumnName("RoleProgramActionID");
+
+            entity.Property(e => e.RoleID).HasColumnName("RoleID");
+
+            entity.Property(e => e.ProgramActionID).HasColumnName("ProgramActionID");
+        });
+
+        builder.Entity<UserRole>(entity =>
+        {
+            entity.HasKey(e => e.UserRoleID).HasName("PK__UserRole__3D978A5565ED7DB2");
+
+            entity.ToTable("UserRole");
+
+            entity.Property(e => e.UserRoleID).HasColumnName("UserRoleID");
+
+            entity.Property(e => e.CompanyID).HasColumnName("CompanyID");
+
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.RoleID).HasColumnName("RoleID");
+
+            entity.Property(e => e.UserID).HasColumnName("UserID");
+
+            entity.Property(e => e.CreateDate).HasPrecision(0);
+
+            entity.Property(e => e.UpdateDate).HasPrecision(0);
         });
 
         /*modelBuilder.Entity<ConsentConsentCookie>(entity =>
@@ -884,235 +1065,235 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         Database.CloseConnection();
     }
 
-    public async Task<int> SubmitConsent(string query
-                        /*, int CompanyId
-                        , string CollectionPointGuid
-                        , int WebSiteId
-                        , string FullName
-                        , string Email
-                        , string PhoneNumber
-                        , string FromBrowser
-                        , string FromWebsite
-                        , string VerifyType
-                        , string ConsentSignature
-                        , string IdCardNumber
-                        , int createBy
-                        , DateTimeOffset ExpiredDateTime
-                        , string EventCode
-                        , int Uid
-                        , string AgeRangeCode*/
-        , SubmitConsentCommand request)
-    {
+    //public async Task<int> SubmitConsent(string query
+    //                    /*, int CompanyId
+    //                    , string CollectionPointGuid
+    //                    , int WebSiteId
+    //                    , string FullName
+    //                    , string Email
+    //                    , string PhoneNumber
+    //                    , string FromBrowser
+    //                    , string FromWebsite
+    //                    , string VerifyType
+    //                    , string ConsentSignature
+    //                    , string IdCardNumber
+    //                    , int createBy
+    //                    , DateTimeOffset ExpiredDateTime
+    //                    , string EventCode
+    //                    , int Uid
+    //                    , string AgeRangeCode*/
+    //    , SubmitConsentCommand request)
+    //{
 
-        int id = 0;
-        try
-        {
-            #region set sqlParameter
+    //    int id = 0;
+    //    try
+    //    {
+    //        #region set sqlParameter
 
-            var outputParam = new SqlParameter
-            {
-                ParameterName = "@OutputID",
-                SqlDbType = SqlDbType.Int,
-                Direction = ParameterDirection.Output
-            };
+    //        var outputParam = new SqlParameter
+    //        {
+    //            ParameterName = "@OutputID",
+    //            SqlDbType = SqlDbType.Int,
+    //            Direction = ParameterDirection.Output
+    //        };
 
-            var companyParam = new SqlParameter
-            {
-                ParameterName = "@CompanyID",
-                Value = request.CompanyId,
-                SqlDbType = SqlDbType.Int,
+    //        var companyParam = new SqlParameter
+    //        {
+    //            ParameterName = "@CompanyID",
+    //            Value = request.CompanyId,
+    //            SqlDbType = SqlDbType.Int,
 
-            };
+    //        };
 
-            var collectionPointGUIDParam = new SqlParameter
-            {
-                ParameterName = "@CollectionPointGUID",
-                Value = request.CollectionPointGuid,
-                SqlDbType = SqlDbType.NVarChar
+    //        var collectionPointGUIDParam = new SqlParameter
+    //        {
+    //            ParameterName = "@CollectionPointGUID",
+    //            Value = request.CollectionPointGuid,
+    //            SqlDbType = SqlDbType.NVarChar
 
-            };
+    //        };
 
-            var websiteIDParam = new SqlParameter
-            {
-                ParameterName = "@WebsiteID",
-                Value = request.WebSiteId,
-                SqlDbType = SqlDbType.Int
-            };
+    //        var websiteIDParam = new SqlParameter
+    //        {
+    //            ParameterName = "@WebsiteID",
+    //            Value = request.WebSiteId,
+    //            SqlDbType = SqlDbType.Int
+    //        };
 
-            var nameSurnameParam = new SqlParameter
-            {
-                ParameterName = "@NameSurname",
-                Value = request.FullName,
-                SqlDbType = SqlDbType.NVarChar
-            };
+    //        var nameSurnameParam = new SqlParameter
+    //        {
+    //            ParameterName = "@NameSurname",
+    //            Value = request.FullName,
+    //            SqlDbType = SqlDbType.NVarChar
+    //        };
 
-            var emailParam = new SqlParameter
-            {
-                ParameterName = "@Email",
-                Value = request.Email,
-                SqlDbType = SqlDbType.NVarChar
-            };
+    //        var emailParam = new SqlParameter
+    //        {
+    //            ParameterName = "@Email",
+    //            Value = request.Email,
+    //            SqlDbType = SqlDbType.NVarChar
+    //        };
 
-            var telParam = new SqlParameter
-            {
-                ParameterName = "@Tel",
-                Value = request.PhoneNumber,
-                SqlDbType = SqlDbType.NVarChar
-            };
+    //        var telParam = new SqlParameter
+    //        {
+    //            ParameterName = "@Tel",
+    //            Value = request.PhoneNumber,
+    //            SqlDbType = SqlDbType.NVarChar
+    //        };
 
-            var fromBrowserParam = new SqlParameter
-            {
-                ParameterName = "@FromBrowser",
-                Value = request.FromBrowser,
-                SqlDbType = SqlDbType.NVarChar
-            };
+    //        var fromBrowserParam = new SqlParameter
+    //        {
+    //            ParameterName = "@FromBrowser",
+    //            Value = request.FromBrowser,
+    //            SqlDbType = SqlDbType.NVarChar
+    //        };
 
-            var fromWebsiteParam = new SqlParameter
-            {
-                ParameterName = "@FromWebsite",
-                Value = request.FromWebsite,
-                SqlDbType = SqlDbType.NVarChar
-            };
+    //        var fromWebsiteParam = new SqlParameter
+    //        {
+    //            ParameterName = "@FromWebsite",
+    //            Value = request.FromWebsite,
+    //            SqlDbType = SqlDbType.NVarChar
+    //        };
 
-            var verifyTypeParam = new SqlParameter
-            {
-                ParameterName = "@VerifyType",
-                Value = request.VerifyType,
-                SqlDbType = SqlDbType.NVarChar
-            };
+    //        var verifyTypeParam = new SqlParameter
+    //        {
+    //            ParameterName = "@VerifyType",
+    //            Value = request.VerifyType,
+    //            SqlDbType = SqlDbType.NVarChar
+    //        };
 
-            var consentSignatureParam = new SqlParameter
-            {
-                ParameterName = "@ConsentSignature",
-                Value = request.ConsentSignature,
-                SqlDbType = SqlDbType.NText
-            };
+    //        var consentSignatureParam = new SqlParameter
+    //        {
+    //            ParameterName = "@ConsentSignature",
+    //            Value = request.ConsentSignature,
+    //            SqlDbType = SqlDbType.NText
+    //        };
 
-            var cardNumberParam = new SqlParameter
-            {
-                ParameterName = "@CardNumber",
-                Value = request.IdCardNumber,
-                SqlDbType = SqlDbType.NVarChar
-            };
+    //        var cardNumberParam = new SqlParameter
+    //        {
+    //            ParameterName = "@CardNumber",
+    //            Value = request.IdCardNumber,
+    //            SqlDbType = SqlDbType.NVarChar
+    //        };
 
-            var createByParam = new SqlParameter
-            {
-                ParameterName = "@CreateBy",
-                SqlDbType = SqlDbType.Int,
-                Value = 1
-            };
+    //        var createByParam = new SqlParameter
+    //        {
+    //            ParameterName = "@CreateBy",
+    //            SqlDbType = SqlDbType.Int,
+    //            Value = 1
+    //        };
 
-            var expiredParam = new SqlParameter
-            {
-                ParameterName = "@Expired",
-                Value = request.ExpiredDateTime,
-                SqlDbType = SqlDbType.DateTimeOffset
+    //        var expiredParam = new SqlParameter
+    //        {
+    //            ParameterName = "@Expired",
+    //            Value = request.ExpiredDateTime,
+    //            SqlDbType = SqlDbType.DateTimeOffset
 
-            };
+    //        };
 
-            var eventCodeParam = new SqlParameter
-            {
-                ParameterName = "@EventCode",
-                Value = request.EventCode,
-                SqlDbType = SqlDbType.NVarChar
-            };
+    //        var eventCodeParam = new SqlParameter
+    //        {
+    //            ParameterName = "@EventCode",
+    //            Value = request.EventCode,
+    //            SqlDbType = SqlDbType.NVarChar
+    //        };
 
-            var uIDParam = new SqlParameter
-            {
-                ParameterName = "@UID",
-                Value = request.Uid,
-                SqlDbType = SqlDbType.Int
-            };
+    //        var uIDParam = new SqlParameter
+    //        {
+    //            ParameterName = "@UID",
+    //            Value = request.Uid,
+    //            SqlDbType = SqlDbType.Int
+    //        };
 
-            var ageRangeParam = new SqlParameter
-            {
-                ParameterName = "@AgeRange",
-                Value = request.AgeRangeCode,
-                SqlDbType = SqlDbType.NVarChar
-            };
-            #endregion
+    //        var ageRangeParam = new SqlParameter
+    //        {
+    //            ParameterName = "@AgeRange",
+    //            Value = request.AgeRangeCode,
+    //            SqlDbType = SqlDbType.NVarChar
+    //        };
+    //        #endregion
 
-            var result = await Database.ExecuteSqlRawAsync("EXEC" + query
-                            , companyParam
-                            , collectionPointGUIDParam
-                            , websiteIDParam
-                            , nameSurnameParam
-                            , emailParam
-                            , telParam
-                            , fromBrowserParam
-                            , fromWebsiteParam
-                            , verifyTypeParam
-                            , consentSignatureParam
-                            , cardNumberParam
-                            , createByParam
-                            , expiredParam
-                            , eventCodeParam
-                            , uIDParam
-                            , ageRangeParam
-                            , outputParam).ConfigureAwait(false);
-
-
-            id = Convert.ToInt32(outputParam.Value.ToString());
-            var consentID = new SqlParameter
-            {
-                ParameterName = "@ConsentID",
-                Value = id,
-                SqlDbType = SqlDbType.Int
-            };
-
-            foreach (var purpose in request.Purpose)
-            {
+    //        var result = await Database.ExecuteSqlRawAsync("EXEC" + query
+    //                        , companyParam
+    //                        , collectionPointGUIDParam
+    //                        , websiteIDParam
+    //                        , nameSurnameParam
+    //                        , emailParam
+    //                        , telParam
+    //                        , fromBrowserParam
+    //                        , fromWebsiteParam
+    //                        , verifyTypeParam
+    //                        , consentSignatureParam
+    //                        , cardNumberParam
+    //                        , createByParam
+    //                        , expiredParam
+    //                        , eventCodeParam
+    //                        , uIDParam
+    //                        , ageRangeParam
+    //                        , outputParam).ConfigureAwait(false);
 
 
-                var purposeGUID = new SqlParameter
-                {
-                    ParameterName = "@PurposeGUID",
-                    Value = purpose.PurposeGuid,
-                    SqlDbType = SqlDbType.UniqueIdentifier
-                };
-                var consentActive = new SqlParameter
-                {
-                    ParameterName = "@ConsentActive",
-                    Value = purpose.Active,
-                    SqlDbType = SqlDbType.Bit
+    //        id = Convert.ToInt32(outputParam.Value.ToString());
+    //        var consentID = new SqlParameter
+    //        {
+    //            ParameterName = "@ConsentID",
+    //            Value = id,
+    //            SqlDbType = SqlDbType.Int
+    //        };
 
-                };
-                var expired = new SqlParameter
-                {
-                    ParameterName = "@Expired",
-                    //Value = purpose.ExpiredDateTime,
-                    SqlDbType = SqlDbType.DateTimeOffset
-                };
+    //        foreach (var purpose in request.Purpose)
+    //        {
+
+
+    //            var purposeGUID = new SqlParameter
+    //            {
+    //                ParameterName = "@PurposeGUID",
+    //                Value = purpose.PurposeGuid,
+    //                SqlDbType = SqlDbType.UniqueIdentifier
+    //            };
+    //            var consentActive = new SqlParameter
+    //            {
+    //                ParameterName = "@ConsentActive",
+    //                Value = purpose.Active,
+    //                SqlDbType = SqlDbType.Bit
+
+    //            };
+    //            var expired = new SqlParameter
+    //            {
+    //                ParameterName = "@Expired",
+    //                //Value = purpose.ExpiredDateTime,
+    //                SqlDbType = SqlDbType.DateTimeOffset
+    //            };
                 
 
-                var result2 = Database.ExecuteSqlRaw("EXEC" + "[SP_CONSENT_SIGNITEM] @CompanyID,@ConsentID,@CollectionPointGUID,@PurposeGUID,@ConsentActive,@Expired", companyParam, consentID, collectionPointGUIDParam, purposeGUID, consentActive, expired);
-            }
+    //            var result2 = Database.ExecuteSqlRaw("EXEC" + "[SP_CONSENT_SIGNITEM] @CompanyID,@ConsentID,@CollectionPointGUID,@PurposeGUID,@ConsentActive,@Expired", companyParam, consentID, collectionPointGUIDParam, purposeGUID, consentActive, expired);
+    //        }
 
-            foreach (var collectionPointCustomField in request.CollectionPointCustomField)
-            {
-                var collectionPointCustomFieldConfigID = new SqlParameter
-                {
-                    ParameterName = "@CollectionPointCustomFieldConfigID",
-                    Value = collectionPointCustomField.CollectionPointCustomFieldConfigId,
-                    SqlDbType = SqlDbType.Int
+    //        foreach (var collectionPointCustomField in request.CollectionPointCustomField)
+    //        {
+    //            var collectionPointCustomFieldConfigID = new SqlParameter
+    //            {
+    //                ParameterName = "@CollectionPointCustomFieldConfigID",
+    //                Value = collectionPointCustomField.CollectionPointCustomFieldConfigId,
+    //                SqlDbType = SqlDbType.Int
 
-                };
-                var valueParam = new SqlParameter
-                {
-                    ParameterName = "@Value",
-                    Value = collectionPointCustomField.Value,
-                    SqlDbType = SqlDbType.NVarChar
-                };
-                var result3 = Database.ExecuteSqlRaw("EXEC" + "[SP_CONSENT_CONSENT_CUSTOM_FIELD] @CollectionPointCustomFieldConfigID, @Value,@ConsentID", collectionPointCustomFieldConfigID, valueParam, consentID);
-            }
+    //            };
+    //            var valueParam = new SqlParameter
+    //            {
+    //                ParameterName = "@Value",
+    //                Value = collectionPointCustomField.Value,
+    //                SqlDbType = SqlDbType.NVarChar
+    //            };
+    //            var result3 = Database.ExecuteSqlRaw("EXEC" + "[SP_CONSENT_CONSENT_CUSTOM_FIELD] @CollectionPointCustomFieldConfigID, @Value,@ConsentID", collectionPointCustomFieldConfigID, valueParam, consentID);
+    //        }
 
-            return id;
+    //        return id;
 
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(query, ex);
-        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        throw new Exception(query, ex);
+    //    }
 
-    }
+    //}
 }

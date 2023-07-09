@@ -20,7 +20,7 @@ public record UpdatePurposeCommand : IRequest<PurposeActiveList>
     [JsonIgnore]
     public int PurposeID { get; set; }
     public int PurposeType { get; init; }
-    public int CategoryID { get; init; }
+    public int PurposeCategoryId { get; init; }
     public string Description { get; init; }
     public string KeepAliveData { get; init; }
     public string LinkMoreDetail { get; init; }
@@ -110,5 +110,6 @@ public class UpdatePurposeCommandHandler : IRequestHandler<UpdatePurposeCommand,
             throw new InternalServerException(ex.Message);
         }                        
        
+
     }
 }

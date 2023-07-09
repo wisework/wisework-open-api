@@ -32,25 +32,35 @@ public interface IApplicationDbContext
     DbSet<CompanyUser> DbSetCompanyUser { get; }
     DbSet<LanguageDisplay> DbSetLanguage { get; }
     DbSet<LocalStringResource> DbSetLocalStringResource { get; }
+    DbSet<TotalRow> DbSetTotalRow { get; }
+    DbSet<Consent_ConsentCustomField> DbSetConsentCustomField { get; }
+
+    DbSet<Domain.Entities.Action> DbSetAction { get; }
+    DbSet<Program> DbSetProgram { get; }
+    DbSet<ProgramAction> DbSetProgramAction { get; }
+    DbSet<ProgramDescription> DbSetProgramDescription { get; }
+    DbSet<Role> DbSetRole { get; }
+    DbSet<RoleProgramAction> DbSetRoleProgramAction { get; }
+    DbSet<UserRole> DbSetUserRole { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
-    Task<int> SubmitConsent(string query
-                        /*,int CompanyId
-                        , string CollectionPointGuid
-                        , int WebSiteId
-                        , string FullName
-                        , string Email
-                        , string PhoneNumber
-                        , string FromBrowser
-                        , string FromWebsite
-                        , string VerifyType
-                        , string ConsentSignature
-                        , string IdCardNumber
-                        , int createBy
-                        , DateTimeOffset ExpiredDateTime
-                        , string EventCode
-                        , int Uid
-                        , string AgeRangeCode*/
-        ,SubmitConsentCommand command);
+    //Task<int> SubmitConsent(string query
+    //                    /*,int CompanyId
+    //                    , string CollectionPointGuid
+    //                    , int WebSiteId
+    //                    , string FullName
+    //                    , string Email
+    //                    , string PhoneNumber
+    //                    , string FromBrowser
+    //                    , string FromWebsite
+    //                    , string VerifyType
+    //                    , string ConsentSignature
+    //                    , string IdCardNumber
+    //                    , int createBy
+    //                    , DateTimeOffset ExpiredDateTime
+    //                    , string EventCode
+    //                    , int Uid
+    //                    , string AgeRangeCode*/
+    //    ,SubmitConsentCommand command);
     void OpenConnection();
     void CloseConnection();
 }

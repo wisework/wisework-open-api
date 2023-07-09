@@ -18,7 +18,7 @@ namespace WW.Application.Purpose.Commands.CreatePurpose;
 public record CreatePurposeCommand : IRequest<PurposeActiveList>
 {
     public int PurposeType { get; init; }
-    public int CategoryID { get; init; }
+    public int PurposeCategoryId { get; init; }
     public string Code { get; init; }
     public string Description { get; init; }
     public string KeepAliveData { get; init; }
@@ -48,12 +48,12 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
             throw new UnauthorizedAccessException();
         }
 
+
         try
         {
             var entity = new Consent_Purpose();
             var guid = Guid.NewGuid();
           
-
             string expiredDateTime = Calulate.ExpiredDateTime(request.KeepAliveData, DateTime.Now);
 
             entity.Guid = guid.ToString();
@@ -82,6 +82,7 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
             entity.ExpiredDateTime = $"{expiredDateTime}";
 
             _context.DbSetConsentPurpose.Add(entity);
+
 
             await _context.SaveChangesAsync(cancellationToken);
 

@@ -2,17 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentValidation.Results;
 using MediatR;
 using Wisework.ConsentManagementSystem.Api;
+using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
+using WW.Application.Common.Models;
 using WW.Domain.Common;
 using WW.Domain.Entities;
 using WW.Domain.Enums;
 
 namespace WW.Application.PurposeCategory.Queries.GetPurposeCategory;
-public record GetPurposeCategoryInfoQuery(int Id) : IRequest<PurposeCategoryActiveList>;
+public record GetPurposeCategoryInfoQuery(int Id) : IRequest<PurposeCategoryActiveList>
+{
+    [JsonIgnore]
+    public AuthenticationModel? authentication { get; set; }
+}
 
 public class GetPurposeCategoryInfoQueryHandler : IRequestHandler<GetPurposeCategoryInfoQuery, PurposeCategoryActiveList>
 {
@@ -27,31 +35,50 @@ public class GetPurposeCategoryInfoQueryHandler : IRequestHandler<GetPurposeCate
 
     public async Task<PurposeCategoryActiveList> Handle(GetPurposeCategoryInfoQuery request, CancellationToken cancellationToken)
     {
-
-        MapperConfiguration config = new MapperConfiguration(cfg =>
+        if (request.authentication == null)
         {
-            cfg.CreateMap<Consent_PurposeCategory, PurposeCategoryActiveList>();
-        });
+            throw new UnauthorizedAccessException();
+        }
+        if (request.Id <= 0)
+        {
+            List<ValidationFailure> failures = new List<ValidationFailure> { };
+            failures.Add(new ValidationFailure("ID", "ID must be greater than 0"));
 
-        Mapper mapper = new Mapper(config);
+            throw new ValidationException(failures);
+        }
+        try
+        {
+            MapperConfiguration config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Consent_PurposeCategory, PurposeCategoryActiveList>();
+            });
 
-        //todo:edit conpanyid หลังมีการทำ identity server
-        var purposecategoryInfo = (from ppc in _context.DbSetConsentPurposeCategory
-                                   join uCreate in _context.DbSetUser on ppc.CreateBy equals uCreate.CreateBy
-                                   join uUpdate in _context.DbSetUser on ppc.CreateBy equals uUpdate.UpdateBy
-                                   join c in _context.DbSetCompanies on ppc.CompanyID equals (int)(long)c.CompanyId
-                                   join w in _context.DbSetConsentWebsite on (int)(long)c.CompanyId equals w.CompanyId
-                                   where ppc.ID == request.Id
-                                   select new PurposeCategoryActiveList
-                                   {
-                                       Code = ppc.Code,
-                                       Description = ppc.Description,
-                                       Language = ppc.Language,
-                                       Status = ppc.Status
+            Mapper mapper = new Mapper(config);
 
-                                   }).FirstOrDefault();
+            //todo:edit conpanyid หลังมีการทำ identity server
+            var purposecategoryInfo = (from ppc in _context.DbSetConsentPurposeCategory
+                                       join uCreate in _context.DbSetUser on ppc.CreateBy equals uCreate.CreateBy
+                                       join uUpdate in _context.DbSetUser on ppc.CreateBy equals uUpdate.UpdateBy
+                                       join c in _context.DbSetCompanies on ppc.CompanyID equals (int)(long)c.CompanyId
+                                       join w in _context.DbSetConsentWebsite on (int)(long)c.CompanyId equals w.CompanyId
+                                       where ppc.ID == request.Id && ppc.CompanyID == request.authentication.CompanyID && ppc.Status == "Active"
+                                       select new PurposeCategoryActiveList
+                                       {
+                                           Code = ppc.Code,
+                                           Description = ppc.Description,
+                                           Language = ppc.Language,
+                                           Status = ppc.Status
 
-        return purposecategoryInfo;
+                                       }).FirstOrDefault();
+
+            return purposecategoryInfo;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalServerException(ex.Message);
+
+        }
+     
     }
 
 }

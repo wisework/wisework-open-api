@@ -17,7 +17,7 @@ internal class UpdatePurposeCommandValidation : AbstractValidator<UpdatePurposeC
             .NotNull()
             .WithMessage("Purpose type is required");
 
-        RuleFor(v => v.CategoryID)
+        RuleFor(v => v.PurposeCategoryId)
            .NotEmpty()
            .WithMessage("Category ID type cannot be empty")
            .NotNull()

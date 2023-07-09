@@ -75,6 +75,7 @@ public class GetPurposeInfoQueryHandler : IRequestHandler<GetPurposeInfoQuery, P
                                Language = cf.Language,
                            }).FirstOrDefault();
 
+
         if (purposeInfo == null)
         {
             throw new NotFoundException();

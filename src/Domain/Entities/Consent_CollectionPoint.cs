@@ -31,6 +31,7 @@ public class Consent_CollectionPoint :Base
     public bool? ActiveConsentUidpk { get; set; }
     public bool? ActiveConsentUidrequired { get; set; }
     public string? RedirectUrl { get; set; }
+    public string? Language  { get;set; }
     //public string Language { get; set; }
    // public int Id { get; set; }
     //public List<Consent_Purpose> PurposesList { get; set; } = new List<Consent_Purpose>();

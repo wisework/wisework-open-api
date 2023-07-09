@@ -13,6 +13,9 @@ using WW.Application.Common.Mappings;
 using WW.Domain.Common;
 using WW.Domain.Entities;
 using WW.Domain.Enums;
+using System.Text.Json.Serialization;
+using FluentValidation.Results;
+using WW.Application.Common.Exceptions;
 
 namespace WW.Application.PurposeCategory.Queries.GetPurposeCategory;
 
@@ -21,6 +24,9 @@ public record GetPurposeCategoryQuery : IRequest<PaginatedList<PurposeCategoryAc
 {
     public int offset { get; init; } = 1;
     public int limit { get; init; } = 10;
+
+    [JsonIgnore]
+    public AuthenticationModel? authentication { get; set; }
 }
 public class GetPurposeCategoryQueryHandler : IRequestHandler<GetPurposeCategoryQuery, PaginatedList<PurposeCategoryActiveList>>
 {
@@ -33,18 +39,46 @@ public class GetPurposeCategoryQueryHandler : IRequestHandler<GetPurposeCategory
     }
     public async Task<PaginatedList<PurposeCategoryActiveList>> Handle(GetPurposeCategoryQuery request, CancellationToken cancellationToken)
     {
-        MapperConfiguration config = new MapperConfiguration(cfg =>
+        if (request.authentication == null)
         {
-            cfg.CreateMap<Consent_PurposeCategory, PurposeCategoryActiveList>().ForMember(d => d.Code, a => a.MapFrom(s => s.Code));
-        });
+            throw new UnauthorizedAccessException();
+        }
 
-        Mapper mapper = new Mapper(config);
+        if (request.offset <= 0 || request.limit <= 0)
+        {
+            List<ValidationFailure> failures = new List<ValidationFailure> { };
 
-        //todo:edit conpanyid หลังมีการทำ identity server
-        PaginatedList<PurposeCategoryActiveList> model =
-            await _context.DbSetConsentPurposeCategory.Where(p => p.Status == Status.Active.ToString() && p.CompanyID == 1)
-            .ProjectTo<PurposeCategoryActiveList>(mapper.ConfigurationProvider).PaginatedListAsync(request.offset, request.limit);
+            if (request.offset <= 0)
+            {
+                failures.Add(new ValidationFailure("offset", "Offset must be greater than 0"));
+            }
+            if (request.limit <= 0)
+            {
+                failures.Add(new ValidationFailure("limit", "Limit must be greater than 0"));
+            }
 
-        return model;
+            throw new ValidationException(failures);
+        }
+        try
+        {
+            MapperConfiguration config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Consent_PurposeCategory, PurposeCategoryActiveList>().ForMember(d => d.Code, a => a.MapFrom(s => s.Code));
+            });
+
+            Mapper mapper = new Mapper(config);
+
+            //todo:edit conpanyid หลังมีการทำ identity server
+            PaginatedList<PurposeCategoryActiveList> model =
+                await _context.DbSetConsentPurposeCategory.Where(p => p.Status == Status.Active.ToString() && p.CompanyID == request.authentication.CompanyID)
+                .ProjectTo<PurposeCategoryActiveList>(mapper.ConfigurationProvider).PaginatedListAsync(request.offset, request.limit);
+
+            return model;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalServerException(ex.Message);
+        }
+      
     }
 }
