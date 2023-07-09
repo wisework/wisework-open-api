@@ -75,7 +75,7 @@ public class GetWebsiteQueryHandler : IRequestHandler<GetPurposeQuery, Paginated
 
             //todo:edit conpanyid หลังมีการทำ identity server
             PaginatedList<PurposeActiveList> model =
-                await _context.DbSetConsentPurpose.Where(p => p.CompanyId == 1 && p.Status == Status.Active.ToString())
+                await _context.DbSetConsentPurpose.Where(p => p.CompanyId == request.authentication.CompanyID && p.Status == Status.Active.ToString())
                 .ProjectTo<PurposeActiveList>(mapper.ConfigurationProvider).PaginatedListAsync(request.offset, request.limit);
 
             return model;

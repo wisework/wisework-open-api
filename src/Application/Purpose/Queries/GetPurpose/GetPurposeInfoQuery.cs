@@ -44,13 +44,7 @@ public class GetPurposeInfoQueryHandler : IRequestHandler<GetPurposeInfoQuery, P
         if (request.id <= 0 )
         {
             List<ValidationFailure> failures = new List<ValidationFailure> { };
-
-            if (request.id <= 0)
-            {
-                failures.Add(new ValidationFailure("ID", "ID must be greater than 0"));
-            }
-            
-
+            failures.Add(new ValidationFailure("purposeID", "Purpose ID must be greater than 0"));                      
             throw new ValidationException(failures);
         }
 
@@ -63,7 +57,7 @@ public class GetPurposeInfoQueryHandler : IRequestHandler<GetPurposeInfoQuery, P
         Mapper mapper = new Mapper(config);
 
         var purposeInfo = (from cf in _context.DbSetConsentPurpose
-                           where cf.PurposeId == request.id && cf.CompanyId == 1 && cf.Status != Status.X.ToString()
+                           where cf.PurposeId == request.id && cf.CompanyId == request.authentication.CompanyID && cf.Status != Status.X.ToString()
                            select new PurposeActiveList
                            {
                                PurposeID = cf.PurposeId,

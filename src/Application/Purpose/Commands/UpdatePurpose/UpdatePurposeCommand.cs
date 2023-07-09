@@ -57,7 +57,7 @@ public class UpdatePurposeCommandHandler : IRequestHandler<UpdatePurposeCommand,
         }
 
         var entity = _context.DbSetConsentPurpose
-            .Where(cf => cf.PurposeId == request.PurposeID && cf.CompanyId == 1 && cf.Status != Status.X.ToString())
+            .Where(cf => cf.PurposeId == request.PurposeID && cf.CompanyId == request.authentication.CompanyID && cf.Status != Status.X.ToString())
             .FirstOrDefault();
 
         if (entity == null)
