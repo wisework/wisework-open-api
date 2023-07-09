@@ -12,37 +12,57 @@ internal class UpdatePurposeCommandValidation : AbstractValidator<UpdatePurposeC
     public UpdatePurposeCommandValidation()
     {
         RuleFor(v => v.PurposeType)
-          .NotEmpty()
-          .NotNull();
+            .NotEmpty()
+            .WithMessage("Purpose type cannot be empty")
+            .NotNull()
+            .WithMessage("Purpose type is required");
 
         RuleFor(v => v.PurposeCategoryId)
-           .NotEmpty()
-           .NotNull();
+            .NotNull()
+            .WithMessage("Code is required")
+            .NotEmpty()
+            .WithMessage("Code cannot be empty");
 
         RuleFor(v => v.Description)
             .MaximumLength(1000)
-           .NotEmpty()
-           .NotNull();
+            .WithMessage("Description must be no more than 1000 characters long")
+            .NotEmpty()
+            .WithMessage("Description cannot be empty")
+            .NotNull()
+            .WithMessage("Description is required");
 
         RuleFor(v => v.KeepAliveData)
             .MaximumLength(100)
-           .NotEmpty()
-           .NotNull();
+            .WithMessage("Keep alive data must be no more than 100 characters long")
+            .NotEmpty()
+            .WithMessage("Keep alive data cannot be empty")
+            .NotNull()
+            .WithMessage("Keep alive data is required");
 
-        RuleFor(v => v.LinkMoreDetail).MaximumLength(1000)
-           .NotEmpty()
-           .NotNull();
+        RuleFor(v => v.LinkMoreDetail)
+            .MaximumLength(1000)
+            .WithMessage("Link more detail must be no more than 1000 characters long")
+            .NotEmpty()
+            .WithMessage("Link more detail cannot be empty")
+            .NotNull()
+            .WithMessage("Link more detail is required");
 
         RuleFor(v => v.Status)
-           .NotEmpty()
-           .NotNull();
+            .NotEmpty()
+            .WithMessage("Status cannot be empty")
+            .NotNull()
+            .WithMessage("Status is required");
 
         RuleFor(v => v.TextMoreDetail)
-           .NotEmpty()
-           .NotNull();
+            .NotEmpty()
+            .WithMessage("Text more detail cannot be empty")
+            .NotNull()
+            .WithMessage("Text more detail is required");
 
         RuleFor(v => v.WarningDescription)
-           .NotEmpty()
-           .NotNull();
+            .NotEmpty()
+            .WithMessage("Warning description cannot be empty")
+            .NotNull()
+            .WithMessage("Warning description is required");
     }
 }
