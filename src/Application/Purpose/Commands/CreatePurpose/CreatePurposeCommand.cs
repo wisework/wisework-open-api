@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using MediatR;
 using Wisework.ConsentManagementSystem.Api;
+using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
+using WW.Application.Common.Models;
 using WW.Application.CustomField.Commands.CreateCustomField;
+using WW.Domain.Common;
 using WW.Domain.Entities;
 using WW.Domain.Enums;
 
@@ -23,6 +27,9 @@ public record CreatePurposeCommand : IRequest<PurposeActiveList>
     public string TextMoreDetail { get; init; }
     public string WarningDescription { get; init; }
 
+    [JsonIgnore]
+    public AuthenticationModel? authentication { get; set; }
+
 }
 
 public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand, PurposeActiveList>
@@ -36,9 +43,14 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
 
     public async Task<PurposeActiveList> Handle(CreatePurposeCommand request, CancellationToken cancellationToken)
     {
+        if (request.authentication == null)
+        {
+            throw new UnauthorizedAccessException();
+        }
+
         var entity = new Consent_Purpose();
         var guid = Guid.NewGuid();
-        (string letters, string numbers,DateTime expiredDateTime) = SeparateNumbersAndLetters(request.KeepAliveData);
+        string expiredDateTime = Calulate.ExpiredDateTime(request.KeepAliveData, DateTime.Now);
         entity.Guid = guid.ToString();
 
         entity.PurposeType = request.PurposeType;
@@ -53,15 +65,15 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
         entity.TextMoreDetail = request.TextMoreDetail; 
         entity.WarningDescription = request.WarningDescription;
 
-        entity.CreateBy = 1;
-        entity.UpdateBy = 1;
+        entity.CreateBy = request.authentication.UserID;
+        entity.UpdateBy = request.authentication.UserID;
         entity.CreateDate = DateTime.Now;
         entity.UpdateDate = DateTime.Now;
 
         entity.Status = Status.Active.ToString();
         entity.Version = 1;
-        entity.CompanyId = 1;
-        entity.Language = "en";
+        entity.CompanyId = request.authentication.CompanyID;
+        entity.Language = "en-US";
         entity.ExpiredDateTime = $"{expiredDateTime}";
 
 
@@ -91,47 +103,17 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
 
         };
 
-        return PurposeInfo;
-    }
-
-    public static (string letters, string numbers,DateTime expiredDateTime) SeparateNumbersAndLetters(string input)
-    {
-        string letters = "";
-        string numbers = "";
-        DateTime expiredDateTime = DateTime.Now;
-        
-
-        foreach (char c in input)
+        try
         {
-            if (Char.IsLetter(c))
-            {
-                letters += c;
-            }
-            else if (Char.IsNumber(c))
-            {
-                numbers += c;
-            }
+            return PurposeInfo;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalServerException(ex.Message);
         }
 
         
-
-        switch (letters.ToLower()) // Change this value to specify the unit of time to add (days, months, or years)
-        {
-            case "d":
-                expiredDateTime = expiredDateTime.AddDays(Int32.Parse(numbers));
-                break;
-            case "m":
-                expiredDateTime = expiredDateTime.AddMonths(Int32.Parse(numbers));
-                break;
-            case "y":
-                expiredDateTime = expiredDateTime.AddYears(Int32.Parse(numbers));
-                break;
-            default:
-                Console.WriteLine("Invalid time unit specified.");
-                break;
-        }
-
-
-        return (letters, numbers, expiredDateTime);
     }
+
+   
 }

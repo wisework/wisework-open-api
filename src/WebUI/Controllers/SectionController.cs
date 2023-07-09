@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Wisework.ConsentManagementSystem.Api;
+using Wiskwork.OpenAPI.Filters;
 using WW.Application.Common.Models;
+using WW.Application.ConsentPageSetting.Queries.GetShortUrl;
 using WW.Application.Section.Commands.CreateSection;
 using WW.Application.Section.Commands.UpdateSection;
 using WW.Application.Section.Queries.GetSection;
@@ -11,32 +13,60 @@ namespace Wiskwork.OpenAPI.Controllers;
 public class SectionController : ApiControllerBase
 {
     [HttpGet]
+    [AuthorizationFilter]
     public async Task<ActionResult<PaginatedList<SectionActiveList>>> GetCollectionPointsQuery([FromQuery] GetSectionQuery query)
     {
-        return await Mediator.Send(query);
-    }
-    [HttpPost]
-    public async Task<ActionResult<SectionActiveList>> Create(CreateSectionCommand command)
-    {
-        return await Mediator.Send(command);
-    }
-    [HttpPut("{id}")]
-    public async Task<ActionResult<SectionActiveList>> Update(int id, UpdateSectionCommand command)
-    {
-        if (id != command.ID)
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
         {
-            return BadRequest();
+            query.authentication = authentication;
         }
 
-       return await Mediator.Send(command);
+        return await Mediator.Send(query);
+    }
+
+    [HttpPost]
+    [AuthorizationFilter]
+    public async Task<ActionResult<SectionActiveList>> Create(CreateSectionCommand command)
+    {
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            command.authentication = authentication;
+        }
+
+        return await Mediator.Send(command);
+    }
+
+    [HttpPut("{id}")]
+    [AuthorizationFilter]
+    public async Task<ActionResult<SectionActiveList>> Update(int id, UpdateSectionCommand command)
+    {
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            command.SectionId = id;
+            command.authentication = authentication;
+        }
+
+        return await Mediator.Send(command);
 
     }
 
     [HttpGet("{id}")]
+    [AuthorizationFilter]
     public async Task<SectionActiveList> Get(int id)
     {
-        return (SectionActiveList)await Mediator.Send(new GetSectionInfoQuery(id));
+        var query = new GetSectionInfoQuery(id);
 
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            query.authentication = authentication;
+        }
+
+        return await Mediator.Send(query);
+      
     }
 
 
