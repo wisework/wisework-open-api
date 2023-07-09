@@ -26,11 +26,13 @@ public class GetUserInfoQueryHandler : IRequestHandler<GetUserInfoQuery, UserInf
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
+    private readonly IUploadService _uploadService;
 
-    public GetUserInfoQueryHandler(IApplicationDbContext context, IMapper mapper)
+    public GetUserInfoQueryHandler(IApplicationDbContext context, IMapper mapper, IUploadService uploadService)
     {
         _context = context;
         _mapper = mapper;
+        _uploadService = uploadService;
     }
 
     public async Task<UserInfo> Handle(GetUserInfoQuery request, CancellationToken cancellationToken)
@@ -58,23 +60,25 @@ public class GetUserInfoQueryHandler : IRequestHandler<GetUserInfoQuery, UserInf
 
             Mapper mapper = new Mapper(config);
 
+           
+
+
             var userInfo = (from cf in _context.DbSetUser
+                            join ps in _context.DbSetPosition on cf.PositionId equals ps.PositionID
+                            join file in _context.DbSetFile on cf.ProfileImageId equals file.FileId
                             where cf.UserId == request.authentication.UserID && cf.Status != Status.X.ToString()
                             select new UserInfo
                             {
                                 Address = cf.Address,
                                 BirthDate = cf.BirthDate.ToString(),
-                                CitizenId = cf.CitizenId,
-                                //CompanyId = cf.CompanyId,
-                                CompanyId = 1,
+                                CitizenId = cf.CitizenId,                               
+                                CompanyId = Convert.ToInt32(ps.CompanyID),
                                 Email = cf.Email,
                                 FullName = $"{cf.FirstName} {cf.LastName}",
                                 Guid = new Guid(cf.Guid),
-                                Gender = cf.Gender,
-                                //PositionDescription = cf.PositionDescription,
-                                PositionDescription = "IT",
-                                //ProfileImage = cf.ProfileImage,
-                                ProfileImage = "string",
+                                Gender = cf.Gender,                              
+                                PositionDescription = ps.Description,                              
+                                ProfileImage = _uploadService.GetStorageBlobUrl(file.FullFileName, ""),
                                 Tel = cf.Tel,
                                 UserID = Convert.ToInt32(cf.UserId),
                                 Username = cf.Username,
