@@ -4,6 +4,8 @@ using Wiskwork.OpenAPI.Filters;
 using WW.Application.Common.Models;
 using WW.Application.ConsentPageSetting.Commands.CreateConsentTheme;
 using WW.Application.ConsentPageSetting.Commands.UpdateConsentTheme;
+using WW.Application.ConsentPageSetting.Queries.GetAllImage;
+using WW.Application.ConsentPageSetting.Queries.GetAllLogo;
 using WW.Application.ConsentPageSetting.Queries.GetConsentTheme;
 using WW.Application.ConsentPageSetting.Queries.GetImage;
 using WW.Application.ConsentPageSetting.Queries.GetLogo;
@@ -71,11 +73,41 @@ public class ConsentPageSettingController : ApiControllerBase
         return await Mediator.Send(query);
     }
 
+    [HttpGet("logo")]
+    [AuthorizationFilter]
+    public async Task<ActionResult<List<Image>>> GetAllLogoQuery()
+    {
+        var query = new GetAllLogoQuery();
+
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            query.authentication = authentication;
+        }
+
+        return await Mediator.Send(query);
+    }
+
     [HttpGet("logo/{count}")]
     [AuthorizationFilter]
     public async Task<ActionResult<List<Image>>> GetLogoQuery(int count)
     {
         var query = new GetLogoQuery(count);
+
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            query.authentication = authentication;
+        }
+
+        return await Mediator.Send(query);
+    }
+
+    [HttpGet("image")]
+    [AuthorizationFilter]
+    public async Task<ActionResult<List<Image>>> GetAllImageQuery()
+    {
+        var query = new GetAllImageQuery();
 
         HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
         if (authenticationObj is AuthenticationModel authentication)
