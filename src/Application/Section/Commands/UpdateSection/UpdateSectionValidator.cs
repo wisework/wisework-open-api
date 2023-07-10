@@ -11,26 +11,26 @@ public class UpdateSectionCommandValidator : AbstractValidator<UpdateSectionComm
     public UpdateSectionCommandValidator()
     {
         RuleFor(v => v.Code)
-          .MaximumLength(20)
-          .WithMessage("Code must be no more than 20 characters long")
-          .NotEmpty()
-           .WithMessage("Code cannot be empty")
-          .NotNull()
-      .WithMessage("Code is required");
+        .NotNull()
+        .WithMessage("Code is required")
+        .NotEmpty()
+        .WithMessage("Code cannot be empty")
+        .MaximumLength(20)
+        .WithMessage("Code must be no more than 20 characters long");
+
         RuleFor(v => v.Description)
-           .MaximumLength(1000)
-            .WithMessage("Description must be no more than 1000 characters long")
-            .NotEmpty()
-             .WithMessage("Description cannot be empty")
-            .NotNull()
-        .WithMessage("Description is required");
-        RuleFor(v => v.Status)
+         .NotNull()
+         .WithMessage("Description is required")
+         .NotEmpty()
+         .WithMessage("Description cannot be empty")
          .MaximumLength(1000)
-          .WithMessage("Description must be no more than 1000 characters long")
-          .NotEmpty()
-           .WithMessage("Description cannot be empty")
+         .WithMessage("Description must be no more than 1000 characters long");
+
+        RuleFor(v => v.Status)
           .NotNull()
-      .WithMessage("Description is required");
+          .WithMessage("Status is required")
+          .NotEmpty()
+          .WithMessage("Status cannot be empty");
 
 
     }

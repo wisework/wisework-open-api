@@ -16,25 +16,31 @@ public class CreateWebsiteCommandsValidator : AbstractValidator<CreateWebsiteCom
             .NotNull()
             .WithMessage("Name is required")
             .NotEmpty()
-            .WithMessage("Name cannot be empty");
+            .WithMessage("Name cannot be empty")
+            .MaximumLength(1000)
+            .WithMessage("Name must be no more than 1000 characters long");
 
         RuleFor(v => v.UrlHomePage)
             .NotNull()
             .WithMessage("Url home page is required")
             .NotEmpty()
-            .WithMessage("Url home page cannot be empty");
+            .WithMessage("Url home page cannot be empty")
+            .MaximumLength(1000)
+            .WithMessage("Url home page must be no more than 1000 characters long");
 
         RuleFor(v => v.UrlPolicyPage)
             .NotNull()
             .WithMessage("Url policy page is required")
             .NotEmpty()
-            .WithMessage("Url policy page cannot be empty");
+            .WithMessage("Url policy page cannot be empty")
+            .MaximumLength(1000)
+            .WithMessage("Url policy page must be no more than 1000 characters long");
 
         RuleFor(v => v.Status)
             .NotNull()
             .WithMessage("Status is required")
             .NotEmpty()
-            .WithMessage("Status cannot be empty");      
+            .WithMessage("Status cannot be empty");   
 
     }
 }
