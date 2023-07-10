@@ -24,13 +24,11 @@ public record GetLogoQuery(int count) : IRequest<List<Image>>
 public class GetLogoHandler : IRequestHandler<GetLogoQuery, List<Image>>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
     private readonly IUploadService _uploadService;
 
-    public GetLogoHandler(IApplicationDbContext context, IMapper mapper, IUploadService uploadService)
+    public GetLogoHandler(IApplicationDbContext context, IUploadService uploadService)
     {
         _context = context;
-        _mapper = mapper;
         _uploadService = uploadService;
     }
 
