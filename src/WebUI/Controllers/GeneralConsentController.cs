@@ -4,6 +4,7 @@ using Wiskwork.OpenAPI.Filters;
 using WW.Application.CollectionPoints.Queries.GetCollectionPoints;
 using WW.Application.Common.Models;
 using WW.Application.GeneralConsents.Commands;
+using WW.Application.GeneralConsents.Commands.GeneralConsentInfo;
 using WW.Application.GeneralConsents.Queries;
 using WW.OpenAPI.Controllers;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -72,14 +73,14 @@ public class GeneralConsentController : ApiControllerBase
     [Route("info", Name = "ConsentInfo")]
     [AuthorizationFilter]
 
-    public async Task<ActionResult<GeneralConsent>> GetGeneralConsentInfoQuery(GeneralConsentInfoRequestQuery query)
+    public async Task<ActionResult<GeneralConsent>> GetGeneralConsentInfoQuery(GeneralConsentInfoCommand command)
     {
         HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
         if (authenticationObj is AuthenticationModel authentication)
         {
-            query.authentication = authentication;
+            command.authentication = authentication;
         }
-        return await Mediator.Send(query);
+        return await Mediator.Send(command);
     }
 
 }
