@@ -47,7 +47,7 @@ public class GetWebsiteInfoQueryHandler : IRequestHandler<GetWebsiteInfoQuery, W
         {
             List<ValidationFailure> failures = new List<ValidationFailure> { };
                      
-            failures.Add(new ValidationFailure("ID", "ID must be greater than 0"));      
+            failures.Add(new ValidationFailure("websiteID", "Website ID must be greater than 0"));      
 
             throw new ValidationException(failures);
         }

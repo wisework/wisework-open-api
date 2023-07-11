@@ -53,7 +53,7 @@ public class SectionController : ApiControllerBase
 
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("section-info/{id}")]
     [AuthorizationFilter]
     public async Task<SectionActiveList> Get(int id)
     {

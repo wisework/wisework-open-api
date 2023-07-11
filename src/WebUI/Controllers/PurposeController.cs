@@ -2,6 +2,7 @@
 using Wisework.ConsentManagementSystem.Api;
 using Wiskwork.OpenAPI.Filters;
 using WW.Application.Common.Models;
+using WW.Application.purpose.Commands.CreatePurpose;
 using WW.Application.Purpose.Commands.CreatePurpose;
 using WW.Application.Purpose.Commands.UpdatePurpose;
 using WW.Application.Purpose.Queries.GetPurpose;
@@ -46,7 +47,7 @@ public class PurposeController : ApiControllerBase
         HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
         if (authenticationObj is AuthenticationModel authentication)
         {
-            command.PurposeID = id;
+            command.purposeID = id;
             command.authentication = authentication;
         }
         return await Mediator.Send(command);

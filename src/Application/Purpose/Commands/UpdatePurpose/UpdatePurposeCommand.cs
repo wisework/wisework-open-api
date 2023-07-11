@@ -10,21 +10,22 @@ using Wisework.ConsentManagementSystem.Api;
 using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
 using WW.Application.Common.Models;
+using WW.Domain.Common;
 using WW.Domain.Enums;
 
 namespace WW.Application.Purpose.Commands.UpdatePurpose;
 public record UpdatePurposeCommand : IRequest<PurposeActiveList>
 {
     [JsonIgnore]
-    public int PurposeID { get; set; }
-    public int PurposeType { get; init; }
-    public int PurposeCategoryId { get; init; }
-    public string Description { get; init; }
-    public string KeepAliveData { get; init; }
-    public string LinkMoreDetail { get; init; }
-    public string Status { get; init; }
-    public string TextMoreDetail { get; init; }
-    public string WarningDescription { get; init; }
+    public int purposeID { get; set; }
+    public int purposeType { get; init; }
+    public int purposeCategoryId { get; init; }
+    public string description { get; init; }
+    public string keepAliveData { get; init; }
+    public string linkMoreDetail { get; init; }
+    public string status { get; init; }
+    public string textMoreDetail { get; init; }
+    public string warningDescription { get; init; }
     [JsonIgnore]
     public AuthenticationModel? authentication { get; set; }
 }
@@ -40,23 +41,22 @@ public class UpdatePurposeCommandHandler : IRequestHandler<UpdatePurposeCommand,
 
     public async Task<PurposeActiveList> Handle(UpdatePurposeCommand request, CancellationToken cancellationToken)
     {
-
         if (request.authentication == null)
         {
             throw new UnauthorizedAccessException();
         }
 
-        if (request.PurposeID <= 0)
+        if (request.purposeID <= 0)
         {
             List<ValidationFailure> failures = new List<ValidationFailure> { };
-            failures.Add(new ValidationFailure("PurposeID", "Purpose ID must be greater than 0"));
+            failures.Add(new ValidationFailure("purposeID", "Purpose ID must be greater than 0"));
 
             throw new ValidationException(failures);
         }
 
         var entity = _context.DbSetConsentPurpose
-            .Where(cf => cf.PurposeId == request.PurposeID && cf.CompanyId == request.authentication.CompanyID && cf.Status != Status.X.ToString())
-            .FirstOrDefault();
+           .Where(cf => cf.PurposeId == request.purposeID && cf.CompanyId == request.authentication.CompanyID && cf.Status != Status.X.ToString())
+           .FirstOrDefault();
 
         if (entity == null)
         {
@@ -65,15 +65,18 @@ public class UpdatePurposeCommandHandler : IRequestHandler<UpdatePurposeCommand,
 
         try
         {
-            entity.PurposeType = request.PurposeType;
-            entity.PurposeCategoryId = request.PurposeCategoryId;
-
-            entity.Description = request.Description;
-            entity.KeepAliveData = request.KeepAliveData;
-            entity.LinkMoreDetail = request.LinkMoreDetail;
-            entity.Status = request.Status;
-            entity.TextMoreDetail = request.TextMoreDetail;
-            entity.WarningDescription = request.WarningDescription;
+            entity.Guid = entity.Guid;
+            entity.PurposeType = request.purposeType;
+            entity.PurposeCategoryId = request.purposeCategoryId;
+            entity.Code = entity.Code;
+            entity.Description = request.description;
+            entity.KeepAliveData = request.keepAliveData;
+            entity.LinkMoreDetail = request.linkMoreDetail;
+            entity.Status = request.status;
+            entity.TextMoreDetail = request.textMoreDetail;
+            entity.WarningDescription = request.warningDescription;
+            entity.ExpiredDateTime = $"{Calulate.ExpiredDateTime(request.keepAliveData, DateTime.Now)}";
+            entity.Language = entity.Language;
 
             entity.UpdateBy = request.authentication.UserID;
             entity.UpdateDate = DateTime.Now;
@@ -88,14 +91,18 @@ public class UpdatePurposeCommandHandler : IRequestHandler<UpdatePurposeCommand,
             {
 
                 PurposeID = entity.PurposeId,
+                GUID = new Guid(entity.Guid),
                 PurposeType = entity.PurposeType,
                 CategoryID = entity.PurposeCategoryId,
+                Code = entity.Code,
                 Description = entity.Description,
                 KeepAliveData = entity.KeepAliveData,
                 LinkMoreDetail = entity.LinkMoreDetail,
                 Status = entity.Status,
                 TextMoreDetail = entity.TextMoreDetail,
                 WarningDescription = entity.WarningDescription,
+                ExpiredDateTime = entity.ExpiredDateTime,
+                Language = entity.Language,
             };
 
             return purposeInfo;
@@ -104,7 +111,5 @@ public class UpdatePurposeCommandHandler : IRequestHandler<UpdatePurposeCommand,
         {
             throw new InternalServerException(ex.Message);
         }
-
-        
     }
 }
