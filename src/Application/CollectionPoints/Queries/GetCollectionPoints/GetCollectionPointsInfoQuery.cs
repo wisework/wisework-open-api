@@ -44,7 +44,6 @@ public class GetCollectionPointsInfoQueryHandler : IRequestHandler<GetCollection
         {
             //todo:edit conpanyid หลังมีการทำ identity server
             var collectionpointInfo = (from cp in _context.DbSetConsentCollectionPoints
-
                                        where cp.CollectionPointId == request.Id && cp.CompanyId == request.authentication.CompanyID && cp.Status != Status.X.ToString()
                                        select new CollectionPointInfo
                                        {

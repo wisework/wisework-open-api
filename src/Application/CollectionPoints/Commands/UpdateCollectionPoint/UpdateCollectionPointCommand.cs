@@ -25,7 +25,6 @@ public record UpdateCollectionPointCommand : IRequest<int>
     public CollectionPointPageDetail PageDetail { get; init; }
     public List<CollectionPointPurpose> PurposesList { get; init; }
     public int WebsiteId { get; init; }
-    public int Version { get; init; }
     [JsonIgnore]
     public AuthenticationModel? authentication { get; set; }
 }
@@ -47,7 +46,25 @@ public class UpdateCollectionPointCommandHandler : IRequestHandler<UpdateCollect
         try
         {
             #region add collection point and PrimaryKey
-            var entity = new Consent_CollectionPoint();
+            //var collectionpointlll = (from cp in _context.DbSetConsentCollectionPoints
+            //                         where cp.CollectionPointId == request.Id 
+            //                         && cp.CompanyId == request.authentication.CompanyID 
+            //                         && cp.Status != Status.X.ToString()
+            //                         select new CollectionPointInfo
+            //                         {
+            //                             CollectionPointId = cp.CollectionPointId,
+            //                             CollectionPointName = cp.CollectionPoint,
+            //                             Guid = new Guid(cp.Guid),
+            //                             ExpiredDateTime = cp.KeepAliveData,
+            //                             CompanyId = (int)(long)cp.CompanyId,
+            //                             Version = cp.Version,
+            //                             Status = cp.Status,
+
+            //                         }).FirstOrDefault();
+            var entity = _context.DbSetConsentCollectionPoints
+            .Where(cp => cp.CollectionPointId == request.Id && cp.CompanyId == request.authentication.CompanyID && cp.Status != Status.X.ToString())
+            .FirstOrDefault();
+            entity.Guid = Guid.NewGuid().ToString();
             entity.CollectionPoint = request.CollectionPointName;
             entity.WebsiteId = request.WebsiteId;
             entity.KeepAliveData = request.ExpirationPeriod;
@@ -63,8 +80,35 @@ public class UpdateCollectionPointCommandHandler : IRequestHandler<UpdateCollect
 
             entity.Status = Status.Active.ToString();
             entity.Version += entity.Version;
-
+            foreach (var key in request.ConsentKeyIdentifier)
+            {
+                switch (key.Code)
+                {
+                    case "Uid":
+                        entity.ActiveConsentUidpk = key.IsPrimaryKey;
+                        entity.ActiveConsentUidrequired = key.IsRequired;
+                        break;
+                    case "IdCardNumber":
+                        entity.ActiveConsentCardNumberPk = key.IsPrimaryKey;
+                        entity.ActiveConsentCardNumberRequired = key.IsRequired;
+                        break;
+                    case "Email":
+                        entity.ActiveConsentEmailPk = key.IsPrimaryKey;
+                        entity.ActiveConsentEmailRequired = key.IsRequired;
+                        break;
+                    case "Fullname":
+                        entity.ActiveConsentNamePk = key.IsPrimaryKey;
+                        entity.ActiveConsentNameRequired = key.IsRequired;
+                        break;
+                    case "PhoneNumber":
+                        entity.ActiveConsentTelPk = key.IsPrimaryKey;
+                        entity.ActiveConsentTelRequired = key.IsRequired;
+                        break;
+                }
+            }
             _context.DbSetConsentCollectionPoints.Update(entity);
+            await _context.SaveChangesAsync(cancellationToken);
+
             #endregion
 
             #region update purpose 
@@ -72,7 +116,7 @@ public class UpdateCollectionPointCommandHandler : IRequestHandler<UpdateCollect
             //(รายการเก่า update status เป็น x แล้ว insert รายการใหม่)
 
             var queryListCollectionPointItem = from collectionPoint in _context.DbSetConsentCollectionPointItem
-                                               where collectionPoint.CollectionPointId == request.Id && collectionPoint.Version == request.Version && collectionPoint.CompanyId == request.authentication.CompanyID
+                                               where collectionPoint.CollectionPointId == request.Id && collectionPoint.Version == entity.Version && collectionPoint.CompanyId == request.authentication.CompanyID
                                                select collectionPoint;
 
             if (queryListCollectionPointItem == null)
@@ -85,6 +129,7 @@ public class UpdateCollectionPointCommandHandler : IRequestHandler<UpdateCollect
                 item.Status = Status.X.ToString();
             }
 
+            
             foreach (var purpose in request.PurposesList)
             {
                 var purposeEntity = new Consent_CollectionPointItem();
@@ -100,6 +145,7 @@ public class UpdateCollectionPointCommandHandler : IRequestHandler<UpdateCollect
                 purposeEntity.Status = Status.Active.ToString();
                 purposeEntity.Version += purposeEntity.Version;
                 _context.DbSetConsentCollectionPointItem.Update(purposeEntity);
+                await _context.SaveChangesAsync(cancellationToken);
 
             }
             #endregion
@@ -113,6 +159,7 @@ public class UpdateCollectionPointCommandHandler : IRequestHandler<UpdateCollect
                 customFieldsEntity.Required = customFields.IsRequired;
                 customFieldsEntity.Sequence = customFields.Sequence;
                 _context.DbSetConsent_CollectionPointCustomFieldConfig.Update(customFieldsEntity);
+                await _context.SaveChangesAsync(cancellationToken);
 
             }
             #endregion
