@@ -271,7 +271,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
             entity.Property(e => e.PurposeCategoryId).HasColumnName("PurposeCategoryID");
 
-            entity.Property(e => e.WarningDescription).HasColumnType("ntext").HasColumnName("WarningDescription");
+            entity.Property(e => e.WarningDescription).HasColumnName("WarningDescription");
 
             entity.Property(e => e.KeepAliveData)
                 .HasMaxLength(100)
