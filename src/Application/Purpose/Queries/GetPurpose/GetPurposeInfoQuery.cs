@@ -55,7 +55,7 @@ public class GetPurposeInfoQueryHandler : IRequestHandler<GetPurposeInfoQuery, P
         Mapper mapper = new Mapper(config);
 
         var purposeInfo = (from cf in _context.DbSetConsentPurpose
-                               where cf.PurposeId == request.id && cf.CompanyId == 1 && cf.Status != Status.X.ToString() 
+                               where cf.PurposeId == request.id && cf.CompanyId == request.authentication.CompanyID && cf.Status != Status.X.ToString() 
                            select new PurposeActiveList
                                {
                                    PurposeID = cf.PurposeId,
