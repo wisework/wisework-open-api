@@ -245,17 +245,17 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         builder.Entity<Consent_Purpose>(entity =>
         {
             entity.HasKey(e => e.PurposeId)
-                .HasName("PK__Consent___79E6A1B493CC4A77");
+                .HasName("PK__Purpose___79E6A1B493CC4A77");
 
             entity.ToTable("Consent_Purpose");
 
             entity.Property(e => e.PurposeId).HasColumnName("PurposeID");
 
-            entity.Property(e => e.Code).HasMaxLength(20);
-
             entity.Property(e => e.CompanyId).HasColumnName("CompanyID");
 
-            entity.Property(e => e.CreateDate).HasPrecision(0);
+            entity.Property(e => e.Status).HasMaxLength(10);
+
+            entity.Property(e => e.Code).HasMaxLength(20);
 
             entity.Property(e => e.Description).HasMaxLength(1000);
 
@@ -263,22 +263,27 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
                 .HasMaxLength(36)
                 .HasColumnName("GUID");
 
-            entity.Property(e => e.KeepAliveData)
-                .HasMaxLength(100)
-                .IsUnicode(false);
+            entity.Property(e => e.PurposeType).HasColumnName("PurposeType");
+
+            entity.Property(e => e.TextMoreDetail).HasColumnType("ntext");
 
             entity.Property(e => e.LinkMoreDetail).HasMaxLength(1000);
 
             entity.Property(e => e.PurposeCategoryId).HasColumnName("PurposeCategoryID");
 
-            entity.Property(e => e.Status).HasMaxLength(10);
+            entity.Property(e => e.WarningDescription).HasColumnName("WarningDescription");
 
-            entity.Property(e => e.TextMoreDetail).HasColumnType("ntext");
+            entity.Property(e => e.KeepAliveData)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+
+            entity.Property(e => e.ExpiredDateTime).HasColumnType("ExpiredDateTime");
+
+            entity.Property(e => e.Language).HasMaxLength(2);
+
+            entity.Property(e => e.CreateDate).HasPrecision(0);
 
             entity.Property(e => e.UpdateDate).HasPrecision(0);
-
-            entity.Property(e => e.WarningDescription).HasColumnType("ntext").HasColumnName("WarningDescription");
-            entity.Property(e => e.ExpiredDateTime).HasColumnType("KeepAliveData");
 
         });
 

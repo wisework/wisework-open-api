@@ -27,11 +27,13 @@ public class GetCompanyQueryHandler : IRequestHandler<GetCompanyQuery, List<Comp
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
+    private readonly IUploadService _uploadService;
 
-    public GetCompanyQueryHandler(IApplicationDbContext context, IMapper mapper)
+    public GetCompanyQueryHandler(IApplicationDbContext context, IMapper mapper, IUploadService uploadService)
     {
         _context = context;
         _mapper = mapper;
+        _uploadService = uploadService;
     }
 
     public async Task<List<Company>> Handle(GetCompanyQuery request, CancellationToken cancellationToken)
@@ -43,12 +45,13 @@ public class GetCompanyQueryHandler : IRequestHandler<GetCompanyQuery, List<Comp
         }
 
         var companyInfo = (from cf in _context.DbSetCompanies
+                           join file in _context.DbSetFile on cf.ProfileImageId equals file.FileId
                            where cf.Status != Status.X.ToString()
                            select new Company
                            {
                                CompanyId = cf.CompanyId,
                                CompanyName = cf.Name,
-                               LogoImage = cf.LogoImage,
+                               LogoImage = _uploadService.GetStorageBlobUrl(file.FullFileName, ""),
                                Status = cf.Status,
                                CreateBy = cf.CreateBy.ToString(),
                                CreateDate = cf.CreateDate.ToString(),

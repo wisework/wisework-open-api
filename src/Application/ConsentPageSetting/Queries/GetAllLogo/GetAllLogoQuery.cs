@@ -4,50 +4,37 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using FluentValidation.Results;
 using MediatR;
 using Wisework.ConsentManagementSystem.Api;
 using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
-using WW.Application.Common.Mappings;
 using WW.Application.Common.Models;
 using WW.Domain.Entities;
-using WW.Domain.Enums;
 
-namespace WW.Application.ConsentPageSetting.Queries.GetImage;
+namespace WW.Application.ConsentPageSetting.Queries.GetAllLogo;
 
-public record GetImageQuery(int count) : IRequest<List<Image>>
+public record GetAllLogoQuery : IRequest<List<Image>>
 {
     [JsonIgnore]
     public AuthenticationModel? authentication { get; set; }
 }
 
-public class GetImageHandler : IRequestHandler<GetImageQuery, List<Image>>
+public class GetAllLogoHandle : IRequestHandler<GetAllLogoQuery, List<Image>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IUploadService _uploadService;
 
-    public GetImageHandler(IApplicationDbContext context, IUploadService uploadService)
+    public GetAllLogoHandle(IApplicationDbContext context, IUploadService uploadService)
     {
         _context = context;
         _uploadService = uploadService;
     }
 
-    public async Task<List<Image>> Handle(GetImageQuery request, CancellationToken cancellationToken)
+    public async Task<List<Image>> Handle(GetAllLogoQuery request, CancellationToken cancellationToken)
     {
         if (request.authentication == null)
         {
             throw new UnauthorizedAccessException();
-        }
-
-        if (request.count < 0)
-        {
-            List<ValidationFailure> failures = new List<ValidationFailure> { };
-            failures.Add(new ValidationFailure("count", "Count must be greater than or equal to 0"));
-
-            throw new ValidationException(failures);
         }
 
         try
@@ -67,8 +54,7 @@ public class GetImageHandler : IRequestHandler<GetImageQuery, List<Image>>
                                   CreateDate = file.CreateDate,
                                   UpdateBy = file.UpdateBy,
                                   UpdateDate = file.UpdateDate,
-                              }).Take(request.count).ToList();
-
+                              }).ToList();
 
             List<Image> images = joinedData.Select(f => new Image
             {

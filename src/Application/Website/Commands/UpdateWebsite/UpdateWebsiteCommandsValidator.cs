@@ -13,28 +13,34 @@ public class UpdateWebsiteCommandsValidator : AbstractValidator<UpdateWebsiteCom
     public UpdateWebsiteCommandsValidator()
     {
         RuleFor(v => v.Name)
-            .NotNull()
-            .WithMessage("Code is required")
-            .NotEmpty()
-            .WithMessage("Code cannot be empty")
-            .MaximumLength(1000)
-            .WithMessage("Code must be no more than 1000 characters ");
+          .NotNull()
+          .WithMessage("Name is required")
+          .NotEmpty()
+          .WithMessage("Name cannot be empty")
+          .MaximumLength(1000)
+          .WithMessage("Name must be no more than 1000 characters long");
 
         RuleFor(v => v.UrlHomePage)
             .NotNull()
-            .WithMessage("Code is required")
+            .WithMessage("Url home page is required")
             .NotEmpty()
-            .WithMessage("Code cannot be empty")
+            .WithMessage("Url home page cannot be empty")
             .MaximumLength(1000)
-            .WithMessage("Code must be no more than 1000 characters long");
+            .WithMessage("Url home page must be no more than 1000 characters long");
 
         RuleFor(v => v.UrlPolicyPage)
             .NotNull()
-            .WithMessage("Code is required")
+            .WithMessage("Url policy page is required")
             .NotEmpty()
-            .WithMessage("Code cannot be empty")
+            .WithMessage("Url policy page cannot be empty")
             .MaximumLength(1000)
-            .WithMessage("Code must be no more than 1000 characters long");
+            .WithMessage("Url policy page must be no more than 1000 characters long");
+
+        RuleFor(v => v.Status)
+           .NotNull()
+           .WithMessage("Status is required")
+           .NotEmpty()
+           .WithMessage("Status cannot be empty");
 
     }
 }

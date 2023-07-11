@@ -4,33 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
-using WW.Application.CustomField.Commands.CreateCustomField;
-using WW.Application.purpose.Commands.CreatePurpose;
+using WW.Application.Purpose.Commands.CreatePurpose;
 
-namespace WW.Application.Purpose.Commands.CreatePurpose;
-public class CreatePurposeCommandValidator : AbstractValidator<CreatePurposeCommand>
+namespace WW.Application.Purpose.Commands.UpdatePurpose;
+public class UpdatePurposeCommandValidator : AbstractValidator<UpdatePurposeCommand>
 {
-    public CreatePurposeCommandValidator()
+    public UpdatePurposeCommandValidator()
     {
         RuleFor(v => v.purposeType)
-            .NotEmpty()
-            .WithMessage("Purpose type cannot be empty")
-            .GreaterThan(0)
-            .WithMessage("Purpose type must be greater than 0");
+             .NotEmpty()
+             .WithMessage("Purpose type cannot be empty")
+             .GreaterThan(0)
+             .WithMessage("Purpose type must be greater than 0");
 
         RuleFor(v => v.purposeCategoryId)
             .NotEmpty()
             .WithMessage("Purpose category ID cannot be empty")
             .GreaterThan(0)
             .WithMessage("Purpose category ID must be greater than 0");
-
-        RuleFor(v => v.code)
-            .NotNull()
-            .WithMessage("Code is required")
-            .NotEmpty()
-            .WithMessage("Code cannot be empty")
-            .MaximumLength(20)
-            .WithMessage("Code must be no more than 20 characters long");
 
         RuleFor(v => v.description)
             .NotNull()

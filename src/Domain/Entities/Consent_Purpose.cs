@@ -9,8 +9,8 @@ public class Consent_Purpose : Base
 {
     public int PurposeId { get; set; }
     public int CompanyId { get; set; }
-    public string Status { get; set; } = null!;
-    public string Code { get; set; } = null!;
+    public string? Status { get; set; }
+    public string? Code { get; set; }
     public string? Description { get; set; }
     public string? Guid { get; set; }
     public int? PurposeType { get; set; }
