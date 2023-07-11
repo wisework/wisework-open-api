@@ -18,12 +18,13 @@ jobs:
       - name: "Add Sources package"
         run: dotnet nuget add source https://nuget.pkg.github.com/WiseWork/index.json  --username ${{ secrets.GH_USER }} --password  ${{ secrets.GH_PASSWORD}} --store-password-in-clear-text
 
-      - name: Restore NuGet packages
-        run: dotnet restore
 
-      - name: Build with dotnet
-        run: dotnet build --no-restore --configuration Release
         
       - name: dotnet publish
-        run: dotnet publish --no-build -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v2
+        with:
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/myapp
