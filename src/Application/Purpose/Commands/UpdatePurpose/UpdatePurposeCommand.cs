@@ -89,7 +89,6 @@ public class UpdatePurposeCommandHandler : IRequestHandler<UpdatePurposeCommand,
 
             var purposeInfo = new PurposeActiveList
             {
-
                 PurposeID = entity.PurposeId,
                 GUID = new Guid(entity.Guid),
                 PurposeType = entity.PurposeType,

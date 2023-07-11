@@ -39,26 +39,26 @@ public class PurposeController : ApiControllerBase
         return await Mediator.Send(command);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{code}")]
     [AuthorizationFilter]
-    public async Task<ActionResult<PurposeActiveList>> Update(int id, UpdatePurposeCommand command)
+    public async Task<ActionResult<PurposeActiveList>> Update(int code, UpdatePurposeCommand command)
     {
 
         HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
         if (authenticationObj is AuthenticationModel authentication)
         {
-            command.purposeID = id;
+            command.purposeID = code;
             command.authentication = authentication;
         }
         return await Mediator.Send(command);
     }
 
 
-    [HttpGet("purpose-info/{id}")]
+    [HttpGet("purpose-info/{code}")]
     [AuthorizationFilter]
-    public async Task<PurposeActiveList> Get(int id)
+    public async Task<PurposeActiveList> Get(int code)
     {
-        var query = new GetPurposeInfoQuery(id);
+        var query = new GetPurposeInfoQuery(code);
 
         HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
         if (authenticationObj is AuthenticationModel authentication)
