@@ -41,7 +41,7 @@ public class UpdateSectionCommandHandler : IRequestHandler<UpdateSectionCommand,
         entity.Code = request.Code;
         entity.Description = request.Description;
         entity.Status = request.Status;
-
+        entity.Version += entity.Version;
         entity.UpdateBy = 1;
         entity.UpdateDate = DateTime.Now;
 

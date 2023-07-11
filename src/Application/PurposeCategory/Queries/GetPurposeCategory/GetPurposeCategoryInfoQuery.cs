@@ -39,6 +39,13 @@ public class GetPurposeCategoryInfoQueryHandler : IRequestHandler<GetPurposeCate
         {
             throw new UnauthorizedAccessException();
         }
+        if (request.Id == null)
+        {
+            List<ValidationFailure> failures = new List<ValidationFailure> { };
+            failures.Add(new ValidationFailure("ID", "ID can't be null"));
+
+            throw new ValidationException(failures);
+        }
         if (request.Id <= 0)
         {
             List<ValidationFailure> failures = new List<ValidationFailure> { };

@@ -189,6 +189,7 @@ public class CreateTodoListCommandHandler : IRequestHandler<CreateCollectionPoin
             var collectionpointInfo = new CollectionPointObject
             {
                 Id = entity.CollectionPointId,
+                //Guid = new Guid();
                 Name = entity.CollectionPoint,
                 ConsentKeyIdentifier = request.ConsentKeyIdentifier,
                 CustomFieldsList = request.CustomFieldsList,
@@ -196,7 +197,7 @@ public class CreateTodoListCommandHandler : IRequestHandler<CreateCollectionPoin
                 Language = request.Language,
                 PageDetail = request.PageDetail,
                 PurposeList = request.PurposesList,
-                //Website = websiteList,
+                Website = websiteList,  // *** MUST FIX ***
 
             };
 

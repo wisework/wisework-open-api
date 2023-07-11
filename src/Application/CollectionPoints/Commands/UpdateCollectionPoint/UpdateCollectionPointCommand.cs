@@ -62,7 +62,7 @@ public class UpdateCollectionPointCommandHandler : IRequestHandler<UpdateCollect
             entity.CreateDate = DateTime.Now;
 
             entity.Status = Status.Active.ToString();
-            entity.Version = 1;
+            entity.Version += entity.Version;
 
             _context.DbSetConsentCollectionPoints.Update(entity);
             #endregion
@@ -98,7 +98,7 @@ public class UpdateCollectionPointCommandHandler : IRequestHandler<UpdateCollect
                 purposeEntity.UpdateDate = DateTime.Now;
                 purposeEntity.CreateDate = DateTime.Now;
                 purposeEntity.Status = Status.Active.ToString();
-                purposeEntity.Version = 1;
+                purposeEntity.Version += purposeEntity.Version;
                 _context.DbSetConsentCollectionPointItem.Update(purposeEntity);
 
             }
@@ -141,7 +141,7 @@ public class UpdateCollectionPointCommandHandler : IRequestHandler<UpdateCollect
             //todo:change affter identity server
             pageDetail.LanguageCulture = request.Language;
             pageDetail.Status = Status.Active.ToString();
-            pageDetail.Version = 1;
+            pageDetail.Version += pageDetail.Version;
             pageDetail.CompanyId = request.authentication.CompanyID;
             pageDetail.UpdateBy = request.authentication.UserID;
             pageDetail.UpdateDate = DateTime.Now;
