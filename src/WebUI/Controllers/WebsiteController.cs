@@ -5,6 +5,7 @@ using WW.Application.Common.Models;
 using WW.Application.CustomField.Commands.CreateCustomField;
 using WW.Application.CustomField.Commands.UpdateCustomField;
 using WW.Application.CustomField.Queries.GetCustomField;
+using WW.Application.Purpose.Queries.GetAllPurpose;
 using WW.Application.Purpose.Queries.GetPurpose;
 using WW.Application.Website.Commands.CreateWebsite;
 using WW.Application.Website.Commands.UpdateWebsite;
@@ -72,6 +73,21 @@ public class WebsiteController : ApiControllerBase
     public async Task<PurposeActiveList> GetPurpose(int id)
     {
         var query = new GetPurposeInfoQuery(id);
+
+        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
+        if (authenticationObj is AuthenticationModel authentication)
+        {
+            query.authentication = authentication;
+        }
+
+        return await Mediator.Send(query);
+    }
+
+    [HttpGet("purposes")]
+    [AuthorizationFilter]
+    public async Task<ActionResult<List<PurposeActiveList>>> GetAllPurposeQuery()
+    {
+        var query = new GetAllPurposeQuery();
 
         HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
         if (authenticationObj is AuthenticationModel authentication)
