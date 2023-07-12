@@ -68,33 +68,4 @@ public class WebsiteController : ApiControllerBase
         return await Mediator.Send(query);
     }
 
-    [HttpGet("purpose-info/{id}")]
-    [AuthorizationFilter]
-    public async Task<PurposeActiveList> GetPurpose(int id)
-    {
-        var query = new GetPurposeInfoQuery(id);
-
-        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
-        if (authenticationObj is AuthenticationModel authentication)
-        {
-            query.authentication = authentication;
-        }
-
-        return await Mediator.Send(query);
-    }
-
-    [HttpGet("purposes")]
-    [AuthorizationFilter]
-    public async Task<ActionResult<List<PurposeActiveList>>> GetAllPurposeQuery()
-    {
-        var query = new GetAllPurposeQuery();
-
-        HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
-        if (authenticationObj is AuthenticationModel authentication)
-        {
-            query.authentication = authentication;
-        }
-
-        return await Mediator.Send(query);
-    }
 }
