@@ -64,6 +64,7 @@ public class UpdatePurposeCategoryCommandHandler : IRequestHandler<UpdatePurpose
             entity.UpdateBy = request.authentication.UserID;
             entity.UpdateDate = DateTime.Now;
             entity.Status = request.Status;
+            entity.Version += entity.Version;
 
 
             _context.DbSetConsentPurposeCategory.Update(entity);

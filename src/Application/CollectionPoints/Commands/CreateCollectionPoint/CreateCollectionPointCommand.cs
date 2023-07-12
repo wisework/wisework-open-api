@@ -48,7 +48,7 @@ public class CreateTodoListCommandHandler : IRequestHandler<CreateCollectionPoin
         {
             #region add collection point and PrimaryKey
 
-            
+            entity.Guid = Guid.NewGuid().ToString();
             entity.CollectionPoint = request.CollectionPointName;
             entity.WebsiteId = request.WebsiteId;
             entity.KeepAliveData = request.ExpirationPeriod;
@@ -94,16 +94,26 @@ public class CreateTodoListCommandHandler : IRequestHandler<CreateCollectionPoin
 
 
             _context.DbSetConsentCollectionPoints.Add(entity);
+            await _context.SaveChangesAsync(cancellationToken);
+
             #endregion
 
             #region add purpose
             foreach (var purpose in request.PurposesList)
             {
+                var purposeId = (from p in _context.DbSetConsentPurpose
+                                 where p.Guid == purpose.Guid.ToString()
+                                 && p.Status == "Active"
+                                 && p.CompanyId == request.authentication.CompanyID
+                                 select p.PurposeId).FirstOrDefault();
+
                 var purposeEntity = new Consent_CollectionPointItem();
                 // id collecion point
                 purposeEntity.CollectionPointId = entity.CollectionPointId;
+                purposeEntity.PurposeId = purposeId;
                 purposeEntity.Priority = purpose.Priority;
                 purposeEntity.SectionInfoId = purpose.SectionId;
+                purposeEntity.CompanyId = request.authentication.CompanyID;
 
                 //todo:change affter identity server
                 purposeEntity.CreateBy = request.authentication.UserID;
@@ -113,6 +123,8 @@ public class CreateTodoListCommandHandler : IRequestHandler<CreateCollectionPoin
                 purposeEntity.Status = Status.Active.ToString();
                 purposeEntity.Version = 1;
                 _context.DbSetConsentCollectionPointItem.Add(purposeEntity);
+                await _context.SaveChangesAsync(cancellationToken);
+
 
             }
             #endregion
@@ -123,9 +135,12 @@ public class CreateTodoListCommandHandler : IRequestHandler<CreateCollectionPoin
                 var customFieldsEntity = new Consent_CollectionPointCustomFieldConfig();
                 // id collecion point
                 customFieldsEntity.CollectionPointCustomFieldId = customFields.Id;
+                customFieldsEntity.CollectionPointGuid = entity.Guid;
                 customFieldsEntity.Required = customFields.IsRequired;
                 customFieldsEntity.Sequence = customFields.Sequence;
                 _context.DbSetConsent_CollectionPointCustomFieldConfig.Add(customFieldsEntity);
+                await _context.SaveChangesAsync(cancellationToken);
+
 
             }
             #endregion
@@ -165,13 +180,16 @@ public class CreateTodoListCommandHandler : IRequestHandler<CreateCollectionPoin
 
 
             _context.DbSetConsentPage.Add(pageDetail);
+            await _context.SaveChangesAsync(cancellationToken);
 
             #endregion
 
             #region website
             var websiteList = (from cp in _context.DbSetConsentCollectionPoints
                                join w in _context.DbSetConsentWebsite on cp.WebsiteId equals w.WebsiteId
-                               where cp.CollectionPointId == request.WebsiteId
+                               where w.WebsiteId == request.WebsiteId 
+                               && w.Status == "Active" && cp.Status == "Active"
+                               && w.CompanyId == request.authentication.CompanyID
                                select
                                    new CollectionPointInfoWebsiteObject
                                    {
@@ -189,6 +207,7 @@ public class CreateTodoListCommandHandler : IRequestHandler<CreateCollectionPoin
             var collectionpointInfo = new CollectionPointObject
             {
                 Id = entity.CollectionPointId,
+                Guid = new Guid(entity.Guid),
                 Name = entity.CollectionPoint,
                 ConsentKeyIdentifier = request.ConsentKeyIdentifier,
                 CustomFieldsList = request.CustomFieldsList,
@@ -196,7 +215,7 @@ public class CreateTodoListCommandHandler : IRequestHandler<CreateCollectionPoin
                 Language = request.Language,
                 PageDetail = request.PageDetail,
                 PurposeList = request.PurposesList,
-                //Website = websiteList,
+                //Website = websiteList,  // *** MUST FIX ***
 
             };
 
