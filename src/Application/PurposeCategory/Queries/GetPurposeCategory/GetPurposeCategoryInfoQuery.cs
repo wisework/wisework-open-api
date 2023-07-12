@@ -25,12 +25,10 @@ public record GetPurposeCategoryInfoQuery(int Id) : IRequest<PurposeCategoryActi
 public class GetPurposeCategoryInfoQueryHandler : IRequestHandler<GetPurposeCategoryInfoQuery, PurposeCategoryActiveList>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
 
     public GetPurposeCategoryInfoQueryHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<PurposeCategoryActiveList> Handle(GetPurposeCategoryInfoQuery request, CancellationToken cancellationToken)
@@ -55,13 +53,6 @@ public class GetPurposeCategoryInfoQueryHandler : IRequestHandler<GetPurposeCate
         }
         try
         {
-            MapperConfiguration config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<Consent_PurposeCategory, PurposeCategoryActiveList>();
-            });
-
-            Mapper mapper = new Mapper(config);
-
             //todo:edit conpanyid หลังมีการทำ identity server
             var purposecategoryInfo = (from ppc in _context.DbSetConsentPurposeCategory
                                        join uCreate in _context.DbSetUser on ppc.CreateBy equals uCreate.CreateBy
@@ -77,8 +68,15 @@ public class GetPurposeCategoryInfoQueryHandler : IRequestHandler<GetPurposeCate
                                            Status = ppc.Status
 
                                        }).FirstOrDefault();
-
+            if (purposecategoryInfo == null)
+            {
+                throw new NotFoundException();
+            }
             return purposecategoryInfo;
+        }
+        catch (NotFoundException ex)
+        {
+            throw ex;
         }
         catch (Exception ex)
         {

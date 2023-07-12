@@ -27,7 +27,7 @@ public class GeneralConsentController : ApiControllerBase
         return await Mediator.Send(query);
     }
 
-    [HttpGet]
+    [HttpPost]
     [Route("list-with-filter", Name = "ListWithFilter")]
     [AuthorizationFilter]
 

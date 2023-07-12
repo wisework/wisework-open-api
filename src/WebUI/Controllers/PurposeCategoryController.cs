@@ -17,7 +17,7 @@ namespace Wiskwork.OpenAPI.Controllers;
 
 public class PurposeCategoryController : ApiControllerBase
 {
-    [HttpGet]
+    [HttpGet("list")]
     [AuthorizationFilter]
 
     public async Task<ActionResult<PaginatedList<PurposeCategoryActiveList>>> GetPurposeCategoryQuery([FromQuery] GetPurposeCategoryQuery query)
@@ -29,7 +29,7 @@ public class PurposeCategoryController : ApiControllerBase
         }
         return await Mediator.Send(query);
     }
-    [HttpPost]
+    [HttpPost("add")]
     [AuthorizationFilter]
 
     public async Task<ActionResult<PurposeCategoryActiveList>> Create(CreatePurposeCategoryCommand command)
@@ -41,7 +41,7 @@ public class PurposeCategoryController : ApiControllerBase
         }
         return await Mediator.Send(command);
     }
-    [HttpPut("{id}")]
+    [HttpPut("update/{id}")]
     [AuthorizationFilter]
 
     public async Task<ActionResult<PurposeCategoryActiveList>> Update(int id, UpdatePurposeCategoryCommand command)

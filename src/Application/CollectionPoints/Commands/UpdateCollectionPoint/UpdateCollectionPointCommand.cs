@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using FluentValidation.Results;
 using MediatR;
 using Wisework.ConsentManagementSystem.Api;
 using WW.Application.Common.Exceptions;
@@ -43,24 +44,19 @@ public class UpdateCollectionPointCommandHandler : IRequestHandler<UpdateCollect
         {
             throw new UnauthorizedAccessException();
         }
+
+        if (request.Id <= 0)
+        {
+            List<ValidationFailure> failures = new List<ValidationFailure> { };
+            failures.Add(new ValidationFailure("id", "Collection Point ID must be greater than 0"));
+
+            throw new ValidationException(failures);
+        }
+
         try
         {
             #region add collection point and PrimaryKey
-            //var collectionpointlll = (from cp in _context.DbSetConsentCollectionPoints
-            //                         where cp.CollectionPointId == request.Id 
-            //                         && cp.CompanyId == request.authentication.CompanyID 
-            //                         && cp.Status != Status.X.ToString()
-            //                         select new CollectionPointInfo
-            //                         {
-            //                             CollectionPointId = cp.CollectionPointId,
-            //                             CollectionPointName = cp.CollectionPoint,
-            //                             Guid = new Guid(cp.Guid),
-            //                             ExpiredDateTime = cp.KeepAliveData,
-            //                             CompanyId = (int)(long)cp.CompanyId,
-            //                             Version = cp.Version,
-            //                             Status = cp.Status,
-
-            //                         }).FirstOrDefault();
+      
             var entity = _context.DbSetConsentCollectionPoints
             .Where(cp => cp.CollectionPointId == request.Id && cp.CompanyId == request.authentication.CompanyID && cp.Status != Status.X.ToString())
             .FirstOrDefault();

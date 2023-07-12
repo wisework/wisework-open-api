@@ -15,6 +15,7 @@ using WW.Domain.Enums;
 using WW.Domain.Common;
 using System.Text.Json.Serialization;
 using WW.Application.Common.Exceptions;
+using FluentValidation.Results;
 
 namespace WW.Application.CollectionPoints.Queries.GetCollectionPoints;
 
@@ -44,6 +45,21 @@ public class GetCollectionPointsQueryHandler : IRequestHandler<GetCollectionPoin
         if (request.authentication == null)
         {
             throw new UnauthorizedAccessException();
+        }
+        if (request.Offset <= 0 || request.Limit <= 0)
+        {
+            List<ValidationFailure> failures = new List<ValidationFailure> { };
+
+            if (request.Offset <= 0)
+            {
+                failures.Add(new ValidationFailure("offset", "Offset must be greater than 0"));
+            }
+            if (request.Limit <= 0)
+            {
+                failures.Add(new ValidationFailure("limit", "Limit must be greater than 0"));
+            }
+
+            throw new ValidationException(failures);
         }
         try
         {
