@@ -3,6 +3,7 @@ using Wisework.ConsentManagementSystem.Api;
 using Wiskwork.OpenAPI.Filters;
 using WW.Application.Common.Models;
 using WW.Application.GeneralConsents.Commands;
+using WW.Application.GeneralConsents.Commands.GeneralConsentFilterQuery;
 using WW.Application.GeneralConsents.Commands.GeneralConsentInfo;
 using WW.Application.GeneralConsents.Commands.GeneralConsentLastId;
 using WW.Application.GeneralConsents.Queries;
@@ -31,7 +32,7 @@ public class GeneralConsentController : ApiControllerBase
     [Route("list-with-filter", Name = "ListWithFilter")]
     [AuthorizationFilter]
 
-    public async Task<ActionResult<PaginatedList<GeneralConsent>>> GetGeneralConsentQuery([FromQuery] GeneralConsentListRequestQuery query)
+    public async Task<ActionResult<PaginatedList<GeneralConsent>>> GetGeneralConsentQuery( GeneralConsentFilterQueryCommand query)
     {
         HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
         if (authenticationObj is AuthenticationModel authentication)
