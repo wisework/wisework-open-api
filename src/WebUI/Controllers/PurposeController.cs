@@ -71,7 +71,7 @@ public class PurposeController : ApiControllerBase
         return await Mediator.Send(query);
     }
 
-    [HttpGet("purposes")]
+    [HttpGet("purpose-info")]
     [AuthorizationFilter]
     public async Task<ActionResult<List<PurposeActiveList>>> GetAllPurposeQuery()
     {
