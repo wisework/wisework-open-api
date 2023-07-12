@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Wisework.ConsentManagementSystem.Api;
 using Wiskwork.OpenAPI.Filters;
-using WW.Application.CollectionPoints.Queries.GetCollectionPoints;
 using WW.Application.Common.Models;
 using WW.Application.GeneralConsents.Commands;
 using WW.Application.GeneralConsents.Commands.GeneralConsentInfo;
+using WW.Application.GeneralConsents.Commands.GeneralConsentLastId;
 using WW.Application.GeneralConsents.Queries;
 using WW.OpenAPI.Controllers;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -59,14 +59,14 @@ public class GeneralConsentController : ApiControllerBase
     [Route("latest-id", Name = "LatestId")]
     [AuthorizationFilter]
 
-    public async Task<int> GetLatestId(GetLatestIdRequestQuery query)
+    public async Task<int> GetLatestId(GeneralConsentLastIdCommand command)
     {
         HttpContext.Items.TryGetValue("Authentication", out var authenticationObj);
         if (authenticationObj is AuthenticationModel authentication)
         {
-            query.authentication = authentication;
+            command.authentication = authentication;
         }
-        return await Mediator.Send(query);
+        return await Mediator.Send(command);
     }
 
     [HttpPost]

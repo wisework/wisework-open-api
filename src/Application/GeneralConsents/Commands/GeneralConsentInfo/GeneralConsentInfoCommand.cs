@@ -17,10 +17,10 @@ using WW.Domain.Enums;
 namespace WW.Application.GeneralConsents.Commands.GeneralConsentInfo;
 public record GeneralConsentInfoCommand : IRequest<GeneralConsent>
 {
-    public string idCardNumber { get; set; }
-    public string fullName { get; set; }
-    public string email { get; set; }
-    public string phoneNumber { get; set; }
+    public string? idCardNumber { get; set; }
+    public string? fullName { get; set; }
+    public string? email { get; set; }
+    public string? phoneNumber { get; set; }
     public string collectionPointGuid { get; set; }
     [JsonIgnore]
     public AuthenticationModel? authentication { get; set; }
@@ -73,7 +73,7 @@ public class GeneralConsentInfoHandler : IRequestHandler<GeneralConsentInfoComma
                              VerifyType = c.VerifyType,
                          });
 
-            if (query == null)
+            if (query.Count() == 0)
             {
                 throw new NotFoundException();
             }
