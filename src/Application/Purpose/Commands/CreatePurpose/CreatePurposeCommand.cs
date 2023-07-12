@@ -14,7 +14,7 @@ using WW.Domain.Common;
 using WW.Domain.Entities;
 using WW.Domain.Enums;
 
-namespace WW.Application.purpose.Commands.CreatePurpose;
+namespace WW.Application.Purpose.Commands.CreatePurpose;
 
 public record CreatePurposeCommand : IRequest<PurposeActiveList>
 {
@@ -52,7 +52,6 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
             var entity = new Consent_Purpose();
 
             entity.Guid = Guid.NewGuid().ToString();
-
             entity.PurposeType = request.purposeType;
             entity.PurposeCategoryId = request.purposeCategoryId;
             entity.Code = request.code;

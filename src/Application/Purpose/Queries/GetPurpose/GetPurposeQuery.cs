@@ -13,6 +13,7 @@ using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
 using WW.Application.Common.Mappings;
 using WW.Application.Common.Models;
+using WW.Application.CustomField.Queries.GetCustomField;
 using WW.Domain.Common;
 using WW.Domain.Entities;
 using WW.Domain.Enums;
@@ -23,15 +24,15 @@ public record GetPurposeQuery : IRequest<PaginatedList<PurposeActiveList>>
 {
     public int offset { get; init; } = 1;
     public int limit { get; init; } = 10;
-
     [JsonIgnore]
     public AuthenticationModel? authentication { get; set; }
 }
-public class GetWebsiteQueryHandler : IRequestHandler<GetPurposeQuery, PaginatedList<PurposeActiveList>>
+
+public class GetPurposeQueryHandler : IRequestHandler<GetPurposeQuery, PaginatedList<PurposeActiveList>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
-    public GetWebsiteQueryHandler(IApplicationDbContext context, IMapper mapper)
+    public GetPurposeQueryHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
@@ -59,36 +60,29 @@ public class GetWebsiteQueryHandler : IRequestHandler<GetPurposeQuery, Paginated
             throw new ValidationException(failures);
         }
 
-        MapperConfiguration config = new MapperConfiguration(cfg =>
-        {
-            cfg.CreateMap<Consent_Purpose, PurposeActiveList>()
-            .ForMember(d => d.ExpiredDateTime, a => a.MapFrom(p => Calulate.ExpiredDateTime(p.KeepAliveData, p.CreateDate)))
-            .ForMember(d => d.CategoryID, a => a.MapFrom(s => s.PurposeCategoryId))
-            ;
-
-            cfg.CreateMap<string, Guid?>().ConvertUsing(s => String.IsNullOrWhiteSpace(s) ? (Guid?)null : Guid.Parse(s));
-        });
-
-        Mapper mapper = new Mapper(config);
-
-        //todo:edit conpanyid หลังมีการทำ identity server
-        PaginatedList<PurposeActiveList> model =
-            await _context.DbSetConsentPurpose.Where(p => p.CompanyId == request.authentication.CompanyID && p.Status == Status.Active.ToString())
-            .ProjectTo<PurposeActiveList>(mapper.ConfigurationProvider).PaginatedListAsync(request.offset, request.limit);
-
         try
         {
+            MapperConfiguration config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Consent_Purpose, PurposeActiveList>()
+             .ForMember(d => d.ExpiredDateTime, a => a.MapFrom(p => Calulate.ExpiredDateTime(p.KeepAliveData, p.CreateDate)))
+             .ForMember(d => d.CategoryID, a => a.MapFrom(s => s.PurposeCategoryId))
+             ;
+
+                cfg.CreateMap<string, Guid?>().ConvertUsing(value => !string.IsNullOrEmpty(value) ? Guid.Parse(value) : (Guid?)null);
+            });
+
+            Mapper mapper = new Mapper(config);
+
+            PaginatedList<PurposeActiveList> model =
+                await _context.DbSetConsentPurpose.Where(p => p.CompanyId == request.authentication.CompanyID && p.Status == Status.Active.ToString())
+                .ProjectTo<PurposeActiveList>(mapper.ConfigurationProvider).PaginatedListAsync(request.offset, request.limit);
+
             return model;
         }
         catch (Exception ex)
         {
             throw new InternalServerException(ex.Message);
         }
-
-       
-
-      
-
-        
     }
 }

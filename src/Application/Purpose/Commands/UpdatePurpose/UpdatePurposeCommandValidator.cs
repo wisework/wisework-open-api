@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
-using WW.Application.Purpose.Commands.CreatePurpose;
+using WW.Application.CustomField.Commands.UpdateCustomField;
 
 namespace WW.Application.Purpose.Commands.UpdatePurpose;
 public class UpdatePurposeCommandValidator : AbstractValidator<UpdatePurposeCommand>
@@ -12,10 +12,10 @@ public class UpdatePurposeCommandValidator : AbstractValidator<UpdatePurposeComm
     public UpdatePurposeCommandValidator()
     {
         RuleFor(v => v.purposeType)
-             .NotEmpty()
-             .WithMessage("Purpose type cannot be empty")
-             .GreaterThan(0)
-             .WithMessage("Purpose type must be greater than 0");
+            .NotEmpty()
+            .WithMessage("Purpose type cannot be empty")
+            .GreaterThan(0)
+            .WithMessage("Purpose type must be greater than 0");
 
         RuleFor(v => v.purposeCategoryId)
             .NotEmpty()
