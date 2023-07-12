@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using FluentValidation.Results;
 using MediatR;
 using Wisework.ConsentManagementSystem.Api;
 using WW.Application.Common.Exceptions;
@@ -14,6 +15,7 @@ using WW.Application.Common.Models;
 using WW.Domain.Common;
 using WW.Domain.Entities;
 using WW.Domain.Enums;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WW.Application.CollectionPoints.Queries.GetCollectionPoints;
 
@@ -26,12 +28,10 @@ public record GetCollectionPointsInfoQuery(int Id) : IRequest<CollectionPointInf
 public class GetCollectionPointsInfoQueryHandler : IRequestHandler<GetCollectionPointsInfoQuery, CollectionPointInfo>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
 
     public GetCollectionPointsInfoQueryHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<CollectionPointInfo> Handle(GetCollectionPointsInfoQuery request, CancellationToken cancellationToken)
@@ -39,6 +39,20 @@ public class GetCollectionPointsInfoQueryHandler : IRequestHandler<GetCollection
         if (request.authentication == null)
         {
             throw new UnauthorizedAccessException();
+        }
+        if (request.Id == null)
+        {
+            List<ValidationFailure> failures = new List<ValidationFailure> { };
+            failures.Add(new ValidationFailure("ID", "ID can't be null"));
+
+            throw new ValidationException(failures);
+        }
+        if (request.Id <= 0)
+        {
+            List<ValidationFailure> failures = new List<ValidationFailure> { };
+            failures.Add(new ValidationFailure("id", "Collection Point ID must be greater than 0"));
+
+            throw new ValidationException(failures);
         }
         try
         {
@@ -56,7 +70,10 @@ public class GetCollectionPointsInfoQueryHandler : IRequestHandler<GetCollection
                                            Status = cp.Status,
 
                                        }).FirstOrDefault();
-
+            if (collectionpointInfo == null)
+            {
+                throw new NotFoundException();
+            }
             #region website
             var websiteList = (from cp in _context.DbSetConsentCollectionPoints
                                join w in _context.DbSetConsentWebsite on cp.WebsiteId equals w.WebsiteId
@@ -152,7 +169,7 @@ public class GetCollectionPointsInfoQueryHandler : IRequestHandler<GetCollection
                                }).FirstOrDefault();
 
             #endregion
-
+           
             collectionpointInfo.CollectionPointInfoWebsiteObject = websiteList;
             collectionpointInfo.PurposeList = purposeList;
             collectionpointInfo.CustomFieldsList = customFieldInfo;
@@ -160,11 +177,19 @@ public class GetCollectionPointsInfoQueryHandler : IRequestHandler<GetCollection
 
             return collectionpointInfo;
         }
+        catch (ValidationException ex)
+        {
+            throw ex;
+        }
+        catch (NotFoundException ex)
+        {
+            throw ex;
+        }
         catch (Exception ex)
         {
             throw new InternalServerException(ex.Message);
         }
-       
+
     }
 
 }
