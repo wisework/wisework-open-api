@@ -10,14 +10,17 @@ using Wisework.ConsentManagementSystem.Api;
 using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
 using WW.Application.Common.Models;
+using WW.Application.CustomField.Commands.UpdateCustomField;
 using WW.Domain.Common;
 using WW.Domain.Enums;
 
 namespace WW.Application.Purpose.Commands.UpdatePurpose;
+
+
 public record UpdatePurposeCommand : IRequest<PurposeActiveList>
 {
     [JsonIgnore]
-    public int purposeID { get; set; }
+    public int id { get; set; }
     public int purposeType { get; init; }
     public int purposeCategoryId { get; init; }
     public string description { get; init; }
@@ -46,17 +49,17 @@ public class UpdatePurposeCommandHandler : IRequestHandler<UpdatePurposeCommand,
             throw new UnauthorizedAccessException();
         }
 
-        if (request.purposeID <= 0)
+        if (request.id <= 0)
         {
             List<ValidationFailure> failures = new List<ValidationFailure> { };
-            failures.Add(new ValidationFailure("purposeID", "Purpose ID must be greater than 0"));
+            failures.Add(new ValidationFailure("id", "Custom field ID must be greater than 0"));
 
             throw new ValidationException(failures);
         }
 
         var entity = _context.DbSetConsentPurpose
-           .Where(cf => cf.PurposeId == request.purposeID && cf.CompanyId == request.authentication.CompanyID && cf.Status != Status.X.ToString())
-           .FirstOrDefault();
+            .Where(cf => cf.PurposeId == request.id && cf.CompanyId == request.authentication.CompanyID && cf.Status != Status.X.ToString())
+            .FirstOrDefault();
 
         if (entity == null)
         {

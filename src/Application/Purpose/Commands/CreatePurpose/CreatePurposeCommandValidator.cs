@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
-using WW.Application.CustomField.Commands.CreateCustomField;
-using WW.Application.purpose.Commands.CreatePurpose;
 
 namespace WW.Application.Purpose.Commands.CreatePurpose;
 public class CreatePurposeCommandValidator : AbstractValidator<CreatePurposeCommand>

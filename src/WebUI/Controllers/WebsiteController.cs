@@ -5,8 +5,6 @@ using WW.Application.Common.Models;
 using WW.Application.CustomField.Commands.CreateCustomField;
 using WW.Application.CustomField.Commands.UpdateCustomField;
 using WW.Application.CustomField.Queries.GetCustomField;
-using WW.Application.Purpose.Queries.GetAllPurpose;
-using WW.Application.Purpose.Queries.GetPurpose;
 using WW.Application.Website.Commands.CreateWebsite;
 using WW.Application.Website.Commands.UpdateWebsite;
 using WW.Application.Website.Queries.GetWebsite;

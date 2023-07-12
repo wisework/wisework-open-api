@@ -11,15 +11,17 @@ using Wisework.ConsentManagementSystem.Api;
 using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
 using WW.Application.Common.Models;
+using WW.Application.CustomField.Queries.GetCustomField;
 using WW.Domain.Entities;
 using WW.Domain.Enums;
 
 namespace WW.Application.Purpose.Queries.GetPurpose;
+
 public record GetPurposeInfoQuery(int id) : IRequest<PurposeActiveList>
 {
     [JsonIgnore]
     public AuthenticationModel? authentication { get; set; }
-};
+}
 
 public class GetPurposeInfoQueryHandler : IRequestHandler<GetPurposeInfoQuery, PurposeActiveList>
 {
@@ -42,54 +44,41 @@ public class GetPurposeInfoQueryHandler : IRequestHandler<GetPurposeInfoQuery, P
         if (request.id <= 0)
         {
             List<ValidationFailure> failures = new List<ValidationFailure> { };
-            failures.Add(new ValidationFailure("purposeID", "Purpose ID must be greater than 0"));
+            failures.Add(new ValidationFailure("id", "Custom field ID must be greater than 0"));
+
             throw new ValidationException(failures);
         }
 
         MapperConfiguration config = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<Consent_Purpose, PurposeActiveList>();
-            cfg.CreateMap<string, Guid?>().ConvertUsing(s => String.IsNullOrWhiteSpace(s) ? (Guid?)null : Guid.Parse(s));
         });
 
         Mapper mapper = new Mapper(config);
 
         var purposeInfo = (from cf in _context.DbSetConsentPurpose
-                               where cf.PurposeId == request.id && cf.CompanyId == request.authentication.CompanyID && cf.Status != Status.X.ToString() 
-                           select new PurposeActiveList
+                               where cf.PurposeId == request.id && cf.CompanyId == request.authentication.CompanyID && cf.Status != Status.X.ToString()
+                               select new PurposeActiveList
                                {
                                    PurposeID = cf.PurposeId,
-                                   GUID =new Guid(cf.Guid),
+                                   GUID = new Guid(cf.Guid),
                                    PurposeType = cf.PurposeType,
                                    CategoryID = cf.PurposeCategoryId,
                                    Code = cf.Code,
                                    Description = cf.Description,
                                    KeepAliveData = cf.KeepAliveData,
                                    LinkMoreDetail = cf.LinkMoreDetail,
-                                   Status = cf.Status ,
+                                   Status = cf.Status,
                                    TextMoreDetail = cf.TextMoreDetail,
                                    WarningDescription = cf.WarningDescription,
                                    ExpiredDateTime = cf.ExpiredDateTime,
                                    Language = cf.Language,
-
-                                   
                                }).FirstOrDefault();
 
         if (purposeInfo == null)
         {
             throw new NotFoundException();
         }
-
-
-        try
-        {
-            return purposeInfo;
-
-        }
-        catch (Exception ex)
-        {
-
-            throw new InternalServerException(ex.Message);
-        }
+        return purposeInfo;
     }
 }
