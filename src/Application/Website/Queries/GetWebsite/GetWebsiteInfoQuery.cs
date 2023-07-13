@@ -60,7 +60,7 @@ public class GetWebsiteInfoQueryHandler : IRequestHandler<GetWebsiteInfoQuery, W
         Mapper mapper = new Mapper(config);
 
         var customFieldInfo = (from cf in _context.DbSetConsentWebsite
-                               where cf.WebsiteId == request.id && cf.CompanyId == 1 && cf.Status != Status.X.ToString()
+                               where cf.WebsiteId == request.id && cf.CompanyId == request.authentication.CompanyID && cf.Status != Status.X.ToString()
                                select new WebsiteActiveList
                                {
                                    WebsiteId = request.id,

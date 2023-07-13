@@ -44,7 +44,7 @@ public class GetPurposeInfoQueryHandler : IRequestHandler<GetPurposeInfoQuery, P
         if (request.id <= 0)
         {
             List<ValidationFailure> failures = new List<ValidationFailure> { };
-            failures.Add(new ValidationFailure("id", "Custom field ID must be greater than 0"));
+            failures.Add(new ValidationFailure("purposeID", "Purpose ID must be greater than 0"));
 
             throw new ValidationException(failures);
         }
@@ -53,6 +53,7 @@ public class GetPurposeInfoQueryHandler : IRequestHandler<GetPurposeInfoQuery, P
         {
             cfg.CreateMap<Consent_Purpose, PurposeActiveList>();
         });
+
 
         Mapper mapper = new Mapper(config);
 
@@ -79,6 +80,17 @@ public class GetPurposeInfoQueryHandler : IRequestHandler<GetPurposeInfoQuery, P
         {
             throw new NotFoundException();
         }
-        return purposeInfo;
+
+        try
+        {
+            return purposeInfo;
+
+        }
+        catch (Exception ex)
+        {
+
+            throw new InternalServerException(ex.Message);
+        }
+
     }
 }
