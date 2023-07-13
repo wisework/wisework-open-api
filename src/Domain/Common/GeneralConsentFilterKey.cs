@@ -15,6 +15,6 @@ public class GeneralConsentFilterKey
 
     public int? Uid { get; set; }
     public string Email { get; set; }
-    public System.DateTimeOffset? StartDate { get; set; }
-    public System.DateTimeOffset? EndDate { get; set; }
+    public DateTimeOffset? StartDate { get; set; }
+    public DateTimeOffset? EndDate { get; set; }
 }

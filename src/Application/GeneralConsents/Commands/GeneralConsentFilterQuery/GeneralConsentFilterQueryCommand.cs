@@ -62,7 +62,23 @@ public class GeneralConsentFilterQueryCommandHandler : IRequestHandler<GeneralCo
 
             Mapper mapper = new Mapper(config);
             //todo:edit conpanyid หลังมีการทำ identity server
-            var query = _context.DbSetConsent.Where(consent => consent.CompanyId == request.authentication.CompanyID && consent.New == 1 && consent.Status != "X");
+            //var query = _context.DbSetConsent.Where(consent => consent.CompanyId == request.authentication.CompanyID && consent.New == 1 && consent.Status != "X");
+            var query = (from c in _context.DbSetConsent
+                         where c.CompanyId == request.authentication.CompanyID
+                         && c.Status != Status.X.ToString()
+                         select new
+                         {
+                             ConsentId = c.ConsentId,
+                             IdCardNumber = c.IdCardNumber,
+                             FullName = c.FullName,
+                             PhoneNumber = c.PhoneNumber,
+                             Email = c.Email,
+                             Uid = c.Uid,
+                             ConsentDatetime = c.ConsentDatetime,
+                             CreateDate = c.CreateDate,
+                             CreateBy = c.CreateBy,
+
+                         });
             if ( query == null )
             {
                 throw new NotFoundException();
