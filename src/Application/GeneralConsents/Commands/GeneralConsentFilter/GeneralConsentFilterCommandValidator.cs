@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using FluentValidation;
 
 
-namespace WW.Application.GeneralConsents.Commands.GeneralConsentFilterQuery;
-public class GeneralConsentFilterQueryCommandValidator : AbstractValidator<GeneralConsentFilterQueryCommand>
+namespace WW.Application.GeneralConsents.Commands.GeneralConsentFilter;
+public class GeneralConsentFilterCommandValidator : AbstractValidator<GeneralConsentFilterCommand>
 {
-    public GeneralConsentFilterQueryCommandValidator() 
+    public GeneralConsentFilterCommandValidator() 
     {
         RuleFor(v => v.SortingParams.SortName)
            .MaximumLength(100)
@@ -31,6 +31,6 @@ public class GeneralConsentFilterQueryCommandValidator : AbstractValidator<Gener
         RuleFor(v => v.GeneralConsentFilterKey.Email)
             .MaximumLength(100)
             .WithMessage("Email must be no more than 100 characters long");
-       
+
     }
 }
