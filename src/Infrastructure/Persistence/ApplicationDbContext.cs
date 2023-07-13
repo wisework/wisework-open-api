@@ -269,7 +269,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
             entity.Property(e => e.LinkMoreDetail).HasMaxLength(1000);
 
-            entity.Property(e => e.PurposeCategoryId).HasColumnName("CategoryID");
+            entity.Property(e => e.PurposeCategoryId).HasColumnName("PurposeCategoryID");
 
             entity.Property(e => e.WarningDescription).HasColumnName("WarningDescription");
 
