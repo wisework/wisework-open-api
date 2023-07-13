@@ -12,6 +12,7 @@ using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
 using WW.Application.Common.Models;
 using WW.Application.CustomField.Queries.GetCustomField;
+using WW.Domain.Common;
 using WW.Domain.Entities;
 using WW.Domain.Enums;
 
@@ -72,7 +73,7 @@ public class GetPurposeInfoQueryHandler : IRequestHandler<GetPurposeInfoQuery, P
                                    Status = cf.Status,
                                    TextMoreDetail = cf.TextMoreDetail,
                                    WarningDescription = cf.WarningDescription,
-                                   ExpiredDateTime = cf.ExpiredDateTime,
+                                   ExpiredDateTime = Calulate.ExpiredDateTime(cf.KeepAliveData, DateTime.Now),
                                    Language = cf.Language,
                                }).FirstOrDefault();
 
