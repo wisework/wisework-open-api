@@ -73,7 +73,7 @@ public class GetPurposeInfoQueryHandler : IRequestHandler<GetPurposeInfoQuery, P
                                    Status = cf.Status,
                                    TextMoreDetail = cf.TextMoreDetail,
                                    WarningDescription = cf.WarningDescription,
-                                   ExpiredDateTime = Calulate.ExpiredDateTime(cf.KeepAliveData, DateTime.Now),
+                                   ExpiredDateTime = Calulate.ExpiredDateTime(cf.KeepAliveData, cf.CreateDate),
                                    Language = cf.Language,
                                }).FirstOrDefault();
 

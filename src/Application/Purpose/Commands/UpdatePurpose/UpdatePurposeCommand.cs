@@ -52,7 +52,7 @@ public class UpdatePurposeCommandHandler : IRequestHandler<UpdatePurposeCommand,
         if (request.id <= 0)
         {
             List<ValidationFailure> failures = new List<ValidationFailure> { };
-            failures.Add(new ValidationFailure("id", "Custom field ID must be greater than 0"));
+            failures.Add(new ValidationFailure("purposeID", "Purpose ID must be greater than 0"));
 
             throw new ValidationException(failures);
         }
@@ -78,13 +78,46 @@ public class UpdatePurposeCommandHandler : IRequestHandler<UpdatePurposeCommand,
             entity.Status = request.status;
             entity.TextMoreDetail = request.textMoreDetail;
             entity.WarningDescription = request.warningDescription;
-            entity.ExpiredDateTime = $"{Calulate.ExpiredDateTime(request.keepAliveData, DateTime.Now)}";
             entity.Language = entity.Language;
 
             entity.UpdateBy = request.authentication.UserID;
             entity.UpdateDate = DateTime.Now;
             entity.Version += 1;
 
+            var purpose = (from cf in _context.DbSetConsentPurpose
+                               where cf.PurposeId == request.id && cf.CompanyId == request.authentication.CompanyID && cf.Status != Status.X.ToString()
+                               select new PurposeActiveList
+                               {
+                                   PurposeID = cf.PurposeId,
+                                   GUID = new Guid(cf.Guid),
+                                   PurposeType = cf.PurposeType,
+                                   CategoryID = cf.PurposeCategoryId,
+                                   Code = cf.Code,
+                                   Description = cf.Description,
+                                   KeepAliveData = cf.KeepAliveData,
+                                   LinkMoreDetail = cf.LinkMoreDetail,
+                                   Status = cf.Status,
+                                   TextMoreDetail = cf.TextMoreDetail,
+                                   WarningDescription = cf.WarningDescription,
+                                   ExpiredDateTime = Calulate.ExpiredDateTime(cf.KeepAliveData, cf.CreateDate),
+                                   Language = cf.Language,
+                               }).FirstOrDefault();
+
+            if (purpose == null)
+            {
+                throw new NotFoundException();
+            }
+
+            String ExpiredDateTime;
+
+            if(request.keepAliveData == purpose.KeepAliveData)
+            {
+                ExpiredDateTime = Calulate.ExpiredDateTime(entity.KeepAliveData, entity.CreateDate);
+            }
+            else
+            {
+                ExpiredDateTime = Calulate.ExpiredDateTime(entity.KeepAliveData, DateTime.Now);
+            }
 
             _context.DbSetConsentPurpose.Update(entity);
 
@@ -103,7 +136,7 @@ public class UpdatePurposeCommandHandler : IRequestHandler<UpdatePurposeCommand,
                 Status = entity.Status,
                 TextMoreDetail = entity.TextMoreDetail,
                 WarningDescription = entity.WarningDescription,
-                ExpiredDateTime = entity.ExpiredDateTime,
+                ExpiredDateTime = ExpiredDateTime,
                 Language = entity.Language,
             };
 

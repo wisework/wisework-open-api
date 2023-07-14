@@ -70,7 +70,6 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
             entity.Version = 1;
             entity.CompanyId = request.authentication.CompanyID;
             entity.Language = "en";
-            entity.ExpiredDateTime = $"{Calulate.ExpiredDateTime(request.keepAliveData, DateTime.Now)}";
 
             _context.DbSetConsentPurpose.Add(entity);
 
@@ -90,7 +89,7 @@ public class CreatePurposeCommandHandler : IRequestHandler<CreatePurposeCommand,
                 TextMoreDetail = entity.TextMoreDetail,
                 WarningDescription = entity.WarningDescription,
                 Language = entity.Language,
-                ExpiredDateTime = entity.ExpiredDateTime,
+                ExpiredDateTime = Calulate.ExpiredDateTime(request.keepAliveData, DateTime.Now),
             };
 
             return PurposeInfo;
