@@ -19,7 +19,7 @@ public class Consent_Purpose : Base
     public int? PurposeCategoryId { get; set; }
     public string? WarningDescription { get; set; }
     public string? KeepAliveData { get; set; }
-    public string? ExpiredDateTime { get; set; }
+    //public string? ExpiredDateTime { get; set; }
     public string? Language { get; set; }
 
 }

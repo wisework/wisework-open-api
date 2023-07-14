@@ -277,8 +277,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
 
-            entity.Property(e => e.ExpiredDateTime).HasColumnType("ExpiredDateTime");
-
             entity.Property(e => e.Language).HasMaxLength(2);
 
             entity.Property(e => e.CreateDate).HasPrecision(0);
