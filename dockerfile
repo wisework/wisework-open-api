@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 
 ARG ENVIRONMENT=Development
 ARG NUGET_USERNAME
@@ -17,7 +17,7 @@ RUN dotnet new nugetconfig && \
 RUN dotnet restore
 RUN dotnet publish -c Release -o app
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app
 EXPOSE 5000
 COPY --from=build /src/app ./
