@@ -8,7 +8,7 @@ on:
       - '*'
 
 env:
-  DOTNET_VERSION: '6.0.x'
+  DOTNET_VERSION: '7.0.x'
   REPOSITORY: wisework-openapi-v1
   IMAGE_NAME: ${{ github.repository }}
   NUGET_URL: https://nuget.pkg.github.com/WiseWork/index.json
