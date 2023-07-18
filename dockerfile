@@ -14,6 +14,11 @@ RUN dotnet new nugetconfig && \
   --store-password-in-clear-text \
   --name github "https://nuget.pkg.github.com/wisework/index.json"
 
+# install npm
+RUN apt-get update && apt-get install -y curl gnupg
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN apt-get install -y nodejs
+
 RUN dotnet restore
 RUN dotnet publish -c Release -o app
 
