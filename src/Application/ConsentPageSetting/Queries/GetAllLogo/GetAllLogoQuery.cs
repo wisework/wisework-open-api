@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 using MediatR;
 using Wisework.ConsentManagementSystem.Api;
+using Wisework.UploadModule.Interfaces;
 using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
 using WW.Application.Common.Models;
@@ -22,9 +18,9 @@ public record GetAllLogoQuery : IRequest<List<Image>>
 public class GetAllLogoHandle : IRequestHandler<GetAllLogoQuery, List<Image>>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IUploadService _uploadService;
+    private readonly IUploadProvider _uploadService;
 
-    public GetAllLogoHandle(IApplicationDbContext context, IUploadService uploadService)
+    public GetAllLogoHandle(IApplicationDbContext context, IUploadProvider uploadService)
     {
         _context = context;
         _uploadService = uploadService;
@@ -58,7 +54,7 @@ public class GetAllLogoHandle : IRequestHandler<GetAllLogoQuery, List<Image>>
 
             List<Image> images = joinedData.Select(f => new Image
             {
-                FullPath = _uploadService.GetStorageBlobUrl(f.FullFileName, "")
+                FullPath = _uploadService.GetURL(f.FullFileName)
             }).ToList();
 
             return images;

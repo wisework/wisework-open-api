@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿using System.Text.Json.Serialization;
 using FluentValidation.Results;
 using MediatR;
 using Wisework.ConsentManagementSystem.Api;
+using Wisework.UploadModule.Interfaces;
 using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
-using WW.Application.Common.Mappings;
 using WW.Application.Common.Models;
 using WW.Domain.Entities;
-using WW.Domain.Enums;
 
 namespace WW.Application.ConsentPageSetting.Queries.GetImage;
 
@@ -27,9 +19,9 @@ public record GetImageQuery(int count) : IRequest<List<Image>>
 public class GetImageHandler : IRequestHandler<GetImageQuery, List<Image>>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IUploadService _uploadService;
+    private readonly IUploadProvider _uploadService;
 
-    public GetImageHandler(IApplicationDbContext context, IUploadService uploadService)
+    public GetImageHandler(IApplicationDbContext context, IUploadProvider uploadService)
     {
         _context = context;
         _uploadService = uploadService;
@@ -72,7 +64,7 @@ public class GetImageHandler : IRequestHandler<GetImageQuery, List<Image>>
 
             List<Image> images = joinedData.Select(f => new Image
             {
-                FullPath = _uploadService.GetStorageBlobUrl(f.FullFileName, "")
+                FullPath = _uploadService.GetURL(f.FullFileName)
             }).ToList();
 
             return images;

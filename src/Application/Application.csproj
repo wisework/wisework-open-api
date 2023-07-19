@@ -17,6 +17,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="NSwag.Annotations" Version="13.19.0" />
         <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+        <PackageReference Include="Wisework.UploadProvider" Version="1.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -30,6 +31,7 @@
       <Reference Include="Wisework.ConsentManagementSystem.Api">
         <HintPath>..\..\dll\v1.0.17.0\Wisework.ConsentManagementSystem.Api.dll</HintPath>
       </Reference>
+
     </ItemGroup>
 
 </Project>

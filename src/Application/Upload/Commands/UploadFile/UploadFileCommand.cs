@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Wisework.ConsentManagementSystem.Api;
+using Wisework.UploadModule.Interfaces;
 using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
 using WW.Application.Common.Models;
@@ -24,10 +20,10 @@ public record UploadFileCommand : IRequest<Response9>
 public class UploadFileCommandHandler : IRequestHandler<UploadFileCommand, Response9>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IUploadService _uploadService;
+    private readonly IUploadProvider _uploadService;
 
-    public UploadFileCommandHandler(IApplicationDbContext context, IUploadService uploadService)
-    { 
+    public UploadFileCommandHandler(IApplicationDbContext context, IUploadProvider uploadService)
+    {
         _context = context;
         _uploadService = uploadService;
     }

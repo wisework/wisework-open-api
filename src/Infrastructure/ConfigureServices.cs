@@ -1,15 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using WW.Application.Common.Interfaces;
 using WW.Infrastructure.Files;
-using WW.Infrastructure.Identity;
 using WW.Infrastructure.Persistence;
 using WW.Infrastructure.Persistence.Interceptors;
 using WW.Infrastructure.Services;
 using WW.Infrastructure.Services.Authentication;
-
+using UploadModule = Wisework.UploadModule;
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ConfigureServices
@@ -34,14 +31,24 @@ public static class ConfigureServices
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
-               services.AddTransient<IDateTime, DateTimeService>();
+        services.AddTransient<IDateTime, DateTimeService>();
 
         services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
-        UploadFactory.Create(configuration);
-        services.AddTransient<IUploadService>(x =>
+
+
+        services.AddSingleton<UploadModule.Interfaces.IUploadProvider>(service =>
         {
-            return UploadFactory.Create(configuration);
+            return new UploadModule
+                .UploadFactory()
+                .CreateUploadProvider(new UploadModule.Models.Configuration
+                {
+                    ProviderName = configuration.GetValue<String>("Storage:Provider"),
+                    SecretKey = configuration.GetValue<String>("Storage:AzureStorageConnectionString"),
+                    BucketName = configuration.GetValue<String>("Storage:BucketName"),
+                });
         });
+
+
         services.AddTransient<IGenerateURLService, GenerateURLService>();
         services.AddTransient<WW.Application.Common.Interfaces.IAuthenticationService, WW.Infrastructure.Services.Authentication.AuthenticationService>();
         services.AddTransient<ICryptographyService, CryptographyService>();
