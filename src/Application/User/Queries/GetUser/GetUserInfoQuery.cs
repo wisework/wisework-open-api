@@ -21,13 +21,13 @@ public class GetUserInfoQueryHandler : IRequestHandler<GetUserInfoQuery, UserInf
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
-    private readonly IUploadProvider _uploadService;
+    private readonly IUploadProvider _uploadProvider;
 
-    public GetUserInfoQueryHandler(IApplicationDbContext context, IMapper mapper, IUploadProvider uploadService)
+    public GetUserInfoQueryHandler(IApplicationDbContext context, IMapper mapper, IUploadProvider uploadProvider)
     {
         _context = context;
         _mapper = mapper;
-        _uploadService = uploadService;
+        _uploadProvider = uploadProvider;
     }
 
     public async Task<UserInfo> Handle(GetUserInfoQuery request, CancellationToken cancellationToken)
@@ -73,7 +73,7 @@ public class GetUserInfoQueryHandler : IRequestHandler<GetUserInfoQuery, UserInf
                                 Guid = new Guid(cf.Guid),
                                 Gender = cf.Gender,
                                 PositionDescription = ps.Description,
-                                // ProfileImage = _uploadService.GetStorageBlobUrl(file.FullFileName, ""),
+                                // ProfileImage = _uploadProvider.GetStorageBlobUrl(file.FullFileName, ""),
                                 Tel = cf.Tel,
                                 UserID = Convert.ToInt32(cf.UserId),
                                 Username = cf.Username,

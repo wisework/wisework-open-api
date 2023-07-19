@@ -19,13 +19,13 @@ public record GetAllImageQuery : IRequest<List<Image>>
 public class GetAllImageHandle : IRequestHandler<GetAllImageQuery, List<Image>>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IUploadProvider _uploadService;
+    private readonly IUploadProvider _uploadProvider;
 
-    public GetAllImageHandle(IApplicationDbContext context, IUploadProvider uploadService)
+    public GetAllImageHandle(IApplicationDbContext context, IUploadProvider uploadProvider)
 
     {
         _context = context;
-        _uploadService = uploadService;
+        _uploadProvider = uploadProvider;
     }
 
     public async Task<List<Image>> Handle(GetAllImageQuery request, CancellationToken cancellationToken)
@@ -57,7 +57,7 @@ public class GetAllImageHandle : IRequestHandler<GetAllImageQuery, List<Image>>
 
             List<Image> images = joinedData.Select(f => new Image
             {
-                FullPath = _uploadService.GetURL(f.FullFileName)
+                FullPath = _uploadProvider.GetURL(f.FullFileName)
             }).ToList();
 
             return images;
