@@ -160,8 +160,8 @@ public class GeneralConsentListRequestQueryHandler : IRequestHandler<GeneralCons
 
             if (request.PaginationParams != null)
             {
-                Offset = request.PaginationParams.Offset.Value;
-                Limit = request.PaginationParams.Limit.Value;
+                Offset = request.PaginationParams.Offset;
+                Limit = request.PaginationParams.Limit;
             }
 
 
