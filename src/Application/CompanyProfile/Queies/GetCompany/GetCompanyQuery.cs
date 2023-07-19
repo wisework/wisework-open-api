@@ -19,13 +19,13 @@ public class GetCompanyQueryHandler : IRequestHandler<GetCompanyQuery, List<Comp
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
-    private readonly IUploadProvider _uploadService;
+    private readonly IUploadProvider _uploadProvider;
 
-    public GetCompanyQueryHandler(IApplicationDbContext context, IMapper mapper, IUploadProvider uploadService)
+    public GetCompanyQueryHandler(IApplicationDbContext context, IMapper mapper, IUploadProvider uploadProvider)
     {
         _context = context;
         _mapper = mapper;
-        _uploadService = uploadService;
+        _uploadProvider = uploadProvider;
     }
 
     public async Task<List<Company>> Handle(GetCompanyQuery request, CancellationToken cancellationToken)
@@ -43,7 +43,7 @@ public class GetCompanyQueryHandler : IRequestHandler<GetCompanyQuery, List<Comp
                            {
                                CompanyId = cf.CompanyId,
                                CompanyName = cf.Name,
-                               LogoImage = _uploadService.GetURL(file.FullFileName),
+                               LogoImage = _uploadProvider.GetURL(file.FullFileName),
                                Status = cf.Status,
                                CreateBy = cf.CreateBy.ToString(),
                                CreateDate = cf.CreateDate.ToString(),

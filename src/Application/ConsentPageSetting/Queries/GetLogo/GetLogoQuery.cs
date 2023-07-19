@@ -19,12 +19,12 @@ public record GetLogoQuery(int count) : IRequest<List<Image>>
 public class GetLogoHandler : IRequestHandler<GetLogoQuery, List<Image>>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IUploadProvider _uploadService;
+    private readonly IUploadProvider _uploadProvider;
 
-    public GetLogoHandler(IApplicationDbContext context, IUploadProvider uploadService)
+    public GetLogoHandler(IApplicationDbContext context, IUploadProvider uploadProvider)
     {
         _context = context;
-        _uploadService = uploadService;
+        _uploadProvider = uploadProvider;
     }
 
     public async Task<List<Image>> Handle(GetLogoQuery request, CancellationToken cancellationToken)
@@ -63,7 +63,7 @@ public class GetLogoHandler : IRequestHandler<GetLogoQuery, List<Image>>
 
             List<Image> images = joinedData.Select(f => new Image
             {
-                FullPath = _uploadService.GetURL(f.FullFileName)
+                FullPath = _uploadProvider.GetURL(f.FullFileName)
             }).ToList();
 
             return images;
