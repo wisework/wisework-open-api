@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using MediatR;
 using Wisework.ConsentManagementSystem.Api;
+using Wisework.UploadModule.Interfaces;
 using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
 using WW.Application.Common.Models;
-using WW.Domain.Entities;
 using WW.Domain.Enums;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WW.Application.CompanyProfile.Queies.GetCompany;
 public record GetCompanyQuery : IRequest<List<Company>>
@@ -27,9 +19,9 @@ public class GetCompanyQueryHandler : IRequestHandler<GetCompanyQuery, List<Comp
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
-    private readonly IUploadService _uploadService;
+    private readonly IUploadProvider _uploadService;
 
-    public GetCompanyQueryHandler(IApplicationDbContext context, IMapper mapper, IUploadService uploadService)
+    public GetCompanyQueryHandler(IApplicationDbContext context, IMapper mapper, IUploadProvider uploadService)
     {
         _context = context;
         _mapper = mapper;
@@ -51,7 +43,7 @@ public class GetCompanyQueryHandler : IRequestHandler<GetCompanyQuery, List<Comp
                            {
                                CompanyId = cf.CompanyId,
                                CompanyName = cf.Name,
-                               LogoImage = _uploadService.GetStorageBlobUrl(file.FullFileName, ""),
+                               LogoImage = _uploadService.GetURL(file.FullFileName),
                                Status = cf.Status,
                                CreateBy = cf.CreateBy.ToString(),
                                CreateDate = cf.CreateDate.ToString(),
@@ -59,7 +51,7 @@ public class GetCompanyQueryHandler : IRequestHandler<GetCompanyQuery, List<Comp
                                UpdateDate = cf.UpdateDate.ToString(),
                            }).ToList();
 
-        if (companyInfo.Count == 0 )
+        if (companyInfo.Count == 0)
         {
             throw new NotFoundException();
         }
@@ -73,8 +65,8 @@ public class GetCompanyQueryHandler : IRequestHandler<GetCompanyQuery, List<Comp
             throw new InternalServerException(ex.Message);
         }
 
-        
 
-       
+
+
     }
 }

@@ -1,9 +1,6 @@
-﻿using WW.Application.Common.Exceptions;
-
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Amazon.Runtime.Internal.Transform;
-using System;
+using WW.Application.Common.Exceptions;
 
 namespace WW.OpenAPI.Filters;
 
@@ -110,14 +107,14 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     private void HandleUnauthorizedAccessException(ExceptionContext context)
     {
         var exception = (UnauthorizedAccessException)context.Exception;
-        
+
         var details = new ProblemDetails
         {
             Title = "Unauthorized",
             Status = StatusCodes.Status401Unauthorized
         };
 
-        if(!string.IsNullOrEmpty(exception.Message))
+        if (!string.IsNullOrEmpty(exception.Message))
         {
             details.Detail = exception.Message;
         }
@@ -169,7 +166,7 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
             details.Detail = exception.Message;
         }
 
-        context.Result = new NotFoundObjectResult(details) 
+        context.Result = new NotFoundObjectResult(details)
         {
             StatusCode = StatusCodes.Status500InternalServerError,
         };

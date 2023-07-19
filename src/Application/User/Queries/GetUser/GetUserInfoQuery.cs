@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using AutoMapper;
+﻿using AutoMapper;
 using FluentValidation.Results;
 using MediatR;
 using Newtonsoft.Json;
 using Wisework.ConsentManagementSystem.Api;
+using Wisework.UploadModule.Interfaces;
 using WW.Application.Common.Exceptions;
 using WW.Application.Common.Interfaces;
 using WW.Application.Common.Models;
@@ -26,9 +21,9 @@ public class GetUserInfoQueryHandler : IRequestHandler<GetUserInfoQuery, UserInf
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
-    private readonly IUploadService _uploadService;
+    private readonly IUploadProvider _uploadService;
 
-    public GetUserInfoQueryHandler(IApplicationDbContext context, IMapper mapper, IUploadService uploadService)
+    public GetUserInfoQueryHandler(IApplicationDbContext context, IMapper mapper, IUploadProvider uploadService)
     {
         _context = context;
         _mapper = mapper;
@@ -55,12 +50,12 @@ public class GetUserInfoQueryHandler : IRequestHandler<GetUserInfoQuery, UserInf
             MapperConfiguration config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Users, UserInfo>();
-                cfg.CreateMap<string, Guid?>().ConvertUsing(s => String.IsNullOrWhiteSpace(s) ? (Guid?)null : Guid.Parse(s));
+                cfg.CreateMap<string, Guid?>().ConvertUsing(s => String.IsNullOrWhiteSpace(s) ? null : Guid.Parse(s));
             });
 
             Mapper mapper = new Mapper(config);
 
-           
+
 
 
             var userInfo = (from cf in _context.DbSetUser
@@ -71,28 +66,28 @@ public class GetUserInfoQueryHandler : IRequestHandler<GetUserInfoQuery, UserInf
                             {
                                 Address = cf.Address,
                                 BirthDate = cf.BirthDate.ToString(),
-                                CitizenId = cf.CitizenId,                               
+                                CitizenId = cf.CitizenId,
                                 CompanyId = Convert.ToInt32(ps.CompanyID),
                                 Email = cf.Email,
                                 FullName = $"{cf.FirstName} {cf.LastName}",
                                 Guid = new Guid(cf.Guid),
-                                Gender = cf.Gender,                              
-                                PositionDescription = ps.Description,                              
-                                ProfileImage = _uploadService.GetStorageBlobUrl(file.FullFileName, ""),
+                                Gender = cf.Gender,
+                                PositionDescription = ps.Description,
+                                // ProfileImage = _uploadService.GetStorageBlobUrl(file.FullFileName, ""),
                                 Tel = cf.Tel,
                                 UserID = Convert.ToInt32(cf.UserId),
                                 Username = cf.Username,
                                 Version = cf.Version,
                             }).FirstOrDefault();
 
-            
+
             if (userInfo == null)
             {
                 throw new NotFoundException("User not found"); // 404 Not Found
             }
 
             return userInfo;
-        }      
+        }
         catch (Exception ex)
         {
             throw new InternalException("An internal server error occurred."); // 500 error
