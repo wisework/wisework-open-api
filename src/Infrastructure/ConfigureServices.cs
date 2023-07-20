@@ -35,7 +35,6 @@ public static class ConfigureServices
 
         services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
 
-
         services.AddSingleton<UploadModule.Interfaces.IUploadProvider>(service =>
         {
             return new UploadModule
@@ -43,7 +42,7 @@ public static class ConfigureServices
                 .CreateUploadProvider(new UploadModule.Models.Configuration
                 {
                     ProviderName = configuration.GetValue<String>("Storage:Provider"),
-                    SecretKey = configuration.GetValue<String>("Storage:AzureStorageConnectionString"),
+                    SecretKey = configuration.GetValue<String>("Storage:SecretKey"),
                     BucketName = configuration.GetValue<String>("Storage:BucketName"),
                 });
         });
