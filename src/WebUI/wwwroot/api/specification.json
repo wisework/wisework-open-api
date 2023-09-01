@@ -210,6 +210,29 @@
         }
       }
     },
+    "/api/ConsentPageSetting/short-url": {
+      "get": {
+        "tags": [
+          "ConsentPageSetting"
+        ],
+        "operationId": "ConsentPageSetting_GetAllShortUrlQuery",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShortUrl"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/ConsentPageSetting/short-url/{id}": {
       "get": {
         "tags": [
@@ -242,6 +265,29 @@
         }
       }
     },
+    "/api/ConsentPageSetting/logo": {
+      "get": {
+        "tags": [
+          "ConsentPageSetting"
+        ],
+        "operationId": "ConsentPageSetting_GetAllLogoQuery",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Image"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/ConsentPageSetting/logo/{count}": {
       "get": {
         "tags": [
@@ -260,6 +306,29 @@
             "x-position": 1
           }
         ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Image"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ConsentPageSetting/image": {
+      "get": {
+        "tags": [
+          "ConsentPageSetting"
+        ],
+        "operationId": "ConsentPageSetting_GetAllImageQuery",
         "responses": {
           "200": {
             "description": "",
@@ -456,137 +525,64 @@
         }
       }
     },
-    "/api/GeneralConsent": {
+    "/api/GeneralConsent/list": {
       "get": {
         "tags": [
           "GeneralConsent"
         ],
-        "operationId": "GeneralConsent_GetGeneralConsentQuery",
+        "operationId": "GeneralConsent_GeneralConsentQuery",
         "parameters": [
           {
-            "name": "PaginationParams.Offset",
+            "name": "Offset",
             "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             },
             "x-position": 1
           },
           {
-            "name": "PaginationParams.Limit",
+            "name": "Limit",
             "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             },
             "x-position": 2
-          },
-          {
-            "name": "SortingParams.SortName",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 3
-          },
-          {
-            "name": "SortingParams.SortDesc",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            },
-            "x-position": 4
-          },
-          {
-            "name": "GeneralConsentFilterKey.FullName",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 5
-          },
-          {
-            "name": "GeneralConsentFilterKey.PhoneNumber",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 6
-          },
-          {
-            "name": "GeneralConsentFilterKey.IdCardNumber",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 7
-          },
-          {
-            "name": "GeneralConsentFilterKey.Uid",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            },
-            "x-position": 8
-          },
-          {
-            "name": "GeneralConsentFilterKey.Email",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 9
-          },
-          {
-            "name": "GeneralConsentFilterKey.StartDate",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time",
-              "nullable": true
-            },
-            "x-position": 10
-          },
-          {
-            "name": "GeneralConsentFilterKey.EndDate",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time",
-              "nullable": true
-            },
-            "x-position": 11
-          },
-          {
-            "name": "CurrentUtcOffset",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 12
-          },
-          {
-            "name": "IsCurrentlyDst",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 13
           }
         ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedListOfGeneralConsent"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GeneralConsent/list-with-filter": {
+      "post": {
+        "tags": [
+          "GeneralConsent"
+        ],
+        "operationId": "GeneralConsent_GetGeneralConsentQuery",
+        "requestBody": {
+          "x-name": "query",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GeneralConsentFilterQueryCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
             "description": "",
@@ -625,8 +621,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32"
+                  "$ref": "#/components/schemas/SubmitGeneralConsentResponse"
                 }
               }
             }
@@ -641,11 +636,11 @@
         ],
         "operationId": "GeneralConsent_GetLatestId",
         "requestBody": {
-          "x-name": "query",
+          "x-name": "command",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/GetLatestIdRequestQuery"
+                "$ref": "#/components/schemas/GeneralConsentLastIdCommand"
               }
             }
           },
@@ -674,11 +669,11 @@
         ],
         "operationId": "GeneralConsent_GetGeneralConsentInfoQuery",
         "requestBody": {
-          "x-name": "query",
+          "x-name": "command",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/GeneralConsentInfoRequestQuery"
+                "$ref": "#/components/schemas/GeneralConsentInfoCommand"
               }
             }
           },
@@ -699,12 +694,94 @@
         }
       }
     },
-    "/api/Language/{languageCultureKeys}/{resourceKeys}": {
+    "/api/healthcheck/readiness": {
+      "get": {
+        "tags": [
+          "HealthCheck"
+        ],
+        "operationId": "HealthCheck_Readiness",
+        "parameters": [
+          {
+            "name": "Offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/healthcheck/liveness": {
+      "get": {
+        "tags": [
+          "HealthCheck"
+        ],
+        "operationId": "HealthCheck_Liveness",
+        "parameters": [
+          {
+            "name": "Offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Language/{languageCultureKeys}": {
       "get": {
         "tags": [
           "Language"
         ],
-        "operationId": "Language_Get",
+        "operationId": "Language_GetResourceQuery",
         "parameters": [
           {
             "name": "languageCultureKeys",
@@ -718,8 +795,7 @@
           },
           {
             "name": "resourceKeys",
-            "in": "path",
-            "required": true,
+            "in": "query",
             "schema": {
               "type": "string",
               "nullable": true
@@ -747,7 +823,65 @@
         }
       }
     },
-    "/api/PurposeCategory": {
+    "/api/Permission/programs": {
+      "get": {
+        "tags": [
+          "Permission"
+        ],
+        "operationId": "Permission_GetMenuQuery",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Menu"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Permission/favorite-menu/{count}": {
+      "get": {
+        "tags": [
+          "Permission"
+        ],
+        "operationId": "Permission_GetFrequentluUsedMenuQuery",
+        "parameters": [
+          {
+            "name": "count",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FrequentlyUsedMenu"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PurposeCategory/list": {
       "get": {
         "tags": [
           "PurposeCategory"
@@ -785,7 +919,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/PurposeCategory/add": {
       "post": {
         "tags": [
           "PurposeCategory"
@@ -817,7 +953,7 @@
         }
       }
     },
-    "/api/PurposeCategory/{id}": {
+    "/api/PurposeCategory/update/{id}": {
       "put": {
         "tags": [
           "PurposeCategory"
@@ -859,7 +995,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/PurposeCategory/{id}": {
       "get": {
         "tags": [
           "PurposeCategory"
@@ -899,7 +1037,7 @@
         "operationId": "Purpose_GetCollectionPointsQuery",
         "parameters": [
           {
-            "name": "Offset",
+            "name": "offset",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -908,7 +1046,7 @@
             "x-position": 1
           },
           {
-            "name": "Limit",
+            "name": "limit",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -1003,7 +1141,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/Purpose/purpose-info/{id}": {
       "get": {
         "tags": [
           "Purpose"
@@ -1147,7 +1287,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/Section/section-info/{id}": {
       "get": {
         "tags": [
           "Section"
@@ -1179,24 +1321,48 @@
         }
       }
     },
-    "/api/User/{id}": {
+    "/api/Upload": {
+      "post": {
+        "tags": [
+          "Upload"
+        ],
+        "operationId": "Upload_Upload",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fileUpload": {
+                    "type": "string",
+                    "format": "binary",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response9"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/User": {
       "get": {
         "tags": [
           "User"
         ],
-        "operationId": "User_Get",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            },
-            "x-position": 1
-          }
-        ],
+        "operationId": "User_GetInfoUser",
         "responses": {
           "200": {
             "description": "",
@@ -1219,7 +1385,7 @@
         "operationId": "Website_GetCollectionPointsQuery",
         "parameters": [
           {
-            "name": "Offset",
+            "name": "offset",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -1228,7 +1394,7 @@
             "x-position": 1
           },
           {
-            "name": "Limit",
+            "name": "limit",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -1323,7 +1489,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/Website/website-info/{id}": {
       "get": {
         "tags": [
           "Website"
@@ -1355,7 +1523,7 @@
         }
       }
     },
-    "/api/CollectionPoints": {
+    "/api/CollectionPoints/list": {
       "get": {
         "tags": [
           "CollectionPoints"
@@ -1363,7 +1531,7 @@
         "operationId": "CollectionPoints_GetCollectionPointsQuery",
         "parameters": [
           {
-            "name": "PageNumber",
+            "name": "Offset",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -1372,7 +1540,7 @@
             "x-position": 1
           },
           {
-            "name": "PageSize",
+            "name": "Limit",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -1393,7 +1561,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/CollectionPoints/add": {
       "post": {
         "tags": [
           "CollectionPoints"
@@ -1417,8 +1587,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32"
+                  "$ref": "#/components/schemas/CollectionPointObject"
                 }
               }
             }
@@ -1426,7 +1595,7 @@
         }
       }
     },
-    "/api/CollectionPoints/{id}": {
+    "/api/CollectionPoints/update/{id}": {
       "put": {
         "tags": [
           "CollectionPoints"
@@ -1469,12 +1638,14 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/CollectionPoints/{id}": {
       "get": {
         "tags": [
           "CollectionPoints"
         ],
-        "operationId": "CollectionPoints_Get",
+        "operationId": "CollectionPoints_GetInfo",
         "parameters": [
           {
             "name": "id",
@@ -1537,7 +1708,8 @@
         "additionalProperties": false,
         "properties": {
           "visitorId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -1675,7 +1847,7 @@
           "headerBackgroundColor": {
             "type": "string"
           },
-          "bodyBackgroudColor": {
+          "bodyBackgroundColor": {
             "type": "string"
           },
           "topDescriptionTextColor": {
@@ -1708,10 +1880,6 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "themeId": {
-            "type": "integer",
-            "format": "int32"
-          },
           "themeTitle": {
             "type": "string"
           },
@@ -1721,7 +1889,7 @@
           "headerBackgroundColor": {
             "type": "string"
           },
-          "bodyBackgroudColor": {
+          "bodyBackgroundColor": {
             "type": "string"
           },
           "topDescriptionTextColor": {
@@ -1893,10 +2061,6 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
           "code": {
             "type": "string"
           },
@@ -1987,8 +2151,8 @@
           "consentDateTime": {
             "type": "string"
           },
-          "website": {
-            "$ref": "#/components/schemas/Website4"
+          "generalConsentWebsiteObject": {
+            "$ref": "#/components/schemas/GeneralConsentWebsiteObject"
           },
           "collectionPointVersion": {
             "type": "integer",
@@ -2015,10 +2179,6 @@
           "remark": {
             "type": "string"
           },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          },
           "companyId": {
             "type": "integer",
             "format": "int32"
@@ -2039,7 +2199,7 @@
           }
         }
       },
-      "Website4": {
+      "GeneralConsentWebsiteObject": {
         "type": "object",
         "additionalProperties": {
           "nullable": true
@@ -2117,12 +2277,162 @@
           }
         }
       },
+      "GeneralConsentFilterQueryCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "paginationParams": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PaginationParams"
+              }
+            ]
+          },
+          "sortingParams": {
+            "$ref": "#/components/schemas/SortingParams"
+          },
+          "generalConsentFilterKey": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GeneralConsentFilterKey"
+              }
+            ]
+          }
+        }
+      },
+      "PaginationParams": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "offset": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "SortingParams": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "sortName": {
+            "type": "string"
+          },
+          "sortDesc": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "GeneralConsentFilterKey": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "fullName": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "idCardNumber": {
+            "type": "string"
+          },
+          "uid": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "email": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "SubmitGeneralConsentResponse": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "collectionPointName": {
+            "type": "string"
+          },
+          "submitGeneralConsentWebsiteObject": {
+            "$ref": "#/components/schemas/SubmitGeneralConsentWebsiteObject"
+          },
+          "purposeGuid": {
+            "type": "string",
+            "format": "guid"
+          },
+          "purposeCode": {
+            "type": "string"
+          },
+          "purposeDescript": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "consentActive": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
+      "SubmitGeneralConsentWebsiteObject": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string"
+          },
+          "urlPolicyPage": {
+            "type": "string"
+          },
+          "urlHomePage": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
       "SubmitConsentCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "ageRangeCode": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "collectionPointGuid": {
             "type": "string"
@@ -2137,38 +2447,24 @@
           },
           "uid": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "fullName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "phoneNumber": {
-            "type": "string"
-          },
-          "fromBrowser": {
-            "type": "string"
-          },
-          "fromWebsite": {
-            "type": "string"
-          },
-          "verifyType": {
-            "type": "string"
-          },
-          "eventCode": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "idCardNumber": {
-            "type": "string"
-          },
-          "expiredDateTime": {
             "type": "string",
-            "format": "date-time"
-          },
-          "consentSignature": {
-            "type": "string"
+            "nullable": true
           },
           "purpose": {
             "type": "array",
@@ -2178,9 +2474,18 @@
           },
           "collectionPointCustomField": {
             "type": "array",
+            "nullable": true,
             "items": {
               "$ref": "#/components/schemas/SubmitCollectionPointCustomField"
             }
+          },
+          "authentication": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AuthenticationModel"
+              }
+            ]
           }
         }
       },
@@ -2229,45 +2534,206 @@
           }
         }
       },
-      "GetLatestIdRequestQuery": {
+      "AuthenticationModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "tokenID": {
+            "type": "string"
+          },
+          "userID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "companyID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tokenDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "visitorId": {
+            "type": "string"
+          }
+        }
+      },
+      "GeneralConsentLastIdCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "idCardNumber": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "fullName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "phoneNumber": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "collectionPointGuid": {
             "type": "string"
           }
         }
       },
-      "GeneralConsentInfoRequestQuery": {
+      "GeneralConsentInfoCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "idCardNumber": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "fullName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "phoneNumber": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "collectionPointGuid": {
             "type": "string"
+          }
+        }
+      },
+      "Menu": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "parentID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "priority": {},
+          "programGroupID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "programID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isExpanded": {
+            "type": "boolean"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubMenu"
+            }
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
+      "SubMenu": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "parentID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "priority": {},
+          "programGroupID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "programID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isExpanded": {
+            "type": "boolean"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
+      "FrequentlyUsedMenu": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "parentID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "priority": {},
+          "programGroupID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "programID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isExpanded": {
+            "type": "boolean"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
           }
         }
       },
@@ -2448,7 +2914,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "categoryID": {
+          "purposeCategoryId": {
             "type": "integer",
             "format": "int32"
           },
@@ -2479,15 +2945,11 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "purposeID": {
-            "type": "integer",
-            "format": "int32"
-          },
           "purposeType": {
             "type": "integer",
             "format": "int32"
           },
-          "categoryID": {
+          "purposeCategoryId": {
             "type": "integer",
             "format": "int32"
           },
@@ -2586,10 +3048,6 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
           "code": {
             "type": "string"
           },
@@ -2598,6 +3056,23 @@
           },
           "status": {
             "type": "string"
+          }
+        }
+      },
+      "Response9": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
           }
         }
       },
@@ -2738,10 +3213,6 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "websiteId": {
-            "type": "integer",
-            "format": "int32"
-          },
           "name": {
             "type": "string"
           },
@@ -2803,8 +3274,8 @@
             "type": "string",
             "format": "guid"
           },
-          "website": {
-            "$ref": "#/components/schemas/Website"
+          "collectionPointInfoWebsiteObject": {
+            "$ref": "#/components/schemas/CollectionPointInfoWebsiteObject"
           },
           "purposeList": {
             "type": "array",
@@ -2842,7 +3313,7 @@
           }
         }
       },
-      "Website": {
+      "CollectionPointInfoWebsiteObject": {
         "type": "object",
         "additionalProperties": {
           "nullable": true
@@ -2990,11 +3461,21 @@
           }
         }
       },
-      "CreateCollectionPointCommand": {
+      "CollectionPointObject": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": {
+          "nullable": true
+        },
         "properties": {
-          "code": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "guid": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
             "type": "string"
           },
           "consentKeyIdentifier": {
@@ -3018,15 +3499,19 @@
           "pageDetail": {
             "$ref": "#/components/schemas/CollectionPointPageDetail"
           },
-          "purposesList": {
+          "purposeList": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/CollectionPointPurpose"
             }
           },
-          "websiteId": {
-            "type": "integer",
-            "format": "int32"
+          "website": {
+            "$ref": "#/components/schemas/Website"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
           }
         }
       },
@@ -3118,15 +3603,37 @@
           }
         }
       },
-      "UpdateCollectionPointCommand": {
+      "Website": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": {
+          "nullable": true
+        },
         "properties": {
           "id": {
             "type": "integer",
             "format": "int32"
           },
-          "code": {
+          "description": {
+            "type": "string"
+          },
+          "urlPolicyPage": {
+            "type": "string"
+          },
+          "urlHomePage": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
+      "CreateCollectionPointCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "collectionPointName": {
             "type": "string"
           },
           "consentKeyIdentifier": {
@@ -3159,8 +3666,48 @@
           "websiteId": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "UpdateCollectionPointCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
           },
-          "version": {
+          "collectionPointName": {
+            "type": "string"
+          },
+          "consentKeyIdentifier": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CollectionPointConsentKeyIdentifier"
+            }
+          },
+          "customFieldsList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CollectionPointCustomFields"
+            }
+          },
+          "expirationPeriod": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "pageDetail": {
+            "$ref": "#/components/schemas/CollectionPointPageDetail"
+          },
+          "purposesList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CollectionPointPurpose"
+            }
+          },
+          "websiteId": {
             "type": "integer",
             "format": "int32"
           }

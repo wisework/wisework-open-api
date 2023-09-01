@@ -53,7 +53,7 @@ livenessProbe:
     port: http
 readinessProbe:
   httpGet:
-    path: /api/health/liveness
+    path: /api/health/readiness
     port: http
 
 resources: {}
